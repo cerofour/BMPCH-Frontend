@@ -15,6 +15,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const queryClient = new QueryClient();
 
 import axios from "axios";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
 	/* Protected Routes
@@ -39,6 +40,7 @@ function App() {
 						<Route path="usuarios" element={<Users />} />
 						<Route path="catalogo" element={<Catalogue />} />
 						<Route path="ayuda" element={<Help />} />
+						<Route path="admin-panel" element={<AdminPanel />} />
 						<Route path="*" element={<NoPage />} />
 					</Route>
 				</Routes>

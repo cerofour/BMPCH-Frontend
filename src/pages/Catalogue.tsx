@@ -1,8 +1,7 @@
-//import BookGroup from "../components/BookGroup";
+import BookGroup from "../components/BookGroup";
 
 function Catalogue() {
-	return "catalogue works!";
-	// return <BookGroup></BookGroup>;
+	return <BookGroup></BookGroup>;
 }
 
 export default Catalogue;
