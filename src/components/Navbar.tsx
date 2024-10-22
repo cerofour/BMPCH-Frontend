@@ -54,6 +54,14 @@ export default function MyNavbar() {
 							<Offcanvas.Title id={`offcanvasNavbarLabel-expand-md`}>{navbarTitle}</Offcanvas.Title>
 						</Offcanvas.Header>
 						<Offcanvas.Body>
+							<Nav className="justify-content-start flex-grow-1 ps-3">
+								<img
+									src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Hamburger_icon.svg"
+									alt="Boton menu"
+									width={40}
+									height={40}
+								/>
+							</Nav>
 							<Nav className="justify-content-end flex-grow-1 pe-3">{tsxLinks}</Nav>
 							<Form className="d-flex">
 								<Form.Control
