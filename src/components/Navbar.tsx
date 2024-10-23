@@ -1,9 +1,11 @@
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import MySidebar from "./Sidebar";
 
 export default function MyNavbar() {
 	const x = (d: string, l: string) => {
@@ -30,6 +32,11 @@ export default function MyNavbar() {
 			{link.display}
 		</Nav.Link>
 	));
+
+	const [show, setShow] = useState(false);
+
+  	const handleClose = () => setShow(false);
+  	const handleShow = () => setShow(true);
 
 	// ../assets/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png
 	return (
@@ -61,7 +68,9 @@ export default function MyNavbar() {
 									alt="Boton menu"
 									width={40}
 									height={40}
+									onClick={handleShow}
 								/>
+								
 							</Nav>
 							<Nav className="justify-content-end flex-grow-1 pe-3">{tsxLinks}</Nav>
 							<Form className="d-flex">
@@ -77,6 +86,9 @@ export default function MyNavbar() {
 					</Navbar.Offcanvas>
 				</Container>
 			</Navbar>
+			<Offcanvas show={show} onHide={handleClose}>
+        		<MySidebar/>
+      		</Offcanvas>
 		</>
 	);
 }
