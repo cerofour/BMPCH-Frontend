@@ -1,5 +1,5 @@
 {
-  "proxy": "http://localhost:8080",
+  "proxy": "http://144.22.63.67:8080",
   "name": "demo-bib",
   "private": true,
   "version": "0.0.0",
@@ -14,7 +14,9 @@
     "@tanstack/react-query": "^5.56.2",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.7.7",
+    "axios-retry": "^4.5.0",
     "bootstrap": "^5.3.3",
+    "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",

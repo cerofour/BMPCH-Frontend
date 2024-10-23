@@ -35,3 +35,9 @@
 	width: 80%;
 	margin:auto;
 }
+
+.crud-table-heading {
+	display:flex;
+	justify-content: space-between;
+	margin: 5px;
+}

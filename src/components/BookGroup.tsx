@@ -1,41 +1,22 @@
-// import BookCard from "./BookCard";
-
 import { useQuery } from "@tanstack/react-query";
-import BookCard from "./BookCard";
-
-import { Row, Col } from "react-bootstrap";
-
-/*
-import { fetchBookData, BookAPIObject } from "../api/api";
+import { EditorialAPIObject, getAllEditorials } from "../api/api";
 
 export default function BookGroup() {
-	const { isLoading, isError, data, error } = useQuery({
-		queryKey: ["books"],
-		queryFn: fetchBookData,
+	const {
+		isLoading,
+		isError,
+		data: editorials,
+		error,
+	} = useQuery<EditorialAPIObject[], Error>({
+		queryKey: ["getAllEditorials"],
+		queryFn: getAllEditorials,
 	});
 
-	if (isLoading) return <div>Loading books</div>;
+	const wrap = (x: any) => <div className="main-container">{x}</div>;
 
-	if (isError) return <div>An unexpected error ocurred: {error.message}</div>;
+	if (isLoading) return wrap(<h1>Loading books</h1>);
 
-	const bookCards = data.map((book: BookAPIObject) => (
-		<Col key={book.id}>
-			<BookCard
-				id={book.id}
-				author="Diego L"
-				publicationDate={book.publication_date}
-				title={book.title}
-			></BookCard>
-		</Col>
-	));
+	if (isError) return wrap(<h1>Error loading books</h1>);
 
-	return (
-		<div className="d-flex justify-content-flex-end book-group-container">
-			<Row xs="1" md="2" lg="3" xl="3" xxl="4" className="g-4">
-				{bookCards}
-			</Row>
-		</div>
-	);
+	return editorials?.map((editorial) => JSON.stringify(editorial));
 }
-
-*/

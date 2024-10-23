@@ -1,17 +1,6 @@
 import axios from "axios";
-import { useAuth } from "../hooks/useAuth";
 
-export type BookAPIObject = {
-  id: number;
-  title: string;
-  publication_date: string;
-  stock: number;
-  pages: number;
-  edition: number;
-  volume: number;
-  type: { id: number; text_type: string };
-  editorial: { id: number; editorial: string };
-};
+import axiosRetry from "axios-retry";
 
 export type UserAPIObject = {
   userId: number;
@@ -34,37 +23,84 @@ export type UserLogin = {
 };
 
 export type UserLoginResponse = {
-	jwtToken: string;
+	token: string;
 	expiration: number;
 }
+
+export type EditorialAPIObject = {
+	id: number;
+	name: string;
+}
+
+export type TextTypeAPIObject = {
+	typeId: number;
+	typename: string;
+}
+
+export type TextAPIObject = {
+	id: number;
+  title: string;
+  publicationDate: Date,
+  pages: number,
+  edition: number,
+  volume: number,
+  editorial: EditorialAPIObject,
+  type: TextTypeAPIObject,
+};
+
+export type TextDTO = {
+  title: string;
+  publicationDate: Date,
+  numPages: number,
+  edition: number,
+  volume: number,
+  editorialName: string,
+  textType: string,
+};
 
 const DOMAIN = "http://144.22.63.67:8080";
 const API_PREFFIX = '/api/v1';
 
-const JWTToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3MzI2NjI2NyIsImlhdCI6MTcyOTQ2NjgyOCwiZXhwIjoxNzI5NDcwNDI4fQ.003tnRukwM9ocMKZLSTm5TKgCPm_TRd1MWDypATqWZ8";
+export const api = axios.create({
+	baseURL: API_PREFFIX,
+	headers: {
+		"Content-Type": "application/json",
+		"Accept": "application/json",
+	}});
 
-const buildLink = (endpoint: string) => {
-	return DOMAIN + API_PREFFIX + endpoint;
-}
-
-const loginLink = (endpoint: string) => {
-	return DOMAIN + endpoint;
-}
-
-const api = axios.create({
-		method: "GET",
-		baseURL: DOMAIN + API_PREFFIX,
-		headers: {
-			"Authorization": "Bearer " + JWTToken,
-			"Content-Type": "application/json",
-			"Accept": "application/json",
-		},
-	}
-);
+const loginApi = axios.create({
+	baseURL: DOMAIN,
+	headers: {
+		"Content-Type": "application/json",
+		"Accept": "application/json",
+	}});
 
 export async function getAllUsers(): Promise<UserAPIObject[]> {
-	const response = await api.get('/users');
+	const response = await api.get('/users/');
 	return response.data;
 }
 
-//export default api;
+export async function getAllTypes(): Promise<TextTypeAPIObject[]> {
+	const response = await api.get("/text_types/")
+	return response.data;
+}
+
+export async function getAllEditorials(): Promise<EditorialAPIObject[]> {
+	const response = await api.get("/editorial/");
+	return response.data;
+}
+
+export async function getAllTexts(): Promise<TextAPIObject[]> {
+	const response = api.get("/texts/");
+	return (await response).data;
+}
+
+export async function newText(data: TextDTO) {
+	const response = api.post("/texts/new", data);
+	return (await response).data;
+}
+
+export async function sendLoginCredentials(data: UserLogin): Promise<UserLoginResponse> {
+	const response = await loginApi.post("/auth/login", data);
+	return response.data;
+}

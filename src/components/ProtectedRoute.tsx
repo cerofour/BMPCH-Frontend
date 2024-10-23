@@ -1,14 +1,17 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 export default function ProtectedRoute({ children }: any) {
-	const auth = useAuth();
+	const { authenticated } = useAuth();
 
-	console.log(auth.jwtToken);
+	const location = useLocation();
 
-	if (!auth.jwtToken) {
-		// user is not authenticated
-		return <Navigate to="/login" />;
+	// Check if the user is authenticated
+	if (!authenticated()) {
+		// If not authenticated, redirect to the login page
+		return <Navigate to="/login" state={{ from: location }} />;
 	}
+
+	// If authenticated, render the child routes
 	return children;
 }
