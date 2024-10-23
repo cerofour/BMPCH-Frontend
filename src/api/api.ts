@@ -41,7 +41,7 @@ export type UserLoginResponse = {
 const DOMAIN = "http://144.22.63.67:8080";
 const API_PREFFIX = '/api/v1';
 
-const JWTToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3MzI2NjI2NyIsImlhdCI6MTcyOTYxNjQ4OSwiZXhwIjoxNzI5NjIwMDg5fQ.T07runwegnofd2E0NGHaedUP3QbOPwdZ1VzSJa4WNnY";
+const JWTToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI3MzI2NjI2NyIsImlhdCI6MTcyOTY0MjE2OCwiZXhwIjoxNzI5NjQ1NzY4fQ.qps1oYU3r9YRpCJI-92BxGcx0-UU5dWW21gz04uXBnk";
 
 const buildLink = (endpoint: string) => {
 	return DOMAIN + API_PREFFIX + endpoint;
