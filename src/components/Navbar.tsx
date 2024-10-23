@@ -8,30 +8,8 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import MySidebar from "./Sidebar";
 
 export default function MyNavbar() {
-	const x = (d: string, l: string) => {
-		return {
-			display: d,
-			link: l,
-		};
-	};
 
 	const navbarTitle = "Biblioteca Municipal de Chiclayo";
-
-	const navbarLinks = [
-		//x("Bib. MPCH", "/"),
-		x("Panel Admin", "admin-panel"),
-		x("Perfil", "perfil"),
-		x("Catálogo", "catalogo"),
-		x("Ayuda", "ayuda"),
-	];
-
-	//console.log(navbarLinks);
-
-	const tsxLinks = navbarLinks.map((link, i) => (
-		<Nav.Link key={i} href={link.link}>
-			{link.display}
-		</Nav.Link>
-	));
 
 	const [show, setShow] = useState(false);
 
@@ -70,9 +48,7 @@ export default function MyNavbar() {
 									height={40}
 									onClick={handleShow}
 								/>
-								
 							</Nav>
-							<Nav className="justify-content-end flex-grow-1 pe-3">{tsxLinks}</Nav>
 							<Form className="d-flex">
 								<Form.Control
 									type="search"
