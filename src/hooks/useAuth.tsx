@@ -1,35 +1,73 @@
-import { createContext, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { useMemo } from "react";
+import { createContext, useContext, useMemo, useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
-import { useLocalStorage } from "./useLocalStorage";
-import { UserLoginResponse } from "../api/api";
+import { api } from "../api/api";
 
-const AuthContext = createContext();
+interface AuthContextProps {
+	token: string | null;
+	setToken: (token: string) => void;
+	authenticated: () => boolean;
+	logout: () => void;
+}
 
-export const AuthProvider = ({ children }: any) => {
-	const [jwtToken, setJwtToken] = useLocalStorage("jwt-token", null);
-	const [jwtTokenExpiration, setJwtTokenExpiration] = useLocalStorage("jwt-token-expiration", null);
-	const navigate = useNavigate();
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
-	const isAuthExpired = async () => new Date(jwtTokenExpiration) < new Date();
+const tokenKey = "jwtToken";
 
-	const login = async (data: UserLoginResponse) => {
-		setJwtToken(data.jwtToken);
-		setJwtTokenExpiration(new Date(new Date().getTime() + data.expiration));
+const AuthProvider = ({ children }: any) => {
+	const [token, setToken_] = useState<string | null>(localStorage.getItem(tokenKey));
+
+	const setToken = (token: string | null) => {
+		setToken_(token);
 	};
 
-	const logout = async () => {
-		setJwtToken(null);
-		setJwtTokenExpiration(null);
-		navigate("/");
+	const logout = () => {
+		setToken(null);
+		localStorage.removeItem(tokenKey);
+		delete api.defaults.headers.common["Authorization"]; // Remove token from headers
 	};
 
-	const value = useMemo(() => ({ jwtToken, jwtTokenExpiration, isAuthExpired, login, logout }), [jwtToken]);
+	const authenticated = (): boolean => {
+		if (token === null) return false;
 
-	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+		const decoded: any = jwtDecode(token);
+		if (decoded.exp * 1000 < Date.now()) {
+			logout();
+			return false;
+		}
+
+		return true;
+	};
+
+	useEffect(() => {
+		if (token) {
+			api.defaults.headers.common["Authorization"] = "Bearer " + token;
+			localStorage.setItem(tokenKey, token);
+		} else {
+			delete api.defaults.headers.common["Authorization"];
+			localStorage.removeItem(tokenKey);
+		}
+	}, [token]);
+
+	const contextValue = useMemo(
+		() => ({
+			token,
+			authenticated,
+			logout,
+			setToken,
+		}),
+		[token]
+	);
+
+	return <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => {
-	return useContext(AuthContext);
+export const useAuth = (): AuthContextProps => {
+	const context = useContext(AuthContext);
+	if (!context) {
+		throw new Error("useAuth must be used within an AuthProvider");
+	}
+	return context;
 };
+
+export default AuthProvider;
