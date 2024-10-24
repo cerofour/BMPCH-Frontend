@@ -62,7 +62,11 @@ export default function MyNavbar() {
 					</Navbar.Offcanvas>
 				</Container>
 			</Navbar>
-			<Offcanvas show={show} onHide={handleClose} backdrop={false} enforceFocus={false}>
+			<Offcanvas
+				show={show}
+				onHide={handleClose}
+				backdrop={false}
+				enforceFocus={false}>
         		<MySidebar/>
       		</Offcanvas>
 		</>
