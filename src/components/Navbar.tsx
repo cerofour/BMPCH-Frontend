@@ -6,15 +6,16 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import MySidebar from "./Sidebar";
+import MyMenuButton from "./MenuButton";
 
 export default function MyNavbar() {
 
 	const navbarTitle = "Biblioteca Municipal de Chiclayo";
 
-	const [show, setShow] = useState(false);
+	const [showSidebar, setShowSidebar] = useState(false);
 
-  	const handleClose = () => setShow(false);
-  	const handleShow = () => setShow(true);
+  	const handleCloseSidebar = () => setShowSidebar(false);
+  	const handleShowSidebar = () => setShowSidebar(true);
 
 	// ../assets/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png
 	return (
@@ -41,13 +42,7 @@ export default function MyNavbar() {
 						</Offcanvas.Header>
 						<Offcanvas.Body>
 							<Nav className="justify-content-start flex-grow-1 ps-3">
-								<img
-									src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Hamburger_icon.svg"
-									alt="Boton menu"
-									width={40}
-									height={40}
-									onClick={handleShow}
-								/>
+								<MyMenuButton onClick={handleShowSidebar}/>
 							</Nav>
 							<Form className="d-flex">
 								<Form.Control
@@ -63,8 +58,8 @@ export default function MyNavbar() {
 				</Container>
 			</Navbar>
 			<Offcanvas
-				show={show}
-				onHide={handleClose}
+				show={showSidebar}
+				onHide={handleCloseSidebar}
 				backdrop={false}
 				enforceFocus={false}>
         		<MySidebar/>
