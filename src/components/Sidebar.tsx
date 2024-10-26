@@ -30,11 +30,11 @@ export default function MySidebar() {
     return(
         <>
             <Offcanvas.Header closeButton>
-          			<Offcanvas.Title>{sidebarTittle}</Offcanvas.Title>
-        		</Offcanvas.Header>
-        		<Offcanvas.Body>
-                    <Nav className="d-flex flex-column align-items-start flex-grow-1 ps-3">{tsxLinks}</Nav>
-        		</Offcanvas.Body>
+          		<Offcanvas.Title>{sidebarTittle}</Offcanvas.Title>
+        	</Offcanvas.Header>
+        	<Offcanvas.Body>
+                <Nav className="d-flex flex-column align-items-start flex-grow-1 ps-3">{tsxLinks}</Nav>
+        	</Offcanvas.Body>
         </>
     );
 }
