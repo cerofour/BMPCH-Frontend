@@ -1,22 +1,50 @@
 import { useQuery } from "@tanstack/react-query";
-import { EditorialAPIObject, getAllEditorials } from "../api/api";
+import { getAllTexts, TextAPIObject } from "../api/api";
+
+import { Link } from "react-router-dom";
+import { Alert, Spinner, Card, Button, Col, Row } from "react-bootstrap";
+
+function BookCard(book: TextAPIObject) {
+	return (
+		<Col key={book.id}>
+			<Card style={{ width: "18rem" }}>
+				<Card.Img variant="top" src={`https://picsum.photos/id/${book.id}/400`} />
+				<Card.Body>
+					<Card.Title>{book.title}</Card.Title>
+					<small className="text-muted">
+						Fecha de publicación: {book.publicationDate.toString()}
+						<br></br>
+						Editorial: {book.editorial.name}
+					</small>
+					<Link to={"/catalogue/" + book.id}>
+						<Button variant="primary">Más información</Button>
+					</Link>
+				</Card.Body>
+			</Card>
+		</Col>
+	);
+}
 
 export default function BookGroup() {
-	const {
-		isLoading,
-		isError,
-		data: editorials,
-		error,
-	} = useQuery<EditorialAPIObject[], Error>({
-		queryKey: ["getAllEditorials"],
-		queryFn: getAllEditorials,
+	const { isLoading, isError, data, error } = useQuery<TextAPIObject[], Error>({
+		queryKey: ["getAllTexts"],
+		queryFn: getAllTexts,
 	});
 
-	const wrap = (x: any) => <div className="main-container">{x}</div>;
+	if (isError) return <Alert variant="danger">Error al cargar textos: {JSON.stringify(error)}</Alert>;
 
-	if (isLoading) return wrap(<h1>Loading books</h1>);
+	if (isLoading)
+		return (
+			<Alert variant="info">
+				<Spinner animation="border" role="status">
+					<span className="visually-hidden">Cargando textos...</span>
+				</Spinner>
+			</Alert>
+		);
 
-	if (isError) return wrap(<h1>Error loading books</h1>);
-
-	return editorials?.map((editorial) => JSON.stringify(editorial));
+	return (
+		<Row xs={1} md={2} lg={3} className="g-4">
+			{data?.map(BookCard)}
+		</Row>
+	);
 }
