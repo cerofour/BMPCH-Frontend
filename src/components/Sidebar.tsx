@@ -11,8 +11,8 @@ export default function MySidebar() {
 		};
 	};
 
-	const navbarLinks = [
-		//x("Bib. MPCH", "/"),
+	const sidebarLinks = [
+		//x("Menu", "/"),
 		x("Panel Admin", "admin-panel"),
 		x("Perfil", "perfil"),
 		x("Catálogo", "catalogo"),
@@ -21,7 +21,7 @@ export default function MySidebar() {
 
 	//console.log(navbarLinks);
 
-	const tsxLinks = navbarLinks.map((link, i) => (
+	const tsxLinks = sidebarLinks.map((link, i) => (
 		<Nav.Link key={i} href={link.link}>
 			{link.display}
 		</Nav.Link>
