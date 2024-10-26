@@ -1,4 +1,5 @@
 import { Nav, Offcanvas } from "react-bootstrap";
+import MyOptionLink from "./OptionLink";
 
 export default function MySidebar() {
 
@@ -22,9 +23,7 @@ export default function MySidebar() {
 	//console.log(navbarLinks);
 
 	const tsxLinks = sidebarLinks.map((link, i) => (
-		<Nav.Link key={i} href={link.link}>
-			{link.display}
-		</Nav.Link>
+		MyOptionLink(link, i)
 	));
 
     return(
