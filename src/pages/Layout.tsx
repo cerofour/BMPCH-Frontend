@@ -1,4 +1,5 @@
 import MyNavbar from "../components/Navbar";
+import { Container } from "react-bootstrap";
 
 import { Outlet } from "react-router-dom";
 
@@ -7,9 +8,11 @@ function Layout() {
 		<>
 			<MyNavbar></MyNavbar>
 
-			<div className="main-container">
-				<Outlet></Outlet>
-			</div>
+			<Container fluid>
+				<div className="main-container">
+					<Outlet></Outlet>
+				</div>
+			</Container>
 		</>
 	);
 }
