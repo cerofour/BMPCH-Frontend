@@ -1,35 +1,21 @@
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import MySidebar from "./Sidebar";
+import MyMenuButton from "./MenuButton";
 
 export default function MyNavbar() {
-	const x = (d: string, l: string) => {
-		return {
-			display: d,
-			link: l,
-		};
-	};
 
 	const navbarTitle = "Biblioteca Municipal de Chiclayo";
 
-	const navbarLinks = [
-		//x("Bib. MPCH", "/"),
-		x("Panel Admin", "admin-panel"),
-		x("Perfil", "perfil"),
-		x("Catálogo", "catalogo"),
-		x("Ayuda", "ayuda"),
-	];
+	const [showSidebar, setShowSidebar] = useState(false);
 
-	//console.log(navbarLinks);
-
-	const tsxLinks = navbarLinks.map((link, i) => (
-		<Nav.Link key={i} href={link.link}>
-			{link.display}
-		</Nav.Link>
-	));
+  	const handleCloseSidebar = () => setShowSidebar(false);
+  	const handleShowSidebar = () => setShowSidebar(true);
 
 	// ../assets/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png
 	return (
@@ -55,7 +41,9 @@ export default function MyNavbar() {
 							<Offcanvas.Title id={`offcanvasNavbarLabel-expand-md`}>{navbarTitle}</Offcanvas.Title>
 						</Offcanvas.Header>
 						<Offcanvas.Body>
-							<Nav className="justify-content-end flex-grow-1 pe-3">{tsxLinks}</Nav>
+							<Nav className="justify-content-start flex-grow-1 ps-3">
+								<MyMenuButton onClick={handleShowSidebar}/>
+							</Nav>
 							<Form className="d-flex">
 								<Form.Control
 									type="search"
@@ -69,6 +57,13 @@ export default function MyNavbar() {
 					</Navbar.Offcanvas>
 				</Container>
 			</Navbar>
+			<Offcanvas
+				show={showSidebar}
+				onHide={handleCloseSidebar}
+				backdrop={false}
+				enforceFocus={false}>
+        		<MySidebar/>
+      		</Offcanvas>
 		</>
 	);
 }
