@@ -1,21 +1,19 @@
-import { useState } from "react";
-import Button from "react-bootstrap/Button";
+// import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import Form from "react-bootstrap/Form";
+// import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import MySidebar from "./Sidebar";
 import MyMenuButton from "./MenuButton";
+import MyUserProfile from "./UserProfile";
 
-export default function MyNavbar() {
+interface MyNavbarProps {
+	onToggleSidebar: () => void;
+}
+
+export default function MyNavbar({onToggleSidebar}: MyNavbarProps) {
 
 	const navbarTitle = "Biblioteca Municipal de Chiclayo";
-
-	const [showSidebar, setShowSidebar] = useState(false);
-
-  	const handleCloseSidebar = () => setShowSidebar(false);
-  	const handleShowSidebar = () => setShowSidebar(true);
 
 	// ../assets/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png
 	return (
@@ -42,9 +40,12 @@ export default function MyNavbar() {
 						</Offcanvas.Header>
 						<Offcanvas.Body>
 							<Nav className="justify-content-start flex-grow-1 ps-3">
-								<MyMenuButton onClick={handleShowSidebar}/>
+								<MyMenuButton onClick={onToggleSidebar}/>
 							</Nav>
-							<Form className="d-flex">
+							<Nav className="justify-content-end pe-3">
+								<MyUserProfile/>
+							</Nav>
+							{/* <Form className="d-flex">
 								<Form.Control
 									type="search"
 									placeholder="Búsqueda de textos"
@@ -52,18 +53,11 @@ export default function MyNavbar() {
 									aria-label="Search"
 								/>
 								<Button variant="outline-success">Buscar</Button>
-							</Form>
+							</Form> */}
 						</Offcanvas.Body>
 					</Navbar.Offcanvas>
 				</Container>
 			</Navbar>
-			<Offcanvas
-				show={showSidebar}
-				onHide={handleCloseSidebar}
-				backdrop={false}
-				enforceFocus={false}>
-        		<MySidebar/>
-      		</Offcanvas>
 		</>
 	);
 }
