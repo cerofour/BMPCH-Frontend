@@ -75,7 +75,7 @@ export default function MySidebar({show, onClose}: MySidebarProps) {
             <Offcanvas
                 show={show}
                 onHide={onClose}
-                style={{ backgroundColor: "#1d2637", color: "#fff" }}
+                style={{ backgroundColor: "#1d2637", color: "#fff", marginTop: '60px'}}
 				backdrop={false}
 				enforceFocus={false}
             >
