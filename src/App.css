@@ -12,6 +12,8 @@
 	width: 80%;
 	margin: auto;
 	flex-direction: column;
+	background-color: white;
+	padding: 20px;
 }
 
 .login-form-container {

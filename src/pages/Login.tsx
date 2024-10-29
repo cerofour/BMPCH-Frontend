@@ -45,7 +45,7 @@ function LoginForm() {
 
 	return (
 		<>
-			<div style={{backgroundColor: '#fff', padding: '10px'}}>
+			<div style={{backgroundColor: '#fff', padding: '20px'}}>
 				<div style={{textAlign: 'center'}}>
 					<img
 						src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png/1200px-Escudo_de_Armas_la_Ciudad_de_Chiclayo.png"

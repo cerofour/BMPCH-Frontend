@@ -14,7 +14,7 @@ function Layout() {
 	return (
 		<>
 			<MyNavbar onToggleSidebar={handleToggleSidebar}></MyNavbar>
-			<Container fluid>
+			<Container fluid style={{backgroundColor: '#ececf0', paddingTop: "30px", height: '100vh'}}>
 				<div className="main-container">
 					<Outlet></Outlet>
 				</div>

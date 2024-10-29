@@ -10,16 +10,15 @@ export default function MyOptionAccordion(title: string, links: React.ReactNode[
         <>
             <Accordion
                 defaultActiveKey="1"
-                style={{ backgroundColor: '#1d2637', color: '#fff', width: '100%', border: 'none' }}
+                style={{width: '100%'}}
             >
                 <Accordion.Item eventKey="0" style={{ backgroundColor: '#1f283a', border: 'none' }}>
                     <Accordion.Header
                         onClick={handleToggle}
-                        style={{
-                            backgroundColor: isOpen ? '#1695a9' : '#1d2637', 
-                            color: '#fff',
+                        style={{    
                             cursor: 'pointer',
                             border: 'none',
+                            backgroundColor: '#1f283a',
                         }}
                     >
                         {title}

@@ -23,7 +23,7 @@ function App() {
 				<Router>
 					<Routes>
 						<Route index element={<Login />} />
-						<Route path="/login" element={<Login />}/>
+						<Route path="login" element={<Login />}/>
 						<Route path="ayuda" element={<Help></Help>} />
 						{/* Routes that use the layout */}
 						<Route path="/" element={<Layout />}>

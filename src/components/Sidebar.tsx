@@ -48,7 +48,7 @@ export default function MySidebar({show, onClose}: MySidebarProps) {
             x("Gestionar trabajador", "admin-panel"), //Redirige a admin-panel
         ]),
         x("Estadísticas", "estadisticas"),
-        x("Cerrar sesión", "login"),
+        x("Cerrar sesión", "/"),
 		// x("Panel Admin", "admin-panel"),
 		// x("Perfil", "perfil"),
 		// x("Catálogo", "catalogo"),
@@ -75,7 +75,7 @@ export default function MySidebar({show, onClose}: MySidebarProps) {
             <Offcanvas
                 show={show}
                 onHide={onClose}
-                style={{ backgroundColor: "#1d2637", color: "#fff", marginTop: '60px'}}
+                style={{ backgroundColor: "#1d2637", color: "#fff", marginTop: '67px'}}
 				backdrop={false}
 				enforceFocus={false}
             >
