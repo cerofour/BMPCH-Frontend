@@ -3,41 +3,25 @@
 	padding: 0;
 }
 
-.card-group .bookCard {
-	width: 18rem;
-	flex: auto;
+body {
+	background-color: #eff6ff;
 }
 
-.main-container {
-	width: 80%;
-	margin: auto;
-	flex-direction: column;
+.sidebar {
 }
 
-.login-form-container {
-	margin: auto;
+.text-card-link {
+	text-decoration: none;
 }
 
-.login-form-container img {
-	width: 70%;
+.text-card {
+	transition: transform 0.3s ease;
 }
 
-.login-form {
-	padding: 10px;
-	width: 50%;
+.text-card:hover {
+	transform: scale(1.03); /* Slightly grows the element */
 }
 
-.login-form > div {
-	margin-bottom: 15px;
-}
-
-.book-group-container {
-	width: 80%;
-	margin:auto;
-}
-
-.crud-table-heading {
-	display:flex;
-	justify-content: space-between;
-	margin: 5px;
+.catalogue-container {
+	margin: 2em;
 }

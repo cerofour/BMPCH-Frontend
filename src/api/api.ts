@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import axiosRetry from "axios-retry";
-
 export type UserAPIObject = {
   userId: number;
   roleId: number;
@@ -80,6 +78,11 @@ export async function getAllUsers(): Promise<UserAPIObject[]> {
 	return response.data;
 }
 
+export async function getMe(): Promise<UserAPIObject> {
+	const response = await api.get('/users/me');
+	return response.data;
+}
+
 export async function getAllTypes(): Promise<TextTypeAPIObject[]> {
 	const response = await api.get("/text_types/")
 	return response.data;
@@ -102,5 +105,10 @@ export async function newText(data: TextDTO) {
 
 export async function sendLoginCredentials(data: UserLogin): Promise<UserLoginResponse> {
 	const response = await loginApi.post("/auth/login", data);
+	return response.data;
+}
+
+export async function deleteUser(id: number): Promise<void> {
+	const response = await api.post(`/users/delete?id=${id}`);
 	return response.data;
 }

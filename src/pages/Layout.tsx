@@ -1,19 +1,35 @@
 import MyNavbar from "../components/Navbar";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 import { Outlet } from "react-router-dom";
 
-function Layout() {
+export function Layout() {
 	return (
 		<>
 			<MyNavbar></MyNavbar>
+			<Container>
+				<Row>
+					{/*
+					<Col md={3} lg={2} className="sidebar">
+						<div className="p-3">
+							<small>Menú</small>
+							<ul className="list-unstyled">
+								<li>Today</li>
+								<li>Yesterday</li>
+								<li>Last 7 Days</li>
+								<li>Settings</li>
+								<li>Profile</li>
+							</ul>
+						</div>
+					</Col>
+					*/}
 
-			<Container fluid>
-				<div className="main-container">
-					<Outlet></Outlet>
-				</div>
+					{/* Main Content */}
+					<Col className="main-container">
+						<Outlet></Outlet>
+					</Col>
+				</Row>
 			</Container>
 		</>
 	);
 }
-export default Layout;

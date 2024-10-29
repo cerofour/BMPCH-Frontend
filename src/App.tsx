@@ -2,7 +2,7 @@ import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Layout from "./pages/Layout";
+import { Layout } from "./pages/Layout";
 import Profile from "./pages/Profile";
 import Catalogue from "./pages/Catalogue";
 import Help from "./pages/Help";
@@ -42,15 +42,15 @@ function App() {
 									</ProtectedRoute>
 								}
 							/>
-							<Route path="ayuda" element={<Help></Help>} />
 							<Route
 								path="admin-panel"
 								element={
 									<ProtectedRoute>
-										<AdminPanel></AdminPanel>
+										<AdminPanel />
 									</ProtectedRoute>
 								}
 							/>
+							<Route path="ayuda" element={<Help></Help>} />
 							<Route path="*" element={<NoPage />} />
 						</Route>
 					</Routes>

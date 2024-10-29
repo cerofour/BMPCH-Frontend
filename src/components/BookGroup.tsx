@@ -7,17 +7,19 @@ import { Alert, Spinner, Card, Button, Col, Row } from "react-bootstrap";
 function BookCard(book: TextAPIObject) {
 	return (
 		<Col key={book.id}>
-			<Card style={{ width: "18rem" }}>
-				<Card.Img variant="top" src={`https://picsum.photos/id/${book.id}/400`} />
+			<Card className="text-card" style={{ width: "22rem" }}>
+				<Card.Img variant="top" src={`https://placehold.co/300`} />
 				<Card.Body>
 					<Card.Title>{book.title}</Card.Title>
-					<small className="text-muted">
-						Fecha de publicación: {book.publicationDate.toString()}
-						<br></br>
-						Editorial: {book.editorial.name}
-					</small>
-					<Link to={"/catalogue/" + book.id}>
-						<Button variant="primary">Más información</Button>
+					<Card.Text>
+						<small className="text-muted">
+							Fecha de publicación: {book.publicationDate.toString()}
+							<br></br>
+							Editorial: {book.editorial.name}
+						</small>
+					</Card.Text>
+					<Link className="text-card-link" to={"/catalogo/" + book.id}>
+						<Button variant="outline-primary">Ver más información</Button>
 					</Link>
 				</Card.Body>
 			</Card>
@@ -43,7 +45,7 @@ export default function BookGroup() {
 		);
 
 	return (
-		<Row xs={1} md={2} lg={3} className="g-4">
+		<Row xs={1} md={2} lg={3} xxl={4} className="g-4">
 			{data?.map(BookCard)}
 		</Row>
 	);

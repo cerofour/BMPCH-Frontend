@@ -10,6 +10,7 @@ import {
 	getAllTypes,
 	TextTypeAPIObject,
 	newText,
+	deleteUser,
 } from "../api/api";
 import { TextDTO } from "../api/api";
 import { EditorialAPIObject } from "../api/api";
@@ -261,8 +262,19 @@ export function UsersTable() {
 		queryFn: getAllUsers,
 	});
 
-	/*
-	 */
+	const [reload, setReload] = useState(false);
+
+	const deleteUserMutation = useMutation({
+		mutationFn: deleteUser,
+		onSuccess() {
+			setReload(true);
+		},
+	});
+
+	const handleDelete = (e: FormEvent, userId: number) => {
+		e.preventDefault();
+		deleteUserMutation.mutate(userId);
+	};
 
 	const tableContent: any = buildTableContent(6, isLoading, isError, data, (user: UserAPIObject) => (
 		<tr key={user.userId}>
@@ -274,7 +286,9 @@ export function UsersTable() {
 			<td>
 				<ButtonGroup aria-label="Basic example">
 					<Button variant="secondary">Actualizar</Button>
-					<Button variant="danger">Eliminar</Button>
+					<Button onClick={(e) => handleDelete(e, user.userId)} variant="danger">
+						Eliminar
+					</Button>
 				</ButtonGroup>
 			</td>
 		</tr>
