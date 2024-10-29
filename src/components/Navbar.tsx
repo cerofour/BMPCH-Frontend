@@ -1,19 +1,35 @@
-// import Button from "react-bootstrap/Button";
+import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-// import Form from "react-bootstrap/Form";
+import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import MyMenuButton from "./MenuButton";
-import MyUserProfile from "./UserProfile";
 
-interface MyNavbarProps {
-	onToggleSidebar: () => void;
-}
-
-export default function MyNavbar({onToggleSidebar}: MyNavbarProps) {
+export default function MyNavbar() {
+	const x = (d: string, l: string) => {
+		return {
+			display: d,
+			link: l,
+		};
+	};
 
 	const navbarTitle = "Biblioteca Municipal de Chiclayo";
+
+	const navbarLinks = [
+		//x("Bib. MPCH", "/"),
+		x("Panel Admin", "admin-panel"),
+		x("Perfil", "perfil"),
+		x("Catálogo", "catalogo"),
+		x("Ayuda", "ayuda"),
+	];
+
+	//console.log(navbarLinks);
+
+	const tsxLinks = navbarLinks.map((link, i) => (
+		<Nav.Link key={i} href={link.link}>
+			{link.display}
+		</Nav.Link>
+	));
 
 	// ../assets/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png
 	return (
@@ -39,13 +55,8 @@ export default function MyNavbar({onToggleSidebar}: MyNavbarProps) {
 							<Offcanvas.Title id={`offcanvasNavbarLabel-expand-md`}>{navbarTitle}</Offcanvas.Title>
 						</Offcanvas.Header>
 						<Offcanvas.Body>
-							<Nav className="justify-content-start flex-grow-1 ps-3">
-								<MyMenuButton onClick={onToggleSidebar}/>
-							</Nav>
-							<Nav className="justify-content-end pe-3">
-								<MyUserProfile/>
-							</Nav>
-							{/* <Form className="d-flex">
+							<Nav className="justify-content-end flex-grow-1 pe-3">{tsxLinks}</Nav>
+							<Form className="d-flex">
 								<Form.Control
 									type="search"
 									placeholder="Búsqueda de textos"
@@ -53,7 +64,7 @@ export default function MyNavbar({onToggleSidebar}: MyNavbarProps) {
 									aria-label="Search"
 								/>
 								<Button variant="outline-success">Buscar</Button>
-							</Form> */}
+							</Form>
 						</Offcanvas.Body>
 					</Navbar.Offcanvas>
 				</Container>
