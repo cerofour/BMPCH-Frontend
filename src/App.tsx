@@ -22,11 +22,10 @@ function App() {
 			<AuthProvider>
 				<Router>
 					<Routes>
-						<Route index element={<Login />} />
-						<Route path="/login" element={<Login />}/>
-						<Route path="ayuda" element={<Help></Help>} />
 						{/* Routes that use the layout */}
 						<Route path="/" element={<Layout />}>
+							<Route index element={<Login />} />
+							<Route path="login" element={<Login></Login>} />
 							<Route
 								path="catalogo"
 								element={
@@ -43,6 +42,7 @@ function App() {
 									</ProtectedRoute>
 								}
 							/>
+							<Route path="ayuda" element={<Help></Help>} />
 							<Route
 								path="admin-panel"
 								element={
