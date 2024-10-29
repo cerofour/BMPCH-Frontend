@@ -1,4 +1,4 @@
-import { Nav, Offcanvas } from "react-bootstrap";
+import { Nav, Offcanvas, Stack } from "react-bootstrap";
 import MyOptionLink from "./OptionLink";
 import MyOptionAccordion from "./OptionAccordion";
 
@@ -72,20 +72,17 @@ export default function MySidebar({show, onClose}: MySidebarProps) {
 
     return(
         <>
-            <Offcanvas
-                show={show}
-                onHide={onClose}
-                style={{ backgroundColor: "#1d2637", color: "#fff", marginTop: '67px'}}
-				backdrop={false}
-				enforceFocus={false}
-            >
-                <Offcanvas.Header closeButton>
-                    <Offcanvas.Title style={{color: "#808080"}}>{sidebarTittle}</Offcanvas.Title>
-                </Offcanvas.Header>
-                <Offcanvas.Body>
-                    <Nav className="d-flex flex-column align-items-start flex-grow-1 ps-3">{tsxLinks}</Nav>
-                </Offcanvas.Body>
-            </Offcanvas>
+            <div className={`my-sidebar ${show ? '' : 'close'}`}>
+                <Stack direction="horizontal" className="align-items-center justify-content-between">
+                    <h6 style={{color:'#808080',  margin: '0'}}>{sidebarTittle}</h6>
+                    <div>
+                        <button onClick={onClose} className="close-button ">X</button>
+                    </div>
+                </Stack>
+                <Stack gap={3}>
+                    {tsxLinks}
+                </Stack>
+            </div>
         </>
     );
 }

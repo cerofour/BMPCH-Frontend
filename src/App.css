@@ -49,3 +49,36 @@
 	justify-content: space-between;
 	margin: 5px;
 }
+
+.help-container {
+	background-color: #1f283a;
+	width: 100vw;
+	height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.my-sidebar {
+	position: absolute;
+	left: 0;
+	width: 250px;
+	height:100%;
+	background-color: #1f283a;
+	color:#06b195;
+	padding: 20px;
+	transform: translateX(0);
+	transition: transform 0.3s ease;
+	z-index: 1000;
+}
+  
+.my-sidebar.close {
+	transform: translateX(-100%);
+}
+  
+.close-button {
+	background: none;
+	border: none;
+	color: white;
+	cursor: pointer;
+}

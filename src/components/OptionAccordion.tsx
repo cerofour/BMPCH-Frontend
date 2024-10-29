@@ -26,7 +26,7 @@ export default function MyOptionAccordion(title: string, links: React.ReactNode[
                     <Accordion.Body
                         style={{
                             backgroundColor: '#1f283a',
-                            color: '#fff',
+                            color: '#06b195',
                             border: 'none',
                         }}
                     >
