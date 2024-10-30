@@ -13,7 +13,17 @@ export type UserAPIObject = {
   authorities: string[]; // Assuming it's an array of strings, adjust as needed
   username: string;
   password: string;
+  name: string;
+  plastName: string;
+  mlastName: string;
+  phoneNumber: string;
+  gender: GenderDTO;
 };
+
+export type GenderDTO = {
+	id: number;
+	genderName: string;
+}
 
 export type UserLogin = {
 	document: string;
@@ -98,7 +108,7 @@ export async function getAllTexts(): Promise<TextAPIObject[]> {
 }
 
 export async function newText(data: TextDTO) {
-	const response = api.post("/texts/new", data);
+	const response = api.post("/texts/", data);
 	return (await response).data;
 }
 
