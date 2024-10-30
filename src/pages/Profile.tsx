@@ -31,13 +31,13 @@ export default function Profile() {
 						className="mb-3"
 					/>
 					<h3>
-						<b>Nombres y Apellidos</b>
+						<b>{data?.name + " " + data?.plastName + " " + data?.mlastName}</b>
 					</h3>
 				</Col>
 			</Row>
 
 			{/* Profile Stats */}
-			<Row>
+			<Row className="my-3">
 				<Col md={4} className="text-center">
 					<QRCodeSVG value={qrData} size={128}></QRCodeSVG>
 				</Col>
@@ -58,9 +58,9 @@ export default function Profile() {
 						</Col>
 						<Col>
 							<h5>
-								<b>Dirección</b>
+								<b>Teléfono</b>
 							</h5>
-							<p>Dirección de Ejemplo, Chiclayo, Perú</p>
+							<p>{data?.phoneNumber}</p>
 						</Col>
 					</Row>
 					<Row>

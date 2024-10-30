@@ -55,10 +55,10 @@ export default function MyNavbar() {
 
 	const navbarLinks = [
 		//x("Bib. MPCH", "/"),
-		x("Panel Admin", "admin-panel"),
-		x("Perfil", "perfil"),
-		x("Catálogo", "catalogo"),
-		x("Ayuda", "ayuda"),
+		x("Panel Admin", "/admin-panel"),
+		x("Perfil", "/perfil"),
+		x("Catálogo", "/catalogo"),
+		x("Ayuda", "/ayuda"),
 	];
 
 	//console.log(navbarLinks);

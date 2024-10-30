@@ -15,6 +15,8 @@ import AuthProvider from "./hooks/useAuth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "./pages/HomePage";
 import Logout from "./pages/Logout";
+import BookGroup from "./components/BookGroup";
+import BookPage from "./pages/BookPage";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +43,16 @@ function App() {
 								element={
 									<ProtectedRoute>
 										<Catalogue />
+									</ProtectedRoute>
+								}
+							/>
+
+							{/* Individual Book Page Route */}
+							<Route
+								path="catalogo/:id"
+								element={
+									<ProtectedRoute>
+										<BookPage />
 									</ProtectedRoute>
 								}
 							/>

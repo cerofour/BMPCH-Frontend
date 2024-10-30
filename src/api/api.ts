@@ -107,6 +107,11 @@ export async function getAllTexts(): Promise<TextAPIObject[]> {
 	return (await response).data;
 }
 
+export async function getText(textId: number): Promise<TextAPIObject> {
+	const response = await api.get("/texts/get?id=" + textId);
+	return response.data;
+}
+
 export async function newText(data: TextDTO) {
 	const response = api.post("/texts/", data);
 	return (await response).data;
