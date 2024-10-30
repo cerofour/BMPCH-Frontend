@@ -109,6 +109,11 @@ export async function sendLoginCredentials(data: UserLogin): Promise<UserLoginRe
 }
 
 export async function deleteUser(id: number): Promise<void> {
-	const response = await api.post(`/users/delete?id=${id}`);
+	const response = await api.delete(`/users/delete?id=${id}`);
+	return response.data;
+}
+
+export async function deleteText(id: number): Promise<void> {
+	const response = await api.delete(`/texts/delete?id=${id}`);
 	return response.data;
 }

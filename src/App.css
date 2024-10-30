@@ -19,7 +19,7 @@ body {
 }
 
 .text-card:hover {
-	transform: scale(1.03); /* Slightly grows the element */
+	transform: scale(1.02); /* Slightly grows the element */
 }
 
 .catalogue-container {
