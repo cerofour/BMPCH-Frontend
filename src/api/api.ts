@@ -10,7 +10,7 @@ export type UserAPIObject = {
   accountNonExpired: boolean;
   accountNonLocked: boolean;
   credentialsNonExpired: boolean;
-  authorities: string[]; // Assuming it's an array of strings, adjust as needed
+  authorities: string[];
   username: string;
   password: string;
 };
@@ -56,6 +56,29 @@ export type TextDTO = {
   textType: string,
 };
 
+export type UserDTO = {
+	roleId: number;
+	documentTypeId: number;
+	document: string;
+	psk: string;
+}
+
+export type RolesAPIObject = {
+	id: number;
+	role: string;
+}
+
+export type DocumentTypesAPIObject = {
+	id: number;
+	type: string;
+}
+
+export type AuthorsAPIObject = {
+	id: number;
+	plastname: string;
+	mlastname: string;
+}
+
 const DOMAIN = "http://144.22.63.67:8080";
 const API_PREFFIX = '/api/v1';
 
@@ -99,7 +122,32 @@ export async function getAllTexts(): Promise<TextAPIObject[]> {
 }
 
 export async function newText(data: TextDTO) {
-	const response = api.post("/texts/new", data);
+	const response = api.post("/texts/", data);
+	return (await response).data;
+}
+
+export async function newUser(data: UserDTO) {
+	const response = api.post("/auth/signup", data);
+	return (await response).data;
+}
+
+export async function getAllDocumentTypes() {
+	const response = api.get("/document_types/");
+	return (await response).data;
+}
+
+export async function getAllRoles() {
+	const response = api.get("/roles/");
+	return (await response).data;
+}
+
+export async function getAllAuthors() {
+	const response = await api.get("/authors/");
+	return (await response).data;
+}
+
+export async function getAuthor (id: number) {
+	const response = await api.get(`/authors/get?id=${id}`);
 	return (await response).data;
 }
 

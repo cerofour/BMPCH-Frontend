@@ -1,12 +1,10 @@
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
-
 import { Card, CardBody } from "react-bootstrap";
-
-import { NewTextModal, TextsTable, UsersTable } from "../components/AdminTables";
+import {NewTextModal, NewUserModal, TextsTable, UsersTable} from "../components/AdminTables";
 import { Container, Button } from "react-bootstrap";
-
 import { useState } from "react";
+
 
 type PanelCardProps = {
 	title: string;
@@ -30,12 +28,14 @@ function CRUDTabs() {
 	return (
 		<Tabs defaultActiveKey="users" id="uncontrolled-tab-example" className="mb-3">
 			<Tab eventKey="users" title="Usuarios">
-				<PanelCard
-					title="Administrar usuarios"
-					showThisModal={showNewUserModal}
-					setShowThisModal={setShowNewUserModal}
-				>
-					<NewTextModal enabled={showNewUserModal} setEnabled={setShowNewUserModal}></NewTextModal>
+				<PanelCard>
+					<div className="my-2 d-flex justify-content-between">
+						<h2>
+							<b>Administrar Usuarios</b>
+						</h2>
+						<Button onClick={() => setShowNewUserModal(true)}>Agregar Usuario</Button>
+					</div>
+					<NewUserModal show={showNewUserModal} setShow={setShowNewUserModal}></NewUserModal>
 					<UsersTable></UsersTable>
 				</PanelCard>
 			</Tab>
@@ -43,9 +43,9 @@ function CRUDTabs() {
 				<PanelCard>
 					<div className="my-2 d-flex justify-content-between">
 						<h2>
-							<b>Administrar textos</b>
+							<b>Administrar Textos</b>
 						</h2>
-						<Button onClick={() => setShowNewTextModal(true)}>Agregar elemento</Button>
+						<Button onClick={() => setShowNewTextModal(true)}>Agregar Texto</Button>
 					</div>
 
 					<NewTextModal show={showNewTextModal} setShow={setShowNewTextModal}></NewTextModal>

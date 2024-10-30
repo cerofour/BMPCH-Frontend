@@ -9,7 +9,7 @@ import {
   DropdownButton,
   Spinner,
 } from "react-bootstrap";
-import { FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import {
   getAllTexts,
   getAllUsers,
@@ -19,11 +19,12 @@ import {
   TextTypeAPIObject,
   newText,
   deleteUser,
-  deleteText,
+  deleteText, UserDTO, DocumentTypesAPIObject, getAllDocumentTypes, RolesAPIObject, newUser, getAllRoles,
 } from "../api/api";
 import { TextDTO } from "../api/api";
 import { EditorialAPIObject } from "../api/api";
 import { TextAPIObject } from "../api/api";
+import Select from "react-select";
 
 function firstN(src: string, n: number) {
   return src.slice(0, n) + "...";
@@ -121,6 +122,139 @@ function TypesDropdown({ selected, setSelected }: any) {
 }
 //function buildUpdateResourceForm<T> (data: T) {//}
 
+function DocumentTypesDropDown({ selected, setSelected }: any) {
+  const {
+    isLoading,
+    isError,
+    data: types,
+  } = useQuery<DocumentTypesAPIObject[], Error>({
+    queryKey: ["getAllDocumentTypes"],
+    queryFn: getAllDocumentTypes,
+  });
+
+  if (isLoading) return "Cargando...";
+
+  if (isError) return "Error al cargar";
+
+  const elements = types?.map((e) => e.typename);
+
+  return (
+      <MyDropdown
+          data={elements}
+          selected={selected}
+          setSelected={setSelected}
+      ></MyDropdown>
+  );
+}
+
+function RolesDropDown({ selected, setSelected }: any) {
+  const {
+    isLoading,
+    isError,
+    data: types,
+  } = useQuery<RolesAPIObject[], Error>({
+    queryKey: ["getAllRoles"],
+    queryFn: getAllRoles,
+  });
+
+  if (isLoading) return "Cargando...";
+
+  if (isError) return "Error al cargar";
+
+  const elements = types?.map((e) => e.typename);
+
+  return (
+      <MyDropdown
+          data={elements}
+          selected={selected}
+          setSelected={setSelected}
+      ></MyDropdown>
+  );
+}
+
+export function NewTextModal({ show, setShow }: any) {
+  const handleClose = () => setShow(false);
+
+  return (
+    <Modal show={show} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Añadir nuevo texto</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <NewTextForm show={show} setShow={setShow}></NewTextForm>
+      </Modal.Body>
+    </Modal>
+  );
+}
+
+export function NewUserModal({ show, setShow }: any) {
+  const handleClose = () => setShow(false);
+
+  return (
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Añadir nuevo usuario</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <NewUserForm show={show} setShow={setShow}></NewUserForm>
+        </Modal.Body>
+      </Modal>
+  );
+}
+
+function ConfirmationModal({ show, onConfirm, onClose, message }) {
+  return (
+      <Modal show={show} onHide={onClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {message}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onClose}>
+            No
+          </Button>
+          <Button variant="danger" onClick={onConfirm}>
+            Sí
+          </Button>
+        </Modal.Footer>
+      </Modal>
+  );
+}
+
+
+function MultiSelectWithAutocomplete() {
+  const options = [
+    { value: "1", label: "Elemento 1" },
+    { value: "2", label: "Elemento 2" },
+    { value: "3", label: "Elemento 3" },
+    { value: "4", label: "Elemento 4" },
+    { value: "5", label: "Elemento 5" },
+  ];
+
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const handleSelectChange = (selected) => {
+    setSelectedOptions(selected || []);
+  };
+
+  return (
+      <>
+        <Select
+            isMulti
+            options={options} // Opciones predefinidas
+            value={selectedOptions} // Valores seleccionados
+            onChange={handleSelectChange} // Actualizar los seleccionados
+            placeholder="Escribe para buscar y seleccionar..."
+            className="basic-multi-select"
+            classNamePrefix="select"
+        />
+      </>
+  );
+}
+
+
 export function NewTextForm({ show, setShow }: any) {
   const [title, setTitle] = useState("");
   const [editorialName, setEditorialName] = useState("");
@@ -134,6 +268,7 @@ export function NewTextForm({ show, setShow }: any) {
     mutationFn: newText,
     onSuccess: () => {
       //useQueryClient().invalidateQueries("getAllTexts");
+
     },
   });
 
@@ -154,88 +289,152 @@ export function NewTextForm({ show, setShow }: any) {
   };
 
   return (
-    <>
-      <Form onSubmit={(e) => handleSubmit(e)}>
-        <Form.Group className="mb-3" controlId="formTitulo">
-          <Form.Label> Título </Form.Label>
-          <Form.Control
-            placeholder="Escribe el título del libro"
-            onChange={(e) => setTitle(e.target.value)}
-            type="text"
-          ></Form.Control>
-        </Form.Group>
+      <>
+        <Form onSubmit={(e) => handleSubmit(e)}>
+          <Form.Group className="mb-3" controlId="formTitulo">
+            <Form.Label> Título </Form.Label>
+            <Form.Control
+                placeholder="Escribe el título del libro"
+                onChange={(e) => setTitle(e.target.value)}
+                type="text"
+                required
+            ></Form.Control>
+          </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formTitulo">
-          <Form.Label> Fecha de Publicación</Form.Label>
-          <Form.Control
-            onChange={(e) => setPublicationDate(new Date(e.target.value))}
-            type="date"
-          ></Form.Control>
-        </Form.Group>
+          <Form.Group className="mb-3" controlId="formTitulo">
+            <Form.Label> Fecha de Publicación</Form.Label>
+            <Form.Control
+                onChange={(e) => setPublicationDate(new Date(e.target.value))}
+                type="date"
+                required
+            ></Form.Control>
+          </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formTitulo">
-          <Form.Label> Cantidad de Páginas</Form.Label>
-          <Form.Control
-            onChange={(e) => setPages(parseInt(e.target.value))}
-            type="number"
-          ></Form.Control>
-        </Form.Group>
+          <Form.Group className="mb-3" controlId="formTitulo">
+            <Form.Label> Cantidad de Páginas</Form.Label>
+            <Form.Control
+                onChange={(e) => setPages(parseInt(e.target.value))}
+                type="number"
+                required
+            ></Form.Control>
+          </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formTitulo">
-          <Form.Label> Edición</Form.Label>
-          <Form.Control
-            onChange={(e) => setEdition(parseInt(e.target.value))}
-            type="number"
-          ></Form.Control>
-        </Form.Group>
+          <Form.Group className="mb-3" controlId="formTitulo">
+            <Form.Label> Edición</Form.Label>
+            <Form.Control
+                onChange={(e) => setEdition(parseInt(e.target.value))}
+                type="number"
+                required
+            ></Form.Control>
+          </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formTitulo">
-          <Form.Label>Volumen</Form.Label>
-          <Form.Control
-            onChange={(e) => setVolume(parseInt(e.target.value))}
-            type="number"
-          ></Form.Control>
-        </Form.Group>
+          <Form.Group className="mb-3" controlId="formTitulo">
+            <Form.Label>Volumen</Form.Label>
+            <Form.Control
+                onChange={(e) => setVolume(parseInt(e.target.value))}
+                type="number"
+                required
+            ></Form.Control>
+          </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <div className="d-flex justify-content-between">
-            <Form.Label>Editorial</Form.Label>
-            <EditorialDropdown
-              selected={editorialName}
-              setSelected={setEditorialName}
-            ></EditorialDropdown>
-          </div>
-        </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <div className="d-flex justify-content-between">
+              <Form.Label>Editorial</Form.Label>
+              <EditorialDropdown
+                  selected={editorialName}
+                  setSelected={setEditorialName}
+              ></EditorialDropdown>
+            </div>
+          </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          <div className="d-flex justify-content-between">
-            <Form.Label>Tipo de Texto</Form.Label>
-            <TypesDropdown
-              selected={textType}
-              setSelected={setTextType}
-            ></TypesDropdown>
-          </div>
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Crear texto
-        </Button>
-      </Form>
-    </>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <div className="d-flex justify-content-between">
+              <Form.Label>Tipo de Texto</Form.Label>
+              <TypesDropdown
+                  selected={textType}
+                  setSelected={setTextType}
+              ></TypesDropdown>
+            </div>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            <div className="d-flex justify-content-between">
+              <Form.Label>Seleciona los autores del libro</Form.Label>
+              <MultiSelectWithAutocomplete></MultiSelectWithAutocomplete>
+            </div>
+          </Form.Group>
+
+          <Button variant="primary" type="submit">
+            Crear texto
+          </Button>
+        </Form>
+      </>
   );
 }
 
-export function NewTextModal({ show, setShow }: any) {
-  const handleClose = () => setShow(false);
+export function NewUserForm({ show, setShow }: any) {
+  const [document, setDocument] = useState("");
+  const [roleId, setRoleId] = useState(0);
+  const [documentTypeId, setDocumentTypeId] = useState(0);
+  const [psk, setPsk] = useState("");
+
+  const mutation = useMutation({
+    mutationFn: newUser,
+    onSuccess: () => {
+    },
+  });
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    const requestBody: UserDTO = {
+      roleId,
+      documentTypeId,
+      document,
+      psk,
+    };
+    setShow(false);
+    mutation.mutate(requestBody as UserDTO);
+  };
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Añadir nuevo texto</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <NewTextForm show={show} setShow={setShow}></NewTextForm>
-      </Modal.Body>
-    </Modal>
+      <>
+        <Form onSubmit={(e) => handleSubmit(e)}>
+          <Form.Group className="mb-3" controlId="formTitulo">
+            <div className="d-flex justify-content-between">
+              <Form.Label> Tipo de documento</Form.Label>
+              <DocumentTypesDropDown
+                  selected={documentTypeId}
+                  setSelected={setDocumentTypeId}
+              ></DocumentTypesDropDown>
+            </div>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formTitulo">
+            <Form.Label> Documento </Form.Label>
+            <Form.Control
+                placeholder="Escribe el documento"
+                onChange={(e) => {setDocument(e.target.value); setPsk(e.target.value)}}
+                type="text"
+                required
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formTitulo">
+            <div className="d-flex justify-content-between">
+              <Form.Label> Tipo de rol</Form.Label>
+              <RolesDropDown
+                  selected={roleId}
+                  setSelected={setRoleId}
+              ></RolesDropDown>
+            </div>
+          </Form.Group>
+
+          <Button variant="primary" type="submit">
+            Crear Usuario
+          </Button>
+        </Form>
+      </>
   );
 }
 
@@ -244,23 +443,42 @@ export function TextsTable() {
     isLoading,
     isError,
     data: books,
+    refetch
   } = useQuery<TextAPIObject[], Error>({
     queryKey: ["getAllTexts"],
     queryFn: getAllTexts,
   });
 
+  const queryClient = useQueryClient();
+
   const [reload, setReload] = useState(false);
+
+  const [showModal, setShowModal] = useState(false);
+  const [bookIdToDelete, setBookIdToDelete] = useState<number | null>(null);
 
   const deleteTextMutation = useMutation({
     mutationFn: deleteText,
     onSuccess() {
-      setReload(true);
+      //setReload(true);
+      refetch();
     },
   });
 
-  const handleDelete = (e: FormEvent, id: number) => {
-    e.preventDefault();
-    deleteTextMutation.mutate(id);
+  const handleShowModal = (bookId: number) => {
+    setBookIdToDelete(bookId);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setBookIdToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (bookIdToDelete !== null) {
+      deleteTextMutation.mutate(bookIdToDelete);
+      handleCloseModal();
+    }
   };
 
   /*
@@ -283,7 +501,7 @@ export function TextsTable() {
         <td>
           <ButtonGroup aria-label="Basic example">
             <Button variant="secondary">Actualizar</Button>
-            <Button onClick={(e) => handleDelete(e, book.id)} variant="danger">
+            <Button onClick={() => handleShowModal(book.id)} variant="danger">
               Eliminar
             </Button>
           </ButtonGroup>
@@ -310,6 +528,10 @@ export function TextsTable() {
         </thead>
         <tbody>{tableContent}</tbody>
       </Table>
+      <ConfirmationModal
+          show={showModal} onClose={handleCloseModal} onConfirm={handleConfirmDelete}
+          message="¿Desea eliminar este libro?"
+      ></ConfirmationModal>
     </>
   );
 }
@@ -322,6 +544,26 @@ export function UsersTable() {
 
   const [reload, setReload] = useState(false);
 
+  const [showModal, setShowModal] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
+
+
+  const handleShowModal = (userId: number) => {
+    setUserIdToDelete(userId);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setUserIdToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (userIdToDelete !== null) {
+      deleteUserMutation.mutate(userIdToDelete);
+      handleCloseModal();
+    }
+  };
   const deleteUserMutation = useMutation({
     mutationFn: deleteUser,
     onSuccess() {
@@ -350,7 +592,7 @@ export function UsersTable() {
           <ButtonGroup aria-label="Basic example">
             <Button variant="secondary">Actualizar</Button>
             <Button
-              onClick={(e) => handleDelete(e, user.userId)}
+              onClick={() => handleShowModal(user.userId)}
               variant="danger"
             >
               Eliminar
@@ -376,6 +618,11 @@ export function UsersTable() {
         </thead>
         <tbody>{tableContent}</tbody>
       </Table>
+      <ConfirmationModal
+          show={showModal} onClose={handleCloseModal} onConfirm={handleConfirmDelete}
+          message="¿Desea eliminar este usuario?"
+      ></ConfirmationModal>
+
     </>
   );
 }
