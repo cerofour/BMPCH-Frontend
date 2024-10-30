@@ -9,8 +9,15 @@ import { NavDropdown } from "react-bootstrap";
 import { Spinner } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import { getMe, UserAPIObject } from "../api/api";
+import { useAuth } from "../hooks/useAuth";
 
 function UserInformation() {
+	const { authenticated } = useAuth();
+
+	if (authenticated() == false) {
+		return <Nav.Link href="/login">Ingresar</Nav.Link>;
+	}
+
 	const { isLoading, isError, data } = useQuery<UserAPIObject, Error>({
 		queryKey: ["getAuthenticatedUser"],
 		queryFn: getMe,

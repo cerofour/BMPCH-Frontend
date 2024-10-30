@@ -1,6 +1,7 @@
 import { Container, Row, Col, Table, Tab, Tabs, Button, Image } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import { getMe, UserAPIObject } from "../api/api";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function Profile() {
 	const { isLoading, isError, data } = useQuery<UserAPIObject, Error>({
@@ -14,11 +15,13 @@ export default function Profile() {
 	else if (isError) document = "Error.";
 	else document = data?.document;
 
+	const qrData = data?.document || "example";
+
 	return (
 		<Container fluid className="p-4">
 			{/* Profile Header */}
 			<Row className="mb-4">
-				<Col md={4} className="text-center">
+				<Col md={12} className="text-center">
 					{/* Profile Picture */}
 					<Image
 						src="https://content.imageresizer.com/images/memes/War-Cat-meme-88f6yf.jpg"
@@ -31,9 +34,14 @@ export default function Profile() {
 						<b>Nombres y Apellidos</b>
 					</h3>
 				</Col>
+			</Row>
 
-				{/* Profile Stats */}
-				<Col md={8} className="d-flex flex-column justify-content-center">
+			{/* Profile Stats */}
+			<Row>
+				<Col md={4} className="text-center">
+					<QRCodeSVG value={qrData} size={128}></QRCodeSVG>
+				</Col>
+				<Col md={8} className="d-flex mb-3 flex-column justify-content-center">
 					<Row>
 						<Col>
 							<h5>

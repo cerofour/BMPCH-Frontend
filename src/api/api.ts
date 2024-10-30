@@ -55,7 +55,6 @@ export type TextDTO = {
   editorialName: string,
   textType: string,
 };
-
 const DOMAIN = "http://144.22.63.67:8080";
 const API_PREFFIX = '/api/v1';
 

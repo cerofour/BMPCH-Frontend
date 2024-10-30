@@ -13,6 +13,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AuthProvider from "./hooks/useAuth";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import HomePage from "./pages/HomePage";
+import Logout from "./pages/Logout";
 
 const queryClient = new QueryClient();
 
@@ -22,10 +24,18 @@ function App() {
 			<AuthProvider>
 				<Router>
 					<Routes>
+						<Route path="login" element={<Login></Login>} />
 						{/* Routes that use the layout */}
 						<Route path="/" element={<Layout />}>
-							<Route index element={<Login />} />
-							<Route path="login" element={<Login></Login>} />
+							<Route index element={<HomePage />} />
+							<Route
+								path="logout"
+								element={
+									<ProtectedRoute>
+										<Logout />
+									</ProtectedRoute>
+								}
+							/>
 							<Route
 								path="catalogo"
 								element={
