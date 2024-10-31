@@ -10,6 +10,7 @@ import { Spinner } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import { getMe, UserAPIObject } from "../api/api";
 import { useAuth } from "../hooks/useAuth";
+import MyMenuButton from "./MenuButton";
 
 function UserInformation() {
 	const { authenticated } = useAuth();
@@ -43,7 +44,12 @@ function UserInformation() {
 	);
 }
 
-export default function MyNavbar() {
+interface MyNavbarProps {
+	setShowSidebar: () => void;
+}
+
+export default function MyNavbar({setShowSidebar}: MyNavbarProps) {
+
 	const x = (d: string, l: string) => {
 		return {
 			display: d,
@@ -83,6 +89,7 @@ export default function MyNavbar() {
 						/>
 						{navbarTitle}
 					</Navbar.Brand>
+					<MyMenuButton onClick={setShowSidebar}/>
 					<Navbar.Toggle aria-controls={`offcanvasNavbar-expand-md`} />
 
 					<Navbar.Offcanvas

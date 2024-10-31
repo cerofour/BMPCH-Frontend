@@ -5,7 +5,7 @@ import { NewResourceForm } from "../components/NewResourceForm";
 export default function NewResource() {
 
     const pageTitle = "NUEVO RECURSO";
-    const subtitle = "DATOS DEL NUEVO RECURSO";
+    const subtitle = "";
 
     const header = MyMainContentHeader(pageTitle, subtitle);
 

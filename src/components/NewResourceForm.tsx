@@ -92,8 +92,11 @@ export function NewResourceForm() {
         mutation.mutate(requestBody);
     };
 
+    const resourceFormTitle = "DATOS DEL RECURSO"
+
 	return (
 		<>
+            <h5>{resourceFormTitle}</h5>
 			<Form onSubmit={(e) => handleSubmit(e)}>
                 <Form.Group style={{width: '40%'}} className="mb-3" controlId="formId">
                     <div className="form-group-container">

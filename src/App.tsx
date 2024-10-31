@@ -18,6 +18,9 @@ import Logout from "./pages/Logout";
 import BookGroup from "./components/BookGroup";
 import BookPage from "./pages/BookPage";
 import NewResource from "./pages/NewResource";
+import ManageResources from "./pages/ManageResources";
+import ManageReaders from "./pages/ManageReaders";
+import ManageWorkers from "./pages/ManageWorkers";
 
 const queryClient = new QueryClient();
 
@@ -78,6 +81,30 @@ function App() {
 								element={
 									<ProtectedRoute>
 										<NewResource/>
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="gestionar-recursos"
+								element={
+									<ProtectedRoute>
+										<ManageResources/>
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="gestionar-lectores"
+								element={
+									<ProtectedRoute>
+										<ManageReaders/>
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="gestionar-trabajadores"
+								element={
+									<ProtectedRoute>
+										<ManageWorkers/>
 									</ProtectedRoute>
 								}
 							/>
