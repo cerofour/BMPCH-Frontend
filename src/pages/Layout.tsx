@@ -1,6 +1,6 @@
 import { useState } from "react";
 import MyNavbar from "../components/Navbar";
-import { Container, Row, Col, Nav, Offcanvas, Button } from "react-bootstrap";
+import { Container, Row, Col, Nav, Offcanvas } from "react-bootstrap";
 
 import { Outlet } from "react-router-dom";
 
@@ -24,7 +24,7 @@ export function Layout() {
 		x("Ayuda", "/ayuda"),
 	].map((link, i) => (
 		<Nav.Link key={i} href={link.link}>
-			{link.display}
+			<b>{link.display}</b>
 		</Nav.Link>
 	));
 
@@ -38,8 +38,10 @@ export function Layout() {
 			<Container fluid>
 				<Row>
 					{/* Sidebar for large screens */}
-					<Col md={3} lg={2} className="d-none d-md-block bg-dark text-light sidebar">
-						<Nav className="flex-column p-3">{navbarLinks}</Nav>
+					<Col md={3} lg={2} className="d-none d-md-block text-light sidebar">
+						<Nav className="flex-column">
+							{navbarLinks}
+						</Nav>
 					</Col>
 
 					{/* Toggle button for small screens */}

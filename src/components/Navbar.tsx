@@ -52,7 +52,7 @@ export default function MyNavbar({ toggleSidebar, title }: MyNavbarProps) {
 	// ../assets/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png
 	return (
 		<>
-			<Navbar expand="md" sticky="top" className="bg-body-tertiary">
+			<Navbar expand="md" sticky="top" className="bg-body-tertiary mynavbar">
 				<Container fluid>
 					<Navbar.Brand href="/">
 						<img
