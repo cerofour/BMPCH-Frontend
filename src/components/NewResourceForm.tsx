@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, Dropdown, DropdownButton } from "react-bootstrap";
+import { Button, Form, Dropdown, DropdownButton, Row, Stack } from "react-bootstrap";
 import { FormEvent, useState } from "react";
 import {
 	getAllEditorials,
@@ -59,7 +59,7 @@ function TypesDropdown({ selected, setSelected }: { selected: TextTypeAPIObject;
 }
 //function buildUpdateResourceForm<T> (data: T) {//}
 
-export function NewTextForm() {
+export function NewResourceForm() {
 	const [id, setId] = useState(0);
     const [title, setTitle] = useState("");
     const [publicationDate, setPublicationDate] = useState(new Date());
@@ -95,53 +95,108 @@ export function NewTextForm() {
 	return (
 		<>
 			<Form onSubmit={(e) => handleSubmit(e)}>
-				<Form.Group className="mb-3" controlId="formTitle">
-					<Form.Label> Título </Form.Label>
-					<Form.Control
-						placeholder="Escribe el título del libro"
-						onChange={(e) => setTitle(e.target.value)}
-						type="text"
-					></Form.Control>
+                <Form.Group style={{width: '40%'}} className="mb-3" controlId="formId">
+                    <div className="form-group-container">
+                        <Form.Label style={{color: '#808080'}}> ID </Form.Label>
+                        <Form.Control
+                            style={{border: 'none'}}
+                            onChange={(e) => setId(parseInt(e.target.value))}
+                            type="number"
+                        ></Form.Control>
+                    </div>
 				</Form.Group>
-
-				<Form.Group className="mb-3" controlId="formDate">
-					<Form.Label> Fecha de Publicación</Form.Label>
-					<Form.Control
-						onChange={(e) => setPublicationDate(new Date(e.target.value))}
-						type="date"
-					></Form.Control>
-				</Form.Group>
-
-				<Form.Group className="mb-3" controlId="formPages">
-					<Form.Label> Cantidad de Páginas</Form.Label>
-					<Form.Control onChange={(e) => setPages(parseInt(e.target.value))} type="number"></Form.Control>
-				</Form.Group>
-
-				<Form.Group className="mb-3" controlId="formEdition">
-					<Form.Label> Edición</Form.Label>
-					<Form.Control onChange={(e) => setEdition(parseInt(e.target.value))} type="number"></Form.Control>
-				</Form.Group>
-
-				<Form.Group className="mb-3" controlId="formVolume">
-					<Form.Label>Volumen</Form.Label>
-					<Form.Control onChange={(e) => setVolume(parseInt(e.target.value))} type="number"></Form.Control>
-				</Form.Group>
-
-				<Form.Group className="mb-3" controlId="formPublisher">
-                <div className="d-flex justify-content-between">
-                    <Form.Label>Editorial</Form.Label>
-                    <EditorialDropdown selected={editorial} setSelected={setEditorial} />
-                </div>
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formBasicPublisher">
-                <div className="d-flex justify-content-between">
-                    <Form.Label>Tipo de Texto</Form.Label>
-                    <TypesDropdown selected={type} setSelected={setType} />
-                </div>
-            </Form.Group>
+                <Stack direction="horizontal" gap={0}>
+                    <Form.Group style={{width: '40%'}} className="mb-3" controlId="formTitle">
+                        <div className="form-group-container"  >
+                            <Form.Label style={{color: '#808080'}}> TÍTULO </Form.Label>
+                            <Form.Control
+                                style={{border: 'none'}}
+                                onChange={(e) => setTitle(e.target.value)}
+                                type="text"
+                            ></Form.Control>
+                        </div>
+                    </Form.Group>
+                    <Form.Group style={{width: '40%'}} className="mb-3" controlId="formAuthor">
+                        <div className="form-group-container" >
+                            <Form.Label style={{color: '#808080'}}> AUTOR </Form.Label>
+                            <Form.Control
+                                style={{border: 'none'}}
+                                onChange={(e) => setTitle(e.target.value)}
+                                type="text"
+                            ></Form.Control>
+                        </div>
+                    </Form.Group>
+                </Stack>
+                <Stack direction="horizontal" gap={0}>
+                    <Form.Group style={{width: '40%'}} className="mb-3" controlId="formDate">
+                        <div className="form-group-container">
+                            <Form.Label style={{color: '#808080'}}> FECHA DE PUBLICACIÓN </Form.Label>
+                            <Form.Control
+                                style={{border: 'none'}}
+                                onChange={(e) => setPublicationDate(new Date(e.target.value))}
+                                type="date"
+                            ></Form.Control>
+                        </div>
+                    </Form.Group>
+                    <Form.Group style={{width: '40%'}} className="mb-3" controlId="formCategories">
+                        <div className="form-group-container">
+                            <Form.Label style={{color: '#808080'}}> CATEGORÍAS </Form.Label>
+                            <Form.Control
+                                style={{border: 'none'}}
+                                type="text"
+                            ></Form.Control>
+                        </div>
+                    </Form.Group>
+                </Stack>
+                <Form.Group style={{width: '40%'}} className="mb-3" controlId="formPages">
+                    <div className="form-group-container">
+                        <Form.Label style={{color: '#808080'}}> CANTIDAD DE PÁGINAS </Form.Label>
+                        <Form.Control 
+                            style={{border: 'none'}}
+                            onChange={(e) => setPages(parseInt(e.target.value))}
+                            type="number"></Form.Control>
+                    </div>
+                </Form.Group>
+                <Stack direction="horizontal" gap={0}>
+                    <Form.Group style={{width: '40%'}} className="mb-3" controlId="formEdition">
+                        <div className="form-group-container">
+                            <Form.Label style={{color: '#808080'}}> EDICIÓN </Form.Label>
+                            <Form.Control
+                                style={{border: 'none'}}
+                                onChange={(e) => setEdition(parseInt(e.target.value))}
+                                type="number"></Form.Control>
+                        </div>
+                    </Form.Group>
+                    <Form.Group style={{width: '40%'}} className="mb-3" controlId="formVolume">
+                        <div className="form-group-container">
+                            <Form.Label style={{color: '#808080'}}>VOLUMEN</Form.Label>
+                            <Form.Control
+                                style={{border: 'none'}}
+                                onChange={(e) => setVolume(parseInt(e.target.value))}
+                                type="number"></Form.Control>
+                        </div>
+                    </Form.Group>
+                </Stack>
+                <Stack direction="horizontal" gap={0}>
+                    <Form.Group style={{width: '40%'}} className="mb-3" controlId="formPublisher">
+                        <div className="d-flex justify-content-between form-group-container">
+                            <Stack>
+                                <Form.Label style={{color: '#808080'}}>EDITORIAL</Form.Label>
+                                <EditorialDropdown selected={editorial} setSelected={setEditorial} />
+                            </Stack>
+                        </div>
+                    </Form.Group>
+                    <Form.Group style={{width: '40%'}} className="mb-3" controlId="formBasicPublisher">
+                        <div className="d-flex justify-content-between form-group-container">
+                            <Stack>
+                                <Form.Label style={{color: '#808080'}}>TIPO DE RECURSO</Form.Label>
+                                <TypesDropdown selected={type} setSelected={setType} />
+                            </Stack>
+                        </div>
+                    </Form.Group>
+                </Stack>
 				<Button variant="primary" type="submit">
-					Crear texto
+					Añadir
 				</Button>
 			</Form>
 		</>

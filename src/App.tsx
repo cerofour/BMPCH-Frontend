@@ -17,6 +17,7 @@ import HomePage from "./pages/HomePage";
 import Logout from "./pages/Logout";
 import BookGroup from "./components/BookGroup";
 import BookPage from "./pages/BookPage";
+import NewResource from "./pages/NewResource";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +70,14 @@ function App() {
 								element={
 									<ProtectedRoute>
 										<AdminPanel />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="nuevo-recurso"
+								element={
+									<ProtectedRoute>
+										<NewResource/>
 									</ProtectedRoute>
 								}
 							/>
