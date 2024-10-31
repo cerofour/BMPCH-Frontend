@@ -1,22 +1,16 @@
 import { Container } from "react-bootstrap";
-import MyMainContentHeader from "../components/ContentHeader";
-import { NewResourceForm } from "../components/NewResourceForm";
+
+import { NewTextForm } from "../components/AdminTables";
 
 export default function NewResource() {
-
-    const pageTitle = "NUEVO RECURSO";
-    const subtitle = "";
-
-    const header = MyMainContentHeader(pageTitle, subtitle);
-
-    return(
-        <>
-            <Container style={{paddingTop: '50px'}}>
-                <Container style={{backgroundColor: '#fff', padding: '20px'}}>
-                    {header}
-                    <NewResourceForm/>
-                </Container>
-            </Container>
-        </>
-    );
+	return (
+		<>
+			<Container>
+				<h1 className="my-3">
+					<b>Crear Nuevo Texto</b>
+				</h1>
+				<NewTextForm show={false} setShow={(_: boolean) => {}}></NewTextForm>
+			</Container>
+		</>
+	);
 }

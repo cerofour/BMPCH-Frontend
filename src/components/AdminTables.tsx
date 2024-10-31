@@ -1,5 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Table, Modal, Button, ButtonGroup, Form, Dropdown, DropdownButton, Spinner } from "react-bootstrap";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Table, Modal, Button, ButtonGroup, Form, Dropdown, DropdownButton, Spinner, Container } from "react-bootstrap";
 import { FormEvent, useState } from "react";
 import {
 	getAllTexts,
@@ -100,7 +100,6 @@ function TypesDropdown({ selected, setSelected }: any) {
 
 	return <MyDropdown data={elements} selected={selected} setSelected={setSelected}></MyDropdown>;
 }
-//function buildUpdateResourceForm<T> (data: T) {//}
 
 export function NewTextForm({ show, setShow }: any) {
 	const [title, setTitle] = useState("");
@@ -136,56 +135,72 @@ export function NewTextForm({ show, setShow }: any) {
 
 	return (
 		<>
-			<Form onSubmit={(e) => handleSubmit(e)}>
-				<Form.Group className="mb-3" controlId="formTitulo">
-					<Form.Label> Título </Form.Label>
-					<Form.Control
-						placeholder="Escribe el título del libro"
-						onChange={(e) => setTitle(e.target.value)}
-						type="text"
-					></Form.Control>
-				</Form.Group>
+			<Container fluid>
+				<Form>
+					<Form.Group className="mb-3" controlId="formTitulo">
+						<Form.Label> Título </Form.Label>
+						<Form.Control
+							placeholder="Escribe el título del libro"
+							onChange={(e) => setTitle(e.target.value)}
+							type="text"
+						></Form.Control>
+					</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formTitulo">
-					<Form.Label> Fecha de Publicación</Form.Label>
-					<Form.Control
-						onChange={(e) => setPublicationDate(new Date(e.target.value))}
-						type="date"
-					></Form.Control>
-				</Form.Group>
+					<Form.Group className="mb-3" controlId="formTitulo">
+						<Form.Label> Fecha de Publicación</Form.Label>
+						<Form.Control
+							onChange={(e) => setPublicationDate(new Date(e.target.value))}
+							type="date"
+						></Form.Control>
+					</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formTitulo">
-					<Form.Label> Cantidad de Páginas</Form.Label>
-					<Form.Control onChange={(e) => setPages(parseInt(e.target.value))} type="number"></Form.Control>
-				</Form.Group>
+					<Container className="d-flex justify-content-between px-0">
+						<Form.Group className="mb-3" controlId="formTitulo">
+							<Form.Label> Cantidad de Páginas</Form.Label>
+							<Form.Control
+								onChange={(e) => setPages(parseInt(e.target.value))}
+								type="number"
+							></Form.Control>
+						</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formTitulo">
-					<Form.Label> Edición</Form.Label>
-					<Form.Control onChange={(e) => setEdition(parseInt(e.target.value))} type="number"></Form.Control>
-				</Form.Group>
+						<Form.Group className="mb-3" controlId="formTitulo">
+							<Form.Label> Edición</Form.Label>
+							<Form.Control
+								onChange={(e) => setEdition(parseInt(e.target.value))}
+								type="number"
+							></Form.Control>
+						</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formTitulo">
-					<Form.Label>Volumen</Form.Label>
-					<Form.Control onChange={(e) => setVolume(parseInt(e.target.value))} type="number"></Form.Control>
-				</Form.Group>
+						<Form.Group className="mb-3" controlId="formTitulo">
+							<Form.Label>Volumen</Form.Label>
+							<Form.Control
+								onChange={(e) => setVolume(parseInt(e.target.value))}
+								type="number"
+							></Form.Control>
+						</Form.Group>
+					</Container>
 
-				<Form.Group className="mb-3" controlId="formBasicPassword">
-					<div className="d-flex justify-content-between">
-						<Form.Label>Editorial</Form.Label>
-						<EditorialDropdown selected={editorialName} setSelected={setEditorialName}></EditorialDropdown>
-					</div>
-				</Form.Group>
+					<Form.Group className="mb-3" controlId="formBasicPassword">
+						<div className="d-flex justify-content-between">
+							<Form.Label>Editorial</Form.Label>
+							<EditorialDropdown
+								selected={editorialName}
+								setSelected={setEditorialName}
+							></EditorialDropdown>
+						</div>
+					</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formBasicPassword">
-					<div className="d-flex justify-content-between">
-						<Form.Label>Tipo de Texto</Form.Label>
-						<TypesDropdown selected={textType} setSelected={setTextType}></TypesDropdown>
-					</div>
-				</Form.Group>
-				<Button variant="primary" type="submit">
-					Crear texto
-				</Button>
-			</Form>
+					<Form.Group className="mb-3" controlId="formBasicPassword">
+						<div className="d-flex justify-content-between">
+							<Form.Label>Tipo de Texto</Form.Label>
+							<TypesDropdown selected={textType} setSelected={setTextType}></TypesDropdown>
+						</div>
+					</Form.Group>
+					<Button onClick={(e) => handleSubmit(e)} variant="primary" type="submit">
+						Crear texto
+					</Button>
+				</Form>
+			</Container>
 		</>
 	);
 }

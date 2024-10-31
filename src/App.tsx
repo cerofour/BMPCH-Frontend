@@ -15,7 +15,6 @@ import AuthProvider from "./hooks/useAuth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "./pages/HomePage";
 import Logout from "./pages/Logout";
-import BookGroup from "./components/BookGroup";
 import BookPage from "./pages/BookPage";
 import NewResource from "./pages/NewResource";
 import ManageResources from "./pages/ManageResources";
@@ -80,7 +79,7 @@ function App() {
 								path="nuevo-recurso"
 								element={
 									<ProtectedRoute>
-										<NewResource/>
+										<NewResource />
 									</ProtectedRoute>
 								}
 							/>
@@ -88,7 +87,7 @@ function App() {
 								path="gestionar-recursos"
 								element={
 									<ProtectedRoute>
-										<ManageResources/>
+										<ManageResources />
 									</ProtectedRoute>
 								}
 							/>
@@ -96,7 +95,7 @@ function App() {
 								path="gestionar-lectores"
 								element={
 									<ProtectedRoute>
-										<ManageReaders/>
+										<ManageReaders />
 									</ProtectedRoute>
 								}
 							/>
@@ -104,7 +103,7 @@ function App() {
 								path="gestionar-trabajadores"
 								element={
 									<ProtectedRoute>
-										<ManageWorkers/>
+										<ManageWorkers />
 									</ProtectedRoute>
 								}
 							/>
