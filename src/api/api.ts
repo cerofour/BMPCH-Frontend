@@ -1,7 +1,5 @@
 import axios from "axios";
 
-import axiosRetry from "axios-retry";
-
 export type UserAPIObject = {
   userId: number;
   roleId: number;
@@ -15,7 +13,17 @@ export type UserAPIObject = {
   authorities: string[]; // Assuming it's an array of strings, adjust as needed
   username: string;
   password: string;
+  name: string;
+  plastName: string;
+  mlastName: string;
+  phoneNumber: string;
+  gender: GenderDTO;
 };
+
+export type GenderDTO = {
+	id: number;
+	genderName: string;
+}
 
 export type UserLogin = {
 	document: string;
@@ -57,7 +65,6 @@ export type TextDTO = {
   editorialName: string,
   textType: string,
 };
-
 const DOMAIN = "http://144.22.63.67:8080";
 const API_PREFFIX = '/api/v1';
 
@@ -80,6 +87,11 @@ export async function getAllUsers(): Promise<UserAPIObject[]> {
 	return response.data;
 }
 
+export async function getMe(): Promise<UserAPIObject> {
+	const response = await api.get('/users/me');
+	return response.data;
+}
+
 export async function getAllTypes(): Promise<TextTypeAPIObject[]> {
 	const response = await api.get("/text_types/")
 	return response.data;
@@ -95,12 +107,32 @@ export async function getAllTexts(): Promise<TextAPIObject[]> {
 	return (await response).data;
 }
 
+export async function getText(textId: number): Promise<TextAPIObject> {
+	const response = await api.get("/texts/get?id=" + textId);
+	return response.data;
+}
+
 export async function newText(data: TextDTO) {
-	const response = api.post("/texts/new", data);
+	const response = api.post("/texts/", data);
+	return (await response).data;
+}
+
+export async function newResource(data: TextAPIObject) {
+	const response = api.post("/texts/", data);
 	return (await response).data;
 }
 
 export async function sendLoginCredentials(data: UserLogin): Promise<UserLoginResponse> {
 	const response = await loginApi.post("/auth/login", data);
+	return response.data;
+}
+
+export async function deleteUser(id: number): Promise<void> {
+	const response = await api.delete(`/users/delete?id=${id}`);
+	return response.data;
+}
+
+export async function deleteText(id: number): Promise<void> {
+	const response = await api.delete(`/texts/delete?id=${id}`);
 	return response.data;
 }

@@ -3,82 +3,72 @@ import Tabs from "react-bootstrap/Tabs";
 
 import { Card, CardBody } from "react-bootstrap";
 
-import {
-  NewTextModal,
-  TextsTable,
-  UsersTable,
-} from "../components/AdminTables";
+import { NewTextModal, TextsTable, UsersTable } from "../components/AdminTables";
 import { Container, Button } from "react-bootstrap";
 
 import { useState } from "react";
 
 type PanelCardProps = {
-  title: string;
-  showThisModal: boolean;
-  setShowThisModal: (x: boolean) => void;
-  children: any;
+	title: string;
+	showThisModal: boolean;
+	setShowThisModal: (x: boolean) => void;
+	children: any;
 };
 
 function PanelCard({ children }: any) {
-  return (
-    <Card>
-      <CardBody>{children}</CardBody>
-    </Card>
-  );
+	return (
+		<Card>
+			<CardBody>{children}</CardBody>
+		</Card>
+	);
 }
 
 function CRUDTabs() {
-  const [showNewTextModal, setShowNewTextModal] = useState(false);
-  const [showNewUserModal, setShowNewUserModal] = useState(false);
+	const [showNewTextModal, setShowNewTextModal] = useState(false);
+	const [showNewUserModal, setShowNewUserModal] = useState(false);
 
-  return (
-    <Tabs
-      defaultActiveKey="users"
-      id="uncontrolled-tab-example"
-      className="mb-3"
-    >
-      <Tab eventKey="users" title="Usuarios">
-        <PanelCard
-          title="Administrar usuarios"
-          showThisModal={showNewUserModal}
-          setShowThisModal={setShowNewUserModal}
-        >
-          <NewTextModal
-            enabled={showNewUserModal}
-            setEnabled={setShowNewUserModal}
-          ></NewTextModal>
-          <UsersTable></UsersTable>
-        </PanelCard>
-      </Tab>
-      <Tab eventKey="texts" title="Textos">
-        <PanelCard>
-          <div className="crud-table-heading">
-            <h2>Administrar textos</h2>
-            <Button onClick={() => setShowNewTextModal(true)}>
-              Agregar elemento
-            </Button>
-          </div>
+	return (
+		<Tabs defaultActiveKey="users" id="uncontrolled-tab-example" className="mb-3">
+			<Tab eventKey="users" title="Usuarios">
+				<PanelCard
+					title="Administrar usuarios"
+					showThisModal={showNewUserModal}
+					setShowThisModal={setShowNewUserModal}
+				>
+					<NewTextModal enabled={showNewUserModal} setEnabled={setShowNewUserModal}></NewTextModal>
+					<UsersTable></UsersTable>
+				</PanelCard>
+			</Tab>
+			<Tab eventKey="texts" title="Textos">
+				<PanelCard>
+					<div className="my-2 d-flex justify-content-between">
+						<h2>
+							<b>Administrar textos</b>
+						</h2>
+						<Button onClick={() => setShowNewTextModal(true)}>Agregar elemento</Button>
+					</div>
 
-          <NewTextModal
-            show={showNewTextModal}
-            setShow={setShowNewTextModal}
-          ></NewTextModal>
+					<NewTextModal show={showNewTextModal} setShow={setShowNewTextModal}></NewTextModal>
 
-          <TextsTable></TextsTable>
-        </PanelCard>
-      </Tab>
-      <Tab eventKey="contact" title="Contact" disabled>
-        Tab content for Contact
-      </Tab>
-    </Tabs>
-  );
+					<TextsTable></TextsTable>
+				</PanelCard>
+			</Tab>
+			<Tab eventKey="contact" title="Contact" disabled>
+				Tab content for Contact
+			</Tab>
+		</Tabs>
+	);
 }
 
 export default function AdminPanel() {
-  return (
-    <>
-      <h1>Panel de Administrador</h1>
-      <CRUDTabs></CRUDTabs>
-    </>
-  );
+	return (
+		<>
+			<div className="my-4">
+				<h1>
+					<b>Panel de Administrador</b>
+				</h1>
+			</div>
+			<CRUDTabs></CRUDTabs>
+		</>
+	);
 }

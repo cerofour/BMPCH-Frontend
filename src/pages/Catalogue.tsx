@@ -1,24 +1,31 @@
-import { Card, Form, Button, ListGroup } from "react-bootstrap";
+import { Container, Row, Col, Form, Button, FormControl } from "react-bootstrap";
 import BookGroup from "../components/BookGroup";
 
 function Catalogue() {
 	return (
 		<>
-			<h1>Catálogo de Textos</h1>
-			<Card>
-				<Card.Body>
-					<Form className="d-flex">
-						<Form.Control type="search" placeholder="Buscar" className=" mr-sm-2" />
-						<Button type="submit">Buscar</Button>
-					</Form>
-				</Card.Body>
-			</Card>
+			<Container className="my-4">
+				{/* Search Bar */}
+				<Row className="mb-4">
+					<Col>
+						<h1>
+							<b>Catálogo</b>
+						</h1>
+					</Col>
+				</Row>
+				<Row className="mb-4">
+					<Col>
+						<Form className="d-flex">
+							<FormControl type="text" placeholder="Buscar libros..." />
+						</Form>
+					</Col>
+					<Col>
+						<Button variant="primary">Búsqueda</Button>
+					</Col>
+				</Row>
 
-			<Card>
-				<Card.Body>
-					<BookGroup></BookGroup>
-				</Card.Body>
-			</Card>
+				<BookGroup></BookGroup>
+			</Container>
 		</>
 	);
 }

@@ -3,41 +3,64 @@
 	padding: 0;
 }
 
-.card-group .bookCard {
-	width: 18rem;
-	flex: auto;
+body {
+	background-color: #eff6ff;
 }
 
-.main-container {
-	width: 80%;
-	margin: auto;
+.sidebar {
+}
+
+.text-card-link {
+	text-decoration: none;
+}
+
+.text-card {
+	transition: transform 0.3s ease;
+}
+
+.text-card:hover {
+	transform: scale(1.02); /* Slightly grows the element */
+}
+
+.catalogue-container {
+	margin: 2em;
+}
+
+.my-sidebar {
+	position: fixed;
+	left: 0;
+	width: 250px;
+	height: 100%;
+	background-color: #1f283a;
+	color:#06b195;
+	padding: 20px;
+	transform: translateX(0);
+	transition: transform 0.3s ease;
+	z-index: 1000;
+}
+  
+.my-sidebar.close {
+	transform: translateX(-100%);
+}
+
+.close-button {
+	background: none;
+	border: none;
+	color: white;
+	cursor: pointer;
+}
+
+.main {
+	width: 100%;
+	min-height: 100vh;
+	background-color: #ececf0;
+	display: flex;
 	flex-direction: column;
+	flex-grow: 1;
 }
 
-.login-form-container {
-	margin: auto;
-}
-
-.login-form-container img {
-	width: 70%;
-}
-
-.login-form {
+.form-group-container {
+	border: 1px solid #808080;
 	padding: 10px;
-	width: 50%;
-}
-
-.login-form > div {
-	margin-bottom: 15px;
-}
-
-.book-group-container {
-	width: 80%;
-	margin:auto;
-}
-
-.crud-table-heading {
-	display:flex;
-	justify-content: space-between;
-	margin: 5px;
+	width: 100%;
 }
