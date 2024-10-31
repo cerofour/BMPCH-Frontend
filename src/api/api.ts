@@ -117,6 +117,11 @@ export async function newText(data: TextDTO) {
 	return (await response).data;
 }
 
+export async function newResource(data: TextAPIObject) {
+	const response = api.post("/texts/", data);
+	return (await response).data;
+}
+
 export async function sendLoginCredentials(data: UserLogin): Promise<UserLoginResponse> {
 	const response = await loginApi.post("/auth/login", data);
 	return response.data;

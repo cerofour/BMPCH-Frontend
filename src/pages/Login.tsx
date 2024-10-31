@@ -13,29 +13,29 @@ export default function Login() {
 			<Container
 				fluid
 				className="d-flex align-items-center justify-content-center min-vh-100"
-				style={{ backgroundColor: "#0d6efd" }}
+				style={{ backgroundColor: "#1f283a" }}
 			>
 				<Row>
 					<Col>
-						<Card className="p-4" style={{ width: "22rem", borderRadius: "12px" }}>
+						<Card className="p-4" style={{ width: "22rem", borderRadius: "1px" }}>
 							<Card.Body>
 								<div className="text-center mb-3">
 									<img
 										src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png/1200px-Escudo_de_Armas_la_Ciudad_de_Chiclayo.png"
 										alt="Logo de la Municipalidad Provincial de Chiclayo"
-										width={40}
-										height={40}
+										width={120}
+										height={120}
 									/>
 
-									<Card.Title className="fw-bold">Municipalidad Provincial de Chiclayo</Card.Title>
+									<Card.Title className="fw-bold">MUNICIPALIDAD PROVINCIAL DE CHICLAYO</Card.Title>
 									<Card.Subtitle className="mb-4 text-muted">Sistema de Biblioteca</Card.Subtitle>
 								</div>
 								<LoginForm setLoginStatus={setLoginStatus}></LoginForm>
 
-								<div className="text-center mt-3">
+								<div className="mt-0">
 									{loginStatus}
 									<br></br>
-									<a href="#" className="text-muted">
+									<a href="#" style={{color: '#1695a9'}}>
 										¿Cómo registrarme?
 									</a>
 								</div>
@@ -83,12 +83,12 @@ function LoginForm({ setLoginStatus }: any) {
 	return (
 		<Form onSubmit={handleLogin}>
 			<Form.Group className="mb-3" controlId="formDNI">
-				<Form.Label>Ingrese su DNI</Form.Label>
+				{/* <Form.Label>Ingrese su DNI</Form.Label> */}
 				<Form.Control onChange={(e) => setDocument(e.target.value)} type="text" placeholder="Ingrese su DNI" />
 			</Form.Group>
 
 			<Form.Group className="mb-4" controlId="formPassword">
-				<Form.Label>Ingrese contraseña</Form.Label>
+				{/* <Form.Label>Ingrese contraseña</Form.Label> */}
 				<Form.Control
 					onChange={(e) => setPsk(e.target.value)}
 					type="password"
@@ -96,7 +96,9 @@ function LoginForm({ setLoginStatus }: any) {
 				/>
 			</Form.Group>
 
-			<Button variant="primary" type="submit" className="w-100">
+			<Button variant="primary" type="submit" className="w-100"
+				style={{ backgroundColor: '#1695a9', borderColor: '#1695a9', borderRadius: "1px" }}
+			>
 				Ingresar
 			</Button>
 		</Form>
