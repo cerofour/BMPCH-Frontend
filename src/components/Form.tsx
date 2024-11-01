@@ -321,7 +321,7 @@ export function NewUserModal({ show, setShow }: any) {
         <Modal.Title>Añadir nuevo texto</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <NewUserModal show={show} setShow={setShow}></NewUserModal>
+        <NewUserForm show={show} setShow={setShow}></NewUserForm>
       </Modal.Body>
     </Modal>
   );

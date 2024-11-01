@@ -45,8 +45,8 @@ function CRUDTabs() {
           setShowModal={setShowNewUserModal}
         >
           <NewUserModal
-            enabled={showNewUserModal}
-            setEnabled={setShowNewUserModal}
+            show={showNewUserModal}
+            setShow={setShowNewUserModal}
           ></NewUserModal>
           <UsersTable></UsersTable>
         </PanelCard>
