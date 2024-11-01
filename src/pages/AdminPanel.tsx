@@ -1,24 +1,30 @@
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
-import { Card, CardBody } from "react-bootstrap";
-
-import { NewTextModal, TextsTable, UsersTable } from "../components/AdminTables";
-import { Container, Button } from "react-bootstrap";
-
 import { useState } from "react";
+
+import { Card, CardBody, Button } from "react-bootstrap";
+import { TextsTable, UsersTable } from "../components/AdminTables";
+import { NewTextModal } from "../components/Form";
 
 type PanelCardProps = {
 	title: string;
-	showThisModal: boolean;
-	setShowThisModal: (x: boolean) => void;
+	setShowModal: (x: boolean) => void;
 	children: any;
 };
 
-function PanelCard({ children }: any) {
+function PanelCard({ title, setShowModal, children }: PanelCardProps) {
 	return (
 		<Card>
-			<CardBody>{children}</CardBody>
+			<CardBody>
+				<div className="my-2 d-flex justify-content-between">
+					<h2>
+						<b>{title}</b>
+					</h2>
+					<Button onClick={() => setShowModal(true)}>Agregar elemento</Button>
+				</div>
+				{children}
+			</CardBody>
 		</Card>
 	);
 }
@@ -30,31 +36,16 @@ function CRUDTabs() {
 	return (
 		<Tabs defaultActiveKey="users" id="uncontrolled-tab-example" className="mb-3">
 			<Tab eventKey="users" title="Usuarios">
-				<PanelCard
-					title="Administrar usuarios"
-					showThisModal={showNewUserModal}
-					setShowThisModal={setShowNewUserModal}
-				>
+				<PanelCard title="Administrar usuarios" setShowModal={setShowNewUserModal}>
 					<NewTextModal enabled={showNewUserModal} setEnabled={setShowNewUserModal}></NewTextModal>
 					<UsersTable></UsersTable>
 				</PanelCard>
 			</Tab>
 			<Tab eventKey="texts" title="Textos">
-				<PanelCard>
-					<div className="my-2 d-flex justify-content-between">
-						<h2>
-							<b>Administrar textos</b>
-						</h2>
-						<Button onClick={() => setShowNewTextModal(true)}>Agregar elemento</Button>
-					</div>
-
+				<PanelCard title="Administrar textos" setShowModal={setShowNewTextModal}>
 					<NewTextModal show={showNewTextModal} setShow={setShowNewTextModal}></NewTextModal>
-
 					<TextsTable></TextsTable>
 				</PanelCard>
-			</Tab>
-			<Tab eventKey="contact" title="Contact" disabled>
-				Tab content for Contact
 			</Tab>
 		</Tabs>
 	);
