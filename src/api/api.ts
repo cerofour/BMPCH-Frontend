@@ -75,7 +75,7 @@ export const api = axios.create({
 		"Accept": "application/json",
 	}});
 
-const loginApi = axios.create({
+export const loginApi = axios.create({
 	baseURL: DOMAIN,
 	headers: {
 		"Content-Type": "application/json",
@@ -114,6 +114,11 @@ export async function getText(textId: number): Promise<TextAPIObject> {
 
 export async function newText(data: TextDTO) {
 	const response = api.post("/texts/", data);
+	return (await response).data;
+}
+
+export async function newUser(userDto: any) {
+	const response = loginApi.post("/auth/signup", userDto);
 	return (await response).data;
 }
 
