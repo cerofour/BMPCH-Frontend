@@ -4,11 +4,11 @@ import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link } from "react-router-dom";
-import { NavDropdown, Button, NavbarCollapse, Row, Col } from "react-bootstrap";
+import { NavDropdown, Button, Row, Col } from "react-bootstrap";
 import { Spinner } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
-import { getMe} from "../api/api";
-import {UserAPIObject} from "../api/types";
+import { getMe } from "../api/api";
+import { UserAPIObject } from "../api/types";
 import { useAuth } from "../hooks/useAuth";
 
 function UserInformation() {

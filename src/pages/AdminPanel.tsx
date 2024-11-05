@@ -1,22 +1,13 @@
+import { useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
 import { Card, CardBody } from "react-bootstrap";
 
-import { NewTextForm, TextsTable, UsersTable } from "../components/AdminTables";
+import { TextsTable, UsersTable } from "../components/AdminTables";
 import { CustomModal } from "../components/CustomModals";
-import { Container, Button } from "react-bootstrap";
-
-import { useState } from "react";
-
-import { NewTextModal, NewUserForm, NewUserModal } from "../components/Form";
-
-type PanelCardProps = {
-	title: string;
-	showThisModal: boolean;
-	setShowThisModal: (x: boolean) => void;
-	children: any;
-};
+import { Button } from "react-bootstrap";
+import { NewTextForm, NewUserForm } from "../components/Form";
 
 function PanelCard({ children }: any) {
 	return (
@@ -43,6 +34,15 @@ function CRUDTabs() {
 						</h2>
 						<Button onClick={() => setShowNewUserModal(true)}>Agregar usuario</Button>
 					</div>
+
+					<CustomModal
+						show={showNewUserModal}
+						setShow={setShowNewUserModal}
+						title="Añadir nuevo usuario"
+						form={NewUserForm}
+						reload={reloadUsers}
+						setReload={setReloadUsers}
+					></CustomModal>
 
 					<UsersTable></UsersTable>
 				</PanelCard>
