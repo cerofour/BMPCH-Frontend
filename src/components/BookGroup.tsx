@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllTexts, TextAPIObject } from "../api/api";
+import { getAllTexts } from "../api/api";
+import {TextAPIObject} from "../api/types";
 
 import { Link } from "react-router-dom";
 import { Alert, Spinner, Card, Button, Col, Row } from "react-bootstrap";
@@ -37,10 +38,9 @@ export default function BookGroup() {
 
 	if (isLoading)
 		return (
-			<Alert variant="info">
-				<Spinner animation="border" role="status">
-					<span className="visually-hidden">Cargando textos...</span>
-				</Spinner>
+			<Alert variant="info" style={{alignContent: 'center', display: 'flex'}}>
+				<Spinner animation="border" role="status"></Spinner>
+				<span className="mx-2">Cargando...</span>
 			</Alert>
 		);
 

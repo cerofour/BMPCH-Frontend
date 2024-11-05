@@ -1,17 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Table } from "react-bootstrap";
 import { FormEvent, useState } from "react";
-import {
-	getAllUsers,
-	UserAPIObject,
-	deleteUser,
-} from "../api/api";
+import {getAllUsers,deleteUser} from "../api/api";
 import MyEditButton from "./EditButton";
+import {UserAPIObject} from "../api/types"
 import MyDeleteButton from "./DeleteButton";
-
-function firstN(src: string, n: number) {
-	return src.slice(0, n) + "...";
-}
+import {firstN} from "./Utils";
 
 function buildTableContent<T extends Object>(
 	colspan: number,
