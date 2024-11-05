@@ -16,10 +16,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "./pages/HomePage";
 import Logout from "./pages/Logout";
 import BookPage from "./pages/BookPage";
-import NewResource from "./pages/NewResource";
-import ManageResources from "./pages/ManageResources";
-import ManageReaders from "./pages/ManageReaders";
-import ManageWorkers from "./pages/ManageWorkers";
 
 const queryClient = new QueryClient();
 
@@ -72,38 +68,6 @@ function App() {
 								element={
 									<ProtectedRoute>
 										<AdminPanel />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path="nuevo-recurso"
-								element={
-									<ProtectedRoute>
-										<NewResource />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path="gestionar-recursos"
-								element={
-									<ProtectedRoute>
-										<ManageResources />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path="gestionar-lectores"
-								element={
-									<ProtectedRoute>
-										<ManageReaders />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path="gestionar-trabajadores"
-								element={
-									<ProtectedRoute>
-										<ManageWorkers />
 									</ProtectedRoute>
 								}
 							/>

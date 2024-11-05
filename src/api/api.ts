@@ -1,70 +1,16 @@
 import axios from "axios";
 
-export type UserAPIObject = {
-  userId: number;
-  roleId: number;
-  documentTypeId: number;
-  document: string;
-  psk: string;
-  enabled: boolean;
-  accountNonExpired: boolean;
-  accountNonLocked: boolean;
-  credentialsNonExpired: boolean;
-  authorities: string[]; // Assuming it's an array of strings, adjust as needed
-  username: string;
-  password: string;
-  name: string;
-  plastName: string;
-  mlastName: string;
-  phoneNumber: string;
-  gender: GenderDTO;
-};
+import {
+	UserAPIObject, 
+	TextTypeAPIObject, 
+	EditorialAPIObject,
+	TextAPIObject,
+	TextDTO,
+	UserLogin,
+	UserLoginResponse,
+	AuthorAPIObject
+} from "./types";
 
-export type GenderDTO = {
-	id: number;
-	genderName: string;
-}
-
-export type UserLogin = {
-	document: string;
-	psk: string;
-};
-
-export type UserLoginResponse = {
-	token: string;
-	expiration: number;
-}
-
-export type EditorialAPIObject = {
-	id: number;
-	name: string;
-}
-
-export type TextTypeAPIObject = {
-	typeId: number;
-	typename: string;
-}
-
-export type TextAPIObject = {
-	id: number;
-  title: string;
-  publicationDate: Date,
-  pages: number,
-  edition: number,
-  volume: number,
-  editorial: EditorialAPIObject,
-  type: TextTypeAPIObject,
-};
-
-export type TextDTO = {
-  title: string;
-  publicationDate: Date,
-  numPages: number,
-  edition: number,
-  volume: number,
-  editorialName: string,
-  textType: string,
-};
 const DOMAIN = "http://144.22.63.67:8080";
 const API_PREFFIX = '/api/v1';
 
@@ -112,9 +58,14 @@ export async function getText(textId: number): Promise<TextAPIObject> {
 	return response.data;
 }
 
+export async function getAllAuthors(): Promise<AuthorAPIObject[]> {
+	const response = await api.get("/authors/");
+	return response.data;
+}
+
 export async function newText(data: TextDTO) {
-	const response = api.post("/texts/", data);
-	return (await response).data;
+	const response = await api.post("/texts/", data);
+	return response.data;
 }
 
 export async function newResource(data: TextAPIObject) {

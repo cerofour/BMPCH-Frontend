@@ -1,7 +1,9 @@
 import { Container, Col, Row, Card, Alert, Spinner } from "react-bootstrap";
 import { Navigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { TextAPIObject, getText } from "../api/api";
+import { getText } from "../api/api";
+import { TextAPIObject } from "../api/types"
+
 
 function BookPage() {
 	const { id } = useParams<{ id: string }>(); // Retrieve the book ID from the URL
@@ -15,13 +17,11 @@ function BookPage() {
 
 	if (isLoading)
 		return (
-			<Spinner animation="border" role="status">
-				<span className="sr-only">Cargando...</span>
-			</Spinner>
+			<Spinner animation="border" role="status"></Spinner>
 		);
-	if (isError) return <Alert variant="danger">Error al cargar el libro</Alert>;
 	if (!data) return <Alert variant="warning">Libro no encontrado</Alert>;
-
+	if (isError) return <Alert variant="danger">Error al cargar el libro</Alert>; // Solucionar esto
+	
 	return (
 		<Container className="my-5">
 			<Row className="justify-content-center">

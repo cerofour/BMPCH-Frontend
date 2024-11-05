@@ -1,24 +1,43 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Table, Modal, Button, ButtonGroup, Form, Dropdown, DropdownButton, Spinner, Container } from "react-bootstrap";
-import { FormEvent, useState } from "react";
+
+import { FormEvent, useEffect, useState } from "react";
+
+import { ConfirmationModal } from "./CustomModals"
+
+import {firstN} from "./Utils"
+
+import { Table,
+		Button,
+		ButtonGroup, 
+		Form,
+		Dropdown,
+		DropdownButton,
+		Spinner,
+		Container,
+		Alert
+} from "react-bootstrap";
+
 import {
 	getAllTexts,
 	getAllUsers,
-	UserAPIObject,
 	getAllEditorials,
 	getAllTypes,
-	TextTypeAPIObject,
 	newText,
 	deleteUser,
 	deleteText,
+	getAllAuthors,
 } from "../api/api";
-import { TextDTO } from "../api/api";
-import { EditorialAPIObject } from "../api/api";
-import { TextAPIObject } from "../api/api";
 
-function firstN(src: string, n: number) {
-	return src.slice(0, n) + "...";
-}
+import {
+	TextDTO, 
+	EditorialAPIObject,
+	TextAPIObject,
+	UserAPIObject,
+	TextTypeAPIObject,
+	AuthorAPIObject
+} from "../api/types";
+import MultiSelectWithAutocomplete from "./MultiSelectInput";
+
 
 function buildTableContent<T extends Object>(
 	colspan: number,
@@ -46,74 +65,62 @@ function buildTableContent<T extends Object>(
 	return data?.map(mapFn);
 }
 
-function MyDropdown({ data, selected, setSelected }: any) {
+type CustomDropdownProps<T> = {
+	qKey: string[];
+	qFn: () => Promise<T[]>;
+	getOptionLabel: any;
+	setSelectedItem: any;
+	mapSelectedValue: (e: any) => string | number;
+}
+
+
+function CustomDropdown<T>({qKey, qFn, getOptionLabel, setSelectedItem, mapSelectedValue}: CustomDropdownProps<T>) {
+	const {
+		isLoading,
+		isError,
+		data: data,
+	} = useQuery<T[], Error>({
+		queryKey: qKey,
+		queryFn: qFn,
+	});
+
+	const [dropdownTitle, setDropdownTitle] = useState("Seleccione una opción");
+
+	if (isLoading) return <Spinner animation="border" role="status" />;
+
+	if (isError) return <Alert variant="danger">No se pudo cargar.</Alert>;
+
 	return (
-		<DropdownButton variant="outline-secondary" title={selected}>
-			{data.map((option: string) => (
-				<Dropdown.Item key={option} onClick={() => setSelected(option)}>
-					{option}
+		<DropdownButton variant="outline-secondary" title={dropdownTitle}>
+			{data?.map((e: any) => (
+				<Dropdown.Item 
+					key={getOptionLabel(e)} 
+					onClick={() => {
+						setSelectedItem(mapSelectedValue(e));
+						setDropdownTitle(getOptionLabel(e))
+					}}>
+					{getOptionLabel(e)}
 				</Dropdown.Item>
 			))}
 		</DropdownButton>
 	);
+
 }
 
-function EditorialDropdown({ selected, setSelected }: any) {
-	const {
-		isLoading,
-		isError,
-		data: editorials,
-	} = useQuery<EditorialAPIObject[], Error>({
-		queryKey: ["getAllEditorials"],
-		queryFn: getAllEditorials,
-	});
-
-	if (isLoading)
-		return (
-			<Spinner animation="border" role="status">
-				<span className="visually-hidden">Cargando...</span>
-			</Spinner>
-		);
-
-	if (isError) return "Error al cargar.";
-
-	const elements = editorials?.map((e) => e.name);
-
-	return <MyDropdown data={elements} selected={selected} setSelected={setSelected}></MyDropdown>;
-}
-
-function TypesDropdown({ selected, setSelected }: any) {
-	const {
-		isLoading,
-		isError,
-		data: types,
-	} = useQuery<TextTypeAPIObject[], Error>({
-		queryKey: ["getAllTypes"],
-		queryFn: getAllTypes,
-	});
-
-	if (isLoading) return "Cargando...";
-
-	if (isError) return "Error al cargar";
-
-	const elements = types?.map((e) => e.typename);
-
-	return <MyDropdown data={elements} selected={selected} setSelected={setSelected}></MyDropdown>;
-}
-
-export function NewTextForm({ show, setShow }: any) {
+export function NewTextForm({ show, setShow, reload, setReload }: any) {
 	const [title, setTitle] = useState("");
-	const [editorialName, setEditorialName] = useState("");
-	const [textType, setTextType] = useState("");
+	const [editorialId, setEditorialId] = useState(0);
+	const [typeId, setTypeId] = useState(0);
 	const [publicationDate, setPublicationDate] = useState(new Date());
 	const [numPages, setPages] = useState(0);
 	const [edition, setEdition] = useState(0);
 	const [volume, setVolume] = useState(0);
+	const [authors, setAuthors] = useState<number[]>([]);
 
 	const mutation = useMutation({
 		mutationFn: newText,
 		onSuccess: () => {
-			//useQueryClient().invalidateQueries("getAllTexts");
+			setReload(true);
 		},
 	});
 
@@ -122,12 +129,13 @@ export function NewTextForm({ show, setShow }: any) {
 
 		const requestBody: TextDTO = {
 			title,
-			editorialName,
+			editorialId,
 			publicationDate,
-			textType,
+			typeId,
 			edition,
 			volume,
 			numPages,
+			authors,
 		};
 		setShow(false);
 		mutation.mutate(requestBody as TextDTO);
@@ -183,19 +191,42 @@ export function NewTextForm({ show, setShow }: any) {
 					<Form.Group className="mb-3" controlId="formBasicPassword">
 						<div className="d-flex justify-content-between">
 							<Form.Label>Editorial</Form.Label>
-							<EditorialDropdown
-								selected={editorialName}
-								setSelected={setEditorialName}
-							></EditorialDropdown>
+							<CustomDropdown
+								qKey={["getAllEditorials"]}
+								qFn={getAllEditorials}
+								getOptionLabel={(e: EditorialAPIObject) => e.name}
+								setSelectedItem={setEditorialId}
+								mapSelectedValue={(e: EditorialAPIObject) => e.id}
+							></CustomDropdown>
 						</div>
 					</Form.Group>
 
 					<Form.Group className="mb-3" controlId="formBasicPassword">
 						<div className="d-flex justify-content-between">
 							<Form.Label>Tipo de Texto</Form.Label>
-							<TypesDropdown selected={textType} setSelected={setTextType}></TypesDropdown>
+							<CustomDropdown
+								qKey={["getAllTypes"]}
+								qFn={getAllTypes}
+								getOptionLabel={(e: TextTypeAPIObject) => e.typename}
+								setSelectedItem={setTypeId}
+								mapSelectedValue={(e: TextTypeAPIObject) => e.typeId}
+							></CustomDropdown>
 						</div>
 					</Form.Group>
+
+					<Form.Group className="mb-3" controlId="formBasicPassword">
+						<div className="d-flex justify-content-between">
+							<Form.Label>Seleccionar Autores</Form.Label>
+							<MultiSelectWithAutocomplete
+								qKey={["getAllAuthors"]}
+								qFn={getAllAuthors}
+								getOptionLabel={(e: AuthorAPIObject) => `${e.name} ${e.plastName} ${e.mlastName}`}
+								getOptionValue={(e: AuthorAPIObject) => e.id}
+								setSelected={setAuthors}
+							></MultiSelectWithAutocomplete>
+						</div>
+					</Form.Group>
+
 					<Button onClick={(e) => handleSubmit(e)} variant="primary" type="submit">
 						Crear texto
 					</Button>
@@ -205,32 +236,20 @@ export function NewTextForm({ show, setShow }: any) {
 	);
 }
 
-export function NewTextModal({ show, setShow }: any) {
-	const handleClose = () => setShow(false);
 
-	return (
-		<Modal show={show} onHide={handleClose}>
-			<Modal.Header closeButton>
-				<Modal.Title>Añadir nuevo texto</Modal.Title>
-			</Modal.Header>
-			<Modal.Body>
-				<NewTextForm show={show} setShow={setShow}></NewTextForm>
-			</Modal.Body>
-		</Modal>
-	);
-}
-
-export function TextsTable() {
+export function TextsTable({ reload, setReload }: any) {
 	const {
 		isLoading,
 		isError,
 		data: books,
+		refetch
 	} = useQuery<TextAPIObject[], Error>({
 		queryKey: ["getAllTexts"],
 		queryFn: getAllTexts,
 	});
 
-	const [reload, setReload] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+	const [bookIdToDelete, setBookIdToDelete] = useState<number | null>(null);
 
 	const deleteTextMutation = useMutation({
 		mutationFn: deleteText,
@@ -239,13 +258,29 @@ export function TextsTable() {
 		},
 	});
 
-	const handleDelete = (e: FormEvent, id: number) => {
-		e.preventDefault();
-		deleteTextMutation.mutate(id);
+	useEffect(() => {
+		if(reload) {
+			refetch();
+			setReload(false);
+		}
+	}, [reload, refetch])
+
+	const handleShowModal = (bookId: number) => {
+		setBookIdToDelete(bookId);
+		setShowModal(true);
 	};
 
-	/*
-	 */
+	const handleCloseModal = () => {
+		setShowModal(false);
+		setBookIdToDelete(null);
+	};
+
+	const handleConfirmDelete = () => {
+		if (bookIdToDelete === null) return;
+		deleteTextMutation.mutate(bookIdToDelete);
+		handleCloseModal();
+	};
+
 	const tableContent: any = buildTableContent(9, isLoading, isError, books, (book: TextAPIObject) => (
 		<tr key={book.id}>
 			<td>{book.id}</td>
@@ -253,13 +288,14 @@ export function TextsTable() {
 			<td>{book.editorial.name}</td>
 			<td>{book.type.typename}</td>
 			<td>{book.publicationDate.toString()}</td>
+			<td><ul>{book.authors.map((e) => <li>{e.name} {e.plastName} {e.mlastName}</li>)}</ul></td>
 			<td>{book.pages}</td>
 			<td>{book.edition}</td>
 			<td>{book.volume}</td>
 			<td>
 				<ButtonGroup aria-label="Basic example">
 					<Button variant="secondary">Actualizar</Button>
-					<Button onClick={(e) => handleDelete(e, book.id)} variant="danger">
+					<Button onClick={() => handleShowModal(book.id)} variant="danger">
 						Eliminar
 					</Button>
 				</ButtonGroup>
@@ -277,6 +313,7 @@ export function TextsTable() {
 						<th>Editorial</th>
 						<th>Tipo</th>
 						<th>Fecha Publicación</th>
+						<th>Autores</th>
 						<th>Páginas</th>
 						<th>Edición</th>
 						<th>Volumen</th>
@@ -285,6 +322,10 @@ export function TextsTable() {
 				</thead>
 				<tbody>{tableContent}</tbody>
 			</Table>
+			<ConfirmationModal
+				show={showModal} onClose={handleCloseModal} onConfirm={handleConfirmDelete}
+				message="¿Desea eliminar este libro?"
+      		></ConfirmationModal>
 		</>
 	);
 }
@@ -295,20 +336,33 @@ export function UsersTable() {
 		queryFn: getAllUsers,
 	});
 
-	const [reload, setReload] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+	const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
 
 	const deleteUserMutation = useMutation({
 		mutationFn: deleteUser,
 		onSuccess() {
-			console.log();
-			setReload(true);
+
 		},
 	});
 
-	const handleDelete = (e: FormEvent, userId: number) => {
-		e.preventDefault();
-		deleteUserMutation.mutate(userId);
+	const handleShowModal = (userId: number) => {
+		setUserIdToDelete(userId);
+		setShowModal(true);
 	};
+
+	const handleCloseModal = () => {
+		setShowModal(false);
+		setUserIdToDelete(null);
+	};
+
+	const handleConfirmDelete = () => {
+		if (userIdToDelete === null) return;
+		deleteUserMutation.mutate(userIdToDelete);
+		handleCloseModal();
+	};
+
+
 
 	const tableContent: any = buildTableContent(6, isLoading, isError, data, (user: UserAPIObject) => (
 		<tr key={user.userId}>
@@ -324,7 +378,7 @@ export function UsersTable() {
 			<td>
 				<ButtonGroup aria-label="Basic example">
 					<Button variant="secondary">Actualizar</Button>
-					<Button onClick={(e) => handleDelete(e, user.userId)} variant="danger">
+					<Button onClick={() => handleShowModal(user.userId)} variant="danger">
 						Eliminar
 					</Button>
 				</ButtonGroup>
@@ -351,6 +405,10 @@ export function UsersTable() {
 				</thead>
 				<tbody>{tableContent}</tbody>
 			</Table>
+			<ConfirmationModal
+				show={showModal} onClose={handleCloseModal} onConfirm={handleConfirmDelete}
+				message="¿Desea eliminar este libro?"
+      		></ConfirmationModal>
 		</>
 	);
 }

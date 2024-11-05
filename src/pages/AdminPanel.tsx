@@ -3,7 +3,8 @@ import Tabs from "react-bootstrap/Tabs";
 
 import { Card, CardBody } from "react-bootstrap";
 
-import { NewTextModal, TextsTable, UsersTable } from "../components/AdminTables";
+import { NewTextForm, TextsTable, UsersTable } from "../components/AdminTables";
+import { CustomModal } from "../components/CustomModals";
 import { Container, Button } from "react-bootstrap";
 
 import { useState } from "react";
@@ -27,15 +28,20 @@ function CRUDTabs() {
 	const [showNewTextModal, setShowNewTextModal] = useState(false);
 	const [showNewUserModal, setShowNewUserModal] = useState(false);
 
+	const [reloadUsers, setReloadUsers] = useState(false);
+	const [reloadTexts, setReloadTexts] = useState(false);
+
 	return (
 		<Tabs defaultActiveKey="users" id="uncontrolled-tab-example" className="mb-3">
 			<Tab eventKey="users" title="Usuarios">
-				<PanelCard
-					title="Administrar usuarios"
-					showThisModal={showNewUserModal}
-					setShowThisModal={setShowNewUserModal}
-				>
-					<NewTextModal enabled={showNewUserModal} setEnabled={setShowNewUserModal}></NewTextModal>
+				<PanelCard>
+					<div className="my-2 d-flex justify-content-between">
+						<h2>
+							<b>Administrar usuarios</b>
+						</h2>
+						<Button onClick={() => setShowNewUserModal(true)}>Agregar usuario</Button>
+					</div>
+
 					<UsersTable></UsersTable>
 				</PanelCard>
 			</Tab>
@@ -47,10 +53,15 @@ function CRUDTabs() {
 						</h2>
 						<Button onClick={() => setShowNewTextModal(true)}>Agregar elemento</Button>
 					</div>
-
-					<NewTextModal show={showNewTextModal} setShow={setShowNewTextModal}></NewTextModal>
-
-					<TextsTable></TextsTable>
+					<CustomModal 
+						show={showNewTextModal} 
+						setShow={setShowNewTextModal} 
+						title="Añadir nuevo texto"
+						form={NewTextForm}
+						reload={reloadTexts}
+						setReload={setReloadTexts}
+					></CustomModal>
+					<TextsTable reload={reloadTexts} setReload={setReloadTexts}></TextsTable>
 				</PanelCard>
 			</Tab>
 			<Tab eventKey="contact" title="Contact" disabled>

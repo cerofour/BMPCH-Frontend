@@ -7,7 +7,8 @@ import { Link } from "react-router-dom";
 import { NavDropdown, Button, NavbarCollapse, Row, Col } from "react-bootstrap";
 import { Spinner } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
-import { getMe, UserAPIObject } from "../api/api";
+import { getMe} from "../api/api";
+import {UserAPIObject} from "../api/types";
 import { useAuth } from "../hooks/useAuth";
 
 function UserInformation() {
