@@ -51,6 +51,63 @@ export type AuthorAPIObject = {
     mlastName: string;
 }
 
+export type StatusAPIObject = {
+    id: number;
+    statusName: string;
+    isActive: boolean;
+}
+
+export type CountryAPIObject = {
+    id: number;
+    countryName: string;
+}
+
+export type RegionAPIObject = {
+    id: number;
+    country: CountryAPIObject;
+    regionName: string;
+}
+
+export type ProvinceAPIObject = {
+    id: number;
+    region: RegionAPIObject;
+    provinceName: string;
+}
+
+export type DistrictAPIObject = {
+    id: number;
+    province: ProvinceAPIObject;
+    districtName: string;
+}
+
+export type AddressAPIObject = {
+    id: number;
+    district: DistrictAPIObject;
+    address: string;
+}
+
+export type CarnetAPIObject = {
+    id: number;
+    status: StatusAPIObject;
+    code: string;
+    carnetIssuanceDate: Date;
+    carnetExpirationDate: Date;
+}
+
+export type EducationAPIObject = {
+    id: number;
+    educationName: string;
+}
+
+export type CustomerAPIObject = {
+    id: number;
+    user: UserAPIObject;
+    address: AddressAPIObject;
+    email: string;
+    carnet: CarnetAPIObject;
+    education: EducationAPIObject;
+}
+
 // DTO
 
 export type GenderDTO = {

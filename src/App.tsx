@@ -20,64 +20,71 @@ import BookPage from "./pages/BookPage";
 const queryClient = new QueryClient();
 
 function App() {
-	return (
-		<QueryClientProvider client={queryClient}>
-			<AuthProvider>
-				<Router>
-					<Routes>
-						<Route path="login" element={<Login></Login>} />
-						{/* Routes that use the layout */}
-						<Route path="/" element={<Layout />}>
-							<Route index element={<HomePage />} />
-							<Route
-								path="logout"
-								element={
-									<ProtectedRoute>
-										<Logout />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path="catalogo"
-								element={
-									<ProtectedRoute>
-										<Catalogue />
-									</ProtectedRoute>
-								}
-							/>
+  return (
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="login" element={<Login></Login>} />
+            {/* Routes that use the layout */}
+            <Route path="/" element={<Layout />}>
+              <Route
+                index
+                element={
+                  <ProtectedRoute>
+                    <HomePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="logout"
+                element={
+                  <ProtectedRoute>
+                    <Logout />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="catalogo"
+                element={
+                  <ProtectedRoute>
+                    <Catalogue />
+                  </ProtectedRoute>
+                }
+              />
 
-							{/* Individual Book Page Route */}
-							<Route
-								path="catalogo/:id"
-								element={
-									<ProtectedRoute>
-										<BookPage />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path="perfil"
-								element={
-									<ProtectedRoute>
-										<Profile />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path="admin-panel"
-								element={
-									<ProtectedRoute>
-										<AdminPanel />
-									</ProtectedRoute>
-								}
-							/>
-							<Route path="ayuda" element={<Help></Help>} />
-							<Route path="*" element={<NoPage />} />
-						</Route>
-					</Routes>
-				</Router>
-			</AuthProvider>
-		</QueryClientProvider>
-	);
+              {/* Individual Book Page Route */}
+              <Route
+                path="catalogo/:id"
+                element={
+                  <ProtectedRoute>
+                    <BookPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="perfil"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="admin-panel"
+                element={
+                  <ProtectedRoute>
+                    <AdminPanel />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="ayuda" element={<Help></Help>} />
+              <Route path="*" element={<NoPage />} />
+            </Route>
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
 }
 export default App;

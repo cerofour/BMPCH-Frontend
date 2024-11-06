@@ -8,7 +8,8 @@ import {
 	TextDTO,
 	UserLogin,
 	UserLoginResponse,
-	AuthorAPIObject
+	AuthorAPIObject,
+	CustomerAPIObject
 } from "./types";
 
 const DOMAIN = "http://144.22.63.67:8080";
@@ -60,6 +61,11 @@ export async function getText(textId: number): Promise<TextAPIObject> {
 
 export async function getAllAuthors(): Promise<AuthorAPIObject[]> {
 	const response = await api.get("/authors/");
+	return response.data;
+}
+
+export async function getAllCustomers(): Promise<CustomerAPIObject[]> {
+	const response = await api.get("/customers/");
 	return response.data;
 }
 
