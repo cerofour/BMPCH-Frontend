@@ -1,11 +1,36 @@
 import { Container, Row, Col, Button } from "react-bootstrap";
+import CustomCarousel from "../components/CustomCarousel";
 
 function HomePage() {
+	const images = [
+		{
+			src: "https://tubiblioteca.utp.edu.pe/opac-tmpl/skyblue/images/carousel-01.png",
+			alt: "Imagen1",
+			title: "Imagen1",
+			subcontent: "prueba de imagen 1"
+		},
+		{
+			src: "https://tubiblioteca.utp.edu.pe/opac-tmpl/skyblue/images/carousel-02.png",
+			alt: "Imagen2",
+			title: "Imagen2",
+			subcontent: "prueba de imagen 2"
+		},
+		{
+			src: "https://tubiblioteca.utp.edu.pe/opac-tmpl/skyblue/images/carousel-02.png",
+			alt: "Imagen2",
+			title: "Imagen2",
+			subcontent: "prueba de imagen 2"
+		},
+	];
+
 	return (
+		<>
+		<CustomCarousel elements={images} interval={1000} theme="ligth" />
 		<Container fluid className="d-flex align-items-center justify-content-center">
 			<Row className="text-center">
+
 				<Col>
-					<h1 className="fw-bold" style={{ fontSize: "2.5rem" }}>
+					<h1 className="fw-bold" style={{ fontSize: "2.5rem", marginTop: "30px" }}>
 						Biblioteca Municipal
 					</h1>
 					<p className="lead mb-4">El mejor lugar para encontrar tus libros favoritos.</p>
@@ -37,6 +62,7 @@ function HomePage() {
 				</Col>
 			</Row>
 		</Container>
+		</>
 	);
 }
 

@@ -13,6 +13,7 @@ import { UserAPIObject, TextAPIObject, CustomerAPIObject } from "../api/types";
 import { ConfirmationModal } from "./CustomModals";
 import { firstN, prettifyAddress } from "./Utils";
 import { Link } from "react-router-dom";
+import { Icon } from "./Icon";
 
 function buildTableContent<T extends Object>(
   colspan: number,
@@ -197,12 +198,11 @@ export function UsersTable() {
         <td>{firstN(user.psk, 12)}</td>
         <td>
           <ButtonGroup aria-label="Basic example">
-            <Button variant="secondary">Actualizar</Button>
-            <Button
-              onClick={() => handleShowModal(user.userId)}
-              variant="danger"
-            >
-              Eliminar
+            <Button variant="secondary">
+              <Icon iconName="PersonFillUp" size={25}/>
+            </Button>
+            <Button onClick={() => handleShowModal(user.userId)} variant="danger">
+              <Icon iconName="PersonFillDash" size={25}/>
             </Button>
           </ButtonGroup>
         </td>

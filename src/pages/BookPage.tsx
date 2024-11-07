@@ -1,4 +1,4 @@
-import { Container, Col, Row, Card, Alert, Spinner } from "react-bootstrap";
+import { Container, Col, Row, Alert, Spinner } from "react-bootstrap";
 import { Navigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getText } from "../api/api";
