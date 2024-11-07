@@ -8,11 +8,14 @@ import {
   Col,
   Card,
   Alert,
+  Spinner,
+  InputGroup,
 } from "react-bootstrap";
 import { sendLoginCredentials } from "../api/api";
 import { UserLogin } from "../api/types";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "../hooks/useAuth";
+import { Icon } from "../components/Icon";
 
 export default function Login() {
   const [loginStatus, setLoginStatus] = useState(<></>);
@@ -65,6 +68,8 @@ function LoginForm({ setLoginStatus }: any) {
 
   const [document, setDocument] = useState("");
   const [psk, setPsk] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const location = useLocation();
 
@@ -75,10 +80,12 @@ function LoginForm({ setLoginStatus }: any) {
     onSuccess: (data) => {
       setToken(data.token);
       setLoginStatus(<Alert variant="success">Login Completado!</Alert>);
+      setIsLoading(false);
       navigate(from, { replace: true });
     },
     onError(error) {
       // really bad way to check for an error
+      setIsLoading(false);
       if (error.message.endsWith("401"))
         setLoginStatus(<Alert variant="danger">Credenciales invalidas</Alert>);
       else setLoginStatus(<Alert variant="danger">Error desconocido</Alert>);
@@ -89,6 +96,7 @@ function LoginForm({ setLoginStatus }: any) {
 
   const handleLogin = (e: FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     const request: UserLogin = { document, psk };
     loginRequest.mutate(request);
   };
@@ -101,16 +109,22 @@ function LoginForm({ setLoginStatus }: any) {
           onChange={(e) => setDocument(e.target.value)}
           type="text"
           placeholder="Ingrese su DNI"
+          required
         />
       </Form.Group>
 
       <Form.Group className="mb-4" controlId="formPassword">
         {/* <Form.Label>Ingrese contraseña</Form.Label> */}
-        <Form.Control
-          onChange={(e) => setPsk(e.target.value)}
-          type="password"
-          placeholder="Ingrese su contraseña"
-        />
+        <InputGroup>
+          <Form.Control
+            onChange={(e) => setPsk(e.target.value)}
+            type={showPassword ? "text" : "password"} // Alterna el tipo de input
+            placeholder="Ingrese su contraseña"
+          />
+          <InputGroup.Text onClick={() => setShowPassword(!showPassword)} style={{ cursor: "pointer" }}>
+            {showPassword ? <Icon iconName="EyeSlash" size={20} /> : <Icon iconName="Eye" size={20} />} 
+          </InputGroup.Text>
+        </InputGroup>
       </Form.Group>
 
       <Button
@@ -122,8 +136,9 @@ function LoginForm({ setLoginStatus }: any) {
           borderColor: "#1695a9",
           borderRadius: "1px",
         }}
+        disabled={isLoading}
       >
-        Ingresar
+        {(isLoading ? <Spinner animation="border" variant="light" /> : "Ingresar")}
       </Button>
     </Form>
   );

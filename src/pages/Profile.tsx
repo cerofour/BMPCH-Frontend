@@ -7,9 +7,11 @@ import {
   Tabs,
   Button,
   Image,
+  Spinner,
 } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
-import { getMe, UserAPIObject } from "../api/api";
+import { getMe } from "../api/api";
+import { UserAPIObject } from "../api/types";
 import { QRCodeSVG } from "qrcode.react";
 
 export default function Profile() {
@@ -20,9 +22,15 @@ export default function Profile() {
 
   let document: string | undefined = undefined;
 
-  if (isLoading) document = "Cargando...";
+  if (isLoading) return (
+    <div className="d-flex justify-content-center align-items-center h-100">
+      <Spinner animation="border" variant="primary" />
+    </div>
+  )
   else if (isError) document = "Error.";
   else document = data?.document;
+
+  console.log(isLoading);
 
   const qrData = data?.document || "example";
 

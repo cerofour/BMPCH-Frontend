@@ -1,85 +1,103 @@
-import { Stack } from "react-bootstrap";
-import MyMenuLink from "./MenuLink";
-import MyMenuAccordion from "./MenuAccordion";
+import { UserInformation } from "../components/Navbar";
+import { Accordion, Col, Nav, Offcanvas } from "react-bootstrap";
 
-interface MySidebarProps {
-    show: boolean;
-    onClose: () => void;
+import { Icon } from "../components/Icon";
+
+type x1 = {
+    display: string;
+    link: string;
+    icon: any;
+    sublinks?: y1[] | undefined
 }
 
-export default function MySidebar({show, onClose}: MySidebarProps) {
+type y1 = {
+    display: string;
+    link: string;
+    icon: any;
+}
 
-    const sidebarTittle = "Menú";
+export function Sidebar({showSidebar, setShowSidebar}: any) {
 
-    const x = (d: string, l: string) => {
+	const handleSidebarToggle = () => setShowSidebar(!showSidebar);
+
+	const x = (d: string, l: string, i: any, sl?: y1[] | undefined): x1  => {
 		return {
 			display: d,
 			link: l,
+			icon: i,
+            sublinks: sl
 		};
 	};
 
-    const y = (d: string, s: ReturnType<typeof x>[]) => {
-        return {
-            display: d,
-            subLinks: s,
-        };
-    };
-
-    const a = (l: ReturnType<typeof x>[]) => {
-        return l.map((link, i) => (MyMenuLink(link, i)))
+    const generateNavLink = (element: y1, key: number) => {
+        return (
+        <Nav.Link key={key} href={element.link}>
+            <Icon iconName={element.icon} size={20}/><b className="mx-2">{element.display}</b>
+        </Nav.Link>)
     }
 
-	const sidebarLinks = [
-		//x("Menu", "/"),
-        //y("Menu", [x("Submenu", "/")])
-        x("Inicio","/"),
-        x("Catálogo", "catalogo"),
-        y("Recursos",[
-            x("Nuevo recurso", "nuevo-recurso"),
-            x("Gestionar recursos", "gestionar-recursos"),
-        ]),
-        y("Préstamos", [
-            x("Nuevo préstamo", "nuevo-prestamo"),
-            x("Gestionar préstamos", "gestionar-prestamos")
-        ]),
-        y("Usuarios", [
-            x("Nuevo lector", "nuevo-lector"),
-            x("Gestionar lectores", "gestionar-lectores"),
-            x("Nuevo trabajador", "nuevo-trabajador"),
-            x("Gestionar trabajadores", "gestionar-trabajadores"), //Redirige a admin-panel
-        ]),
-        x("Estadísticas", "estadisticas"),
-        x("Cerrar sesión", "login"),
-		x("Panel Admin", "admin-panel"),
-		x("Perfil", "perfil"),
-		// x("Catálogo", "catalogo"),
-        // x("Ayuda", "ayuda"),
-	];
+	const navbarLinks = [
+		x("Perfil", "/perfil", "PersonFill"),
+        x("Home", "/", "HouseFill"),
+		x("Panel Admin", "", "GearFill", 
+            [x("Tabla de usuarios", "/admin-panel", "Table"), 
+             x("Tabla de textos", "/admin-panel", "Table"),
+             x("Tabla de clientes", "/admin-panel", "Table")]
+        ),
+		x("Catálogo", "/catalogo", "BookFill"),
+		x("Ayuda", "/ayuda", "QuestionCircle"),
+	].map((link, i) => (
+        <Accordion.Item eventKey={i.toString()} style={{border: "none"}}>
+            {(link.sublinks !== undefined) 
+            ? 
+            <>
+                <Accordion.Header>
+                    <Icon iconName={link.icon} size={20}/>
+                    <b className="mx-2">{link.display}</b>
+                </Accordion.Header>
+                <Accordion.Body>
+                    {link.sublinks.map((link1, i) => generateNavLink(link1, i))}
+                </Accordion.Body>
+            </>
+            :
+            generateNavLink(link, i)}
+        </Accordion.Item>
 
-    const tsxLinks = sidebarLinks.map((link, i) => {
-        if ("link" in link) {
-            return MyMenuLink(link, i)
-        } else {
-            const tsxSubLinks = a(link.subLinks)
-            return MyMenuAccordion(link.display, tsxSubLinks)
-        }
-    });
+	));
 
-    return(
-        <>
-            <div>
-                <div className={`my-sidebar ${show ? '' : 'close'}`}>
-                    <Stack direction="horizontal" className="align-items-center justify-content-between mb-3">
-                        <h6 style={{color:'#808080',  margin: '0'}}>{sidebarTittle}</h6>
-                        <div>
-                            <button onClick={onClose} className="close-button">X</button>
-                        </div>
-                    </Stack>
-                    <Stack gap={3}>
-                        {tsxLinks}
-                    </Stack>
-                </div>
-            </div>
-        </>
-    );
+	//console.log(navbarLinks);
+
+	return (
+		<>
+            <Col md={3} lg={2} className="d-none d-md-block text-light sidebar">
+				<Nav className="flex-column">
+                    <Accordion>
+					    {navbarLinks}
+                    </Accordion>
+				</Nav>
+			</Col>
+
+			{/* Toggle button for small screens */}
+			{/* Offcanvas Sidebar for small screens */}
+			<Offcanvas show={showSidebar} onHide={handleSidebarToggle} placement="start">
+			    <Offcanvas.Header closeButton>
+					<Offcanvas.Title>Menu</Offcanvas.Title>
+				</Offcanvas.Header>
+				<Offcanvas.Body>
+					<UserInformation/>
+					<hr/>
+					<Nav className="flex-column">
+                        <Accordion>
+                            {navbarLinks}
+                        </Accordion>
+                    </Nav>
+					<hr/>
+					<Nav.Link key="logout" href="/logout">
+                        <Icon iconName="BoxArrowRight" size={20}/>
+                        <b className="mx-2">Cerrar Sesión</b>
+					</Nav.Link>
+				</Offcanvas.Body>
+			</Offcanvas>
+		</>
+	);
 }
