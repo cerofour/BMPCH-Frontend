@@ -8,10 +8,11 @@ import {
   TextsTable,
   UsersTable,
   CustomersTable,
+  AuthorsTable,
 } from "../components/AdminTables";
 import { CustomModal } from "../components/CustomModals";
 import { Button } from "react-bootstrap";
-import { NewTextForm, NewUserForm, NewCustomerForm } from "../components/Form";
+import { NewTextForm, NewUserForm, NewCustomerForm, NewAuthorForm } from "../components/Form";
 
 function PanelCard({ children }: any) {
   return (
@@ -25,10 +26,13 @@ function CRUDTabs() {
   const [showNewTextModal, setShowNewTextModal] = useState(false);
   const [showNewUserModal, setShowNewUserModal] = useState(false);
   const [showNewCustomerModal, setShowNewCustomerModal] = useState(false);
+  const [showNewAuthorModal, setShowNewAuthorModal] = useState(false);
+
 
   const [reloadUsers, setReloadUsers] = useState(false);
   const [reloadTexts, setReloadTexts] = useState(false);
   const [reloadCustomers, setReloadCustomers] = useState(false);
+  const [reloadAuthors, setReloadAuthors] = useState(false);
 
   return (
     <Tabs
@@ -66,7 +70,7 @@ function CRUDTabs() {
               <b>Administrar textos</b>
             </h2>
             <Button onClick={() => setShowNewTextModal(true)}>
-              Agregar elemento
+              Agregar texto
             </Button>
           </div>
           <CustomModal
@@ -90,7 +94,7 @@ function CRUDTabs() {
               <b>Administrar Clientes</b>
             </h2>
             <Button onClick={() => setShowNewCustomerModal(true)}>
-              Agregar elemento
+              Agregar cliente
             </Button>
           </div>
           <CustomModal
@@ -105,6 +109,30 @@ function CRUDTabs() {
             reload={reloadCustomers}
             setReload={setReloadCustomers}
           ></CustomersTable>
+        </PanelCard>
+      </Tab>
+      <Tab eventKey="authors" title="Autores">
+        <PanelCard>
+          <div className="my-2 d-flex justify-content-between">
+            <h2>
+              <b>Administrar Autores</b>
+            </h2>
+            <Button onClick={() => setShowNewAuthorModal(true)}>
+              Agregar autor
+            </Button>
+          </div>
+          <CustomModal
+            show={showNewAuthorModal}
+            setShow={setShowNewAuthorModal}
+            title="Añadir nuevo autor"
+            form={NewAuthorForm}
+            reload={reloadAuthors}
+            setReload={setReloadAuthors}
+          ></CustomModal>
+          <AuthorsTable
+            reload={reloadAuthors}
+            setReload={setReloadAuthors}
+          ></AuthorsTable>
         </PanelCard>
       </Tab>
     </Tabs>

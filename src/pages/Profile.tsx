@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getMe } from "../api/api";
 import { UserAPIObject } from "../api/types";
 import { QRCodeSVG } from "qrcode.react";
+import { ReactIcons } from "../components/Icon";
 
 export default function Profile() {
   const { isLoading, isError, data } = useQuery<UserAPIObject, Error>({
@@ -40,13 +41,14 @@ export default function Profile() {
       <Row className="mb-4">
         <Col md={12} className="text-center">
           {/* Profile Picture */}
-          <Image
+          <ReactIcons library="IoIcons" iconName="IoIosPerson" size={200}/>
+          {/*<Image
             src="https://placehold.co/300"
             roundedCircle
             width="150"
             height="150"
             className="mb-3"
-          />
+          />*/}
           <h3>
             <b>{data?.name + " " + data?.plastName + " " + data?.mlastName}</b>
           </h3>

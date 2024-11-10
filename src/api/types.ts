@@ -126,6 +126,12 @@ export type TextDTO = {
     authors: number[];
 };
 
+export type AuthorDTO = {
+    name: string,
+    plastName: string;
+    mlastName: string;
+}
+
 export type UserLogin = {
     document: string;
     psk: string;

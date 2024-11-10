@@ -30,14 +30,13 @@ const AuthProvider = ({ children }: any) => {
   };
 
   const authenticated = (): boolean => {
-    if (token === null) return false;
+    if (token === null){console.log("token null");return false;}
 
     const decoded: any = jwtDecode(token);
     if (decoded.exp * 1000 < Date.now()) {
       logout();
       return false;
     }
-
     return true;
   };
 
@@ -45,8 +44,7 @@ const AuthProvider = ({ children }: any) => {
     if (token) {
       api.defaults.headers.common["Authorization"] = "Bearer " + token;
       loginApi.defaults.headers.common["Authorization"] = "Bearer " + token;
-
-      localStorage.setItem(tokenKey, token);
+      localStorage.setItem(tokenKey, token);  
     } else {
       delete api.defaults.headers.common["Authorization"];
       localStorage.removeItem(tokenKey);
