@@ -15,7 +15,7 @@ import { sendLoginCredentials } from "../api/api";
 import { UserLogin } from "../api/types";
 import { useMutation } from "@tanstack/react-query";
 import { useAuth } from "../hooks/useAuth";
-import { Icon } from "../components/Icon";
+import { BootstrapIcons, ReactIcons } from "../components/Icon";
 
 export default function Login() {
   const [loginStatus, setLoginStatus] = useState(<></>);
@@ -120,9 +120,10 @@ function LoginForm({ setLoginStatus }: any) {
             onChange={(e) => setPsk(e.target.value)}
             type={showPassword ? "text" : "password"} // Alterna el tipo de input
             placeholder="Ingrese su contraseña"
+            required
           />
           <InputGroup.Text onClick={() => setShowPassword(!showPassword)} style={{ cursor: "pointer" }}>
-            {showPassword ? <Icon iconName="EyeSlash" size={20} /> : <Icon iconName="Eye" size={20} />} 
+            {showPassword ? <BootstrapIcons iconName="EyeSlash" size={20} /> : <BootstrapIcons iconName="Eye" size={20} />} 
           </InputGroup.Text>
         </InputGroup>
       </Form.Group>

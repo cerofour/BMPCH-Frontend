@@ -19,6 +19,7 @@ import {
   AuthorAPIObject,
   TextTypeAPIObject,
   EditorialAPIObject,
+  AuthorDTO,
 } from "../api/types";
 import {
   getAllTypes,
@@ -26,6 +27,7 @@ import {
   getAllAuthors,
   newText,
   newUser,
+  newAuthor,
 } from "../api/api";
 
 type CustomDropdownProps<T> = {
@@ -119,6 +121,7 @@ export function NewTextForm({ show, setShow, reload, setReload }: any) {
               placeholder="Escribe el título del libro"
               onChange={(e) => setTitle(e.target.value)}
               type="text"
+              required
             ></Form.Control>
           </Form.Group>
 
@@ -127,6 +130,7 @@ export function NewTextForm({ show, setShow, reload, setReload }: any) {
             <Form.Control
               onChange={(e) => setPublicationDate(new Date(e.target.value))}
               type="date"
+              required
             ></Form.Control>
           </Form.Group>
 
@@ -136,6 +140,7 @@ export function NewTextForm({ show, setShow, reload, setReload }: any) {
               <Form.Control
                 onChange={(e) => setPages(parseInt(e.target.value))}
                 type="number"
+                required
               ></Form.Control>
             </Form.Group>
 
@@ -144,6 +149,7 @@ export function NewTextForm({ show, setShow, reload, setReload }: any) {
               <Form.Control
                 onChange={(e) => setEdition(parseInt(e.target.value))}
                 type="number"
+                required
               ></Form.Control>
             </Form.Group>
 
@@ -152,6 +158,7 @@ export function NewTextForm({ show, setShow, reload, setReload }: any) {
               <Form.Control
                 onChange={(e) => setVolume(parseInt(e.target.value))}
                 type="number"
+                required
               ></Form.Control>
             </Form.Group>
           </Container>
@@ -248,20 +255,22 @@ export function NewUserForm({ setShow }: any) {
     <>
       <Container fluid>
         <Form>
-          <Form.Group className="mb-3" controlId="formTitulo">
+          <Form.Group className="mb-3" controlId="formDni">
             <Form.Label> DNI </Form.Label>
             <Form.Control
               placeholder="DNI"
               onChange={(e) => setDocument(e.target.value)}
               type="text"
+              required
             ></Form.Control>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formTitulo">
+          <Form.Group className="mb-3" controlId="formNombre">
             <Form.Label> Nombre </Form.Label>
             <Form.Control
               onChange={(e) => setName(e.target.value)}
               type="text"
+              required
             ></Form.Control>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formTitulo">
@@ -269,6 +278,7 @@ export function NewUserForm({ setShow }: any) {
             <Form.Control
               onChange={(e) => setPlastname(e.target.value)}
               type="text"
+              required
             ></Form.Control>
           </Form.Group>
           <Form.Group className="mb-3" controlId="formTitulo">
@@ -276,6 +286,7 @@ export function NewUserForm({ setShow }: any) {
             <Form.Control
               onChange={(e) => setMlastname(e.target.value)}
               type="text"
+              required
             ></Form.Control>
           </Form.Group>
 
@@ -284,6 +295,7 @@ export function NewUserForm({ setShow }: any) {
             <Form.Control
               onChange={(e) => setPhoneNumber(e.target.value)}
               type="text"
+              required
             ></Form.Control>
           </Form.Group>
 
@@ -292,6 +304,7 @@ export function NewUserForm({ setShow }: any) {
             <Form.Control
               onChange={(e) => setPsk(e.target.value)}
               type="text"
+              required
             ></Form.Control>
           </Form.Group>
 
@@ -310,4 +323,75 @@ export function NewUserForm({ setShow }: any) {
 
 export function NewCustomerForm() {
   return <h1>Clientes!</h1>;
+}
+
+export function NewAuthorForm({ show, setShow, reload, setReload }: any) {
+  const [name, setName] = useState("");
+  const [plastName, setPlastName] = useState("");
+  const [mlastName, setMlastName] = useState("");
+
+  const mutation = useMutation({
+    mutationFn: newAuthor,
+    onSuccess: () => {
+      setReload(true);
+    },
+  });
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+
+    const requestBody: AuthorDTO = {
+      name,
+      plastName,
+      mlastName
+    };
+    setShow(false);
+    mutation.mutate(requestBody as AuthorDTO);
+  };
+
+  return (
+    <>
+      <Container fluid>
+        <Form>
+          <Form.Group className="mb-3" controlId="formNameAuthor">
+            <Form.Label> Nombre del autor </Form.Label>
+            <Form.Control
+              placeholder="Escribe el nombre del autor"
+              onChange={(e) => setName(e.target.value)}
+              type="text"
+              required
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formPlastName">
+            <Form.Label> Apellido Paterno del autor </Form.Label>
+            <Form.Control
+              placeholder="Escribe el apellido paterno del autor"
+              onChange={(e) => setPlastName(e.target.value)}
+              type="text"
+              required
+            ></Form.Control>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formMlastName">
+            <Form.Label> Apellido Materno del autor </Form.Label>
+            <Form.Control
+              placeholder="Escribe el apellido materno del autor"
+              onChange={(e) => setMlastName(e.target.value)}
+              type="text"
+              required
+            ></Form.Control>
+          </Form.Group>
+
+          <Button
+            onClick={(e) => handleSubmit(e)}
+            variant="primary"
+            type="submit"
+          >
+            Crear Autor
+          </Button>
+        </Form>
+      </Container>
+    </>
+  );
 }

@@ -8,12 +8,15 @@ import {
   deleteUser,
   deleteText,
   getAllCustomers,
+  getAllAuthors,
+  deleteCustomer,
+  deleteAuthor,
 } from "../api/api";
-import { UserAPIObject, TextAPIObject, CustomerAPIObject } from "../api/types";
+import { UserAPIObject, TextAPIObject, CustomerAPIObject, AuthorAPIObject } from "../api/types";
 import { ConfirmationModal } from "./CustomModals";
 import { firstN, prettifyAddress } from "./Utils";
 import { Link } from "react-router-dom";
-import { Icon } from "./Icon";
+import { BootstrapIcons } from "./Icon";
 
 function buildTableContent<T extends Object>(
   colspan: number,
@@ -199,10 +202,10 @@ export function UsersTable() {
         <td>
           <ButtonGroup aria-label="Basic example">
             <Button variant="secondary">
-              <Icon iconName="PersonFillUp" size={25}/>
+              <BootstrapIcons iconName="PersonFillUp" size={25}/>
             </Button>
             <Button onClick={() => handleShowModal(user.userId)} variant="danger">
-              <Icon iconName="PersonFillDash" size={25}/>
+              <BootstrapIcons iconName="PersonFillDash" size={25}/>
             </Button>
           </ButtonGroup>
         </td>
@@ -233,7 +236,7 @@ export function UsersTable() {
         show={showModal}
         onClose={handleCloseModal}
         onConfirm={handleConfirmDelete}
-        message="¿Desea eliminar este libro?"
+        message="¿Desea eliminar este usuario?"
       ></ConfirmationModal>
     </>
   );
@@ -251,10 +254,10 @@ export function CustomersTable({ reload, setReload }: any) {
   });
 
   const [showModal, setShowModal] = useState(false);
-  const [bookIdToDelete, setBookIdToDelete] = useState<number | null>(null);
+  const [customerIdToDelete, setCustomerIdToDelete] = useState<number | null>(null);
 
-  const deleteTextMutation = useMutation({
-    mutationFn: deleteText,
+  const deleteCustomerMutation = useMutation({
+    mutationFn: deleteCustomer,
     onSuccess() {
       setReload(true);
     },
@@ -267,19 +270,19 @@ export function CustomersTable({ reload, setReload }: any) {
     }
   }, [reload, refetch]);
 
-  const handleShowModal = (bookId: number) => {
-    setBookIdToDelete(bookId);
+  const handleShowModal = (customerId: number) => {
+    setCustomerIdToDelete(customerId);
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setBookIdToDelete(null);
+    setCustomerIdToDelete(null);
   };
 
   const handleConfirmDelete = () => {
-    if (bookIdToDelete === null) return;
-    deleteTextMutation.mutate(bookIdToDelete);
+    if (customerIdToDelete === null) return;
+    deleteCustomerMutation.mutate(customerIdToDelete);
     handleCloseModal();
   };
 
@@ -336,6 +339,100 @@ export function CustomersTable({ reload, setReload }: any) {
         onClose={handleCloseModal}
         onConfirm={handleConfirmDelete}
         message="¿Desea eliminar este cliente?"
+      ></ConfirmationModal>
+    </>
+  );
+}
+
+export function AuthorsTable({ reload, setReload }: any) {
+  const {
+    isLoading,
+    isError,
+    data: authors,
+    refetch,
+  } = useQuery<AuthorAPIObject[], Error>({
+    queryKey: ["getAllAuthors"],
+    queryFn: getAllAuthors,
+  });
+
+  const [showModal, setShowModal] = useState(false);
+  const [authorIdToDelete, setAuthorIdToDelete] = useState<number | null>(null);
+
+  const deleteAuthorMutation = useMutation({
+    mutationFn: deleteAuthor,
+    onSuccess() {
+      setReload(true);
+    },
+  });
+
+  useEffect(() => {
+    if (reload) {
+      refetch();
+      setReload(false);
+    }
+  }, [reload, refetch]);
+
+  const handleShowModal = (authorId: number) => {
+    setAuthorIdToDelete(authorId);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setAuthorIdToDelete(null);
+  };
+
+  const handleConfirmDelete = () => {
+    if (authorIdToDelete === null) return;
+    deleteAuthorMutation.mutate(authorIdToDelete);
+    handleCloseModal();
+  };
+
+  const tableContent: any = buildTableContent(
+    9,
+    isLoading,
+    isError,
+    authors,
+    (author: AuthorAPIObject) => (
+      <tr key={author.id}>
+        <td>{author.id}</td>
+        <td>{author.name}</td>
+        <td>{author.plastName}</td>
+        <td>{author.mlastName}</td>
+        <td>
+          <ButtonGroup aria-label="Basic example">
+            <Button variant="secondary">Actualizar</Button>
+            <Button
+              onClick={() => handleShowModal(author.id)}
+              variant="danger"
+            >
+              Eliminar
+            </Button>
+          </ButtonGroup>
+        </td>
+      </tr>
+    )
+  );
+
+  return (
+    <>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido Paterno</th>
+            <th>Apellido Materno</th>
+            <th>Opciones</th>
+          </tr>
+        </thead>
+        <tbody>{tableContent}</tbody>
+      </Table>
+      <ConfirmationModal
+        show={showModal}
+        onClose={handleCloseModal}
+        onConfirm={handleConfirmDelete}
+        message="¿Desea eliminar este autor?"
       ></ConfirmationModal>
     </>
   );

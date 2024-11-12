@@ -9,7 +9,8 @@ import {
 	UserLogin,
 	UserLoginResponse,
 	AuthorAPIObject,
-	CustomerAPIObject
+	CustomerAPIObject,
+	AuthorDTO
 } from "./types";
 
 const DOMAIN = "http://144.22.63.67:8080";
@@ -79,6 +80,11 @@ export async function newUser(userDto: any) {
 	return (await response).data;
 }
 
+export async function newAuthor(authorDto: AuthorDTO) {
+	const response = api.post("/authors/", authorDto);
+	return (await response).data;
+}
+
 export async function newResource(data: TextAPIObject) {
 	const response = api.post("/texts/", data);
 	return (await response).data;
@@ -96,5 +102,15 @@ export async function deleteUser(id: number): Promise<void> {
 
 export async function deleteText(id: number): Promise<void> {
 	const response = await api.delete(`/texts/delete?id=${id}`);
+	return response.data;
+}
+
+export async function deleteAuthor(id: number): Promise<void> {
+	const response = await api.delete(`/authors/delete?id=${id}`);
+	return response.data;
+}
+
+export async function deleteCustomer(id: number): Promise<void> {
+	const response = await api.delete(`/???/delete?id=${id}`);
 	return response.data;
 }

@@ -1,7 +1,7 @@
 import { UserInformation } from "../components/Navbar";
 import { Accordion, Col, Nav, Offcanvas } from "react-bootstrap";
 
-import { Icon } from "../components/Icon";
+import { BootstrapIcons, ReactIcons } from "../components/Icon";
 
 type x1 = {
     display: string;
@@ -32,7 +32,7 @@ export function Sidebar({showSidebar, setShowSidebar}: any) {
     const generateNavLink = (element: y1, key: number) => {
         return (
         <Nav.Link key={key} href={element.link}>
-            <Icon iconName={element.icon} size={20}/><b className="mx-2">{element.display}</b>
+            <BootstrapIcons iconName={element.icon} size={20}/><b className="mx-2">{element.display}</b>
         </Nav.Link>)
     }
 
@@ -52,7 +52,7 @@ export function Sidebar({showSidebar, setShowSidebar}: any) {
             ? 
             <>
                 <Accordion.Header>
-                    <Icon iconName={link.icon} size={20}/>
+                    <BootstrapIcons iconName={link.icon} size={20}/>
                     <b className="mx-2">{link.display}</b>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -86,15 +86,15 @@ export function Sidebar({showSidebar, setShowSidebar}: any) {
 				<Offcanvas.Body>
 					<UserInformation/>
 					<hr/>
-					<Nav className="flex-column">
+					<Nav className="flex-column" >
                         <Accordion>
                             {navbarLinks}
                         </Accordion>
                     </Nav>
 					<hr/>
 					<Nav.Link key="logout" href="/logout">
-                        <Icon iconName="BoxArrowRight" size={20}/>
-                        <b className="mx-2">Cerrar Sesión</b>
+                        <ReactIcons library="GoIcons" iconName="GoSignOut" size={28}/>
+                        <b className="mx-1">Cerrar Sesión</b>
 					</Nav.Link>
 				</Offcanvas.Body>
 			</Offcanvas>
