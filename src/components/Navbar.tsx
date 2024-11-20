@@ -11,7 +11,7 @@ import { UserAPIObject } from "../api/types";
 import { useAuth } from "../hooks/useAuth";
 import { BootstrapIcons } from "./Icon";
 
-export function UserInformation({showNavDropDown = false}: {showNavDropDown?: boolean}) {
+export function UserInformation({ showNavDropDown = false }: { showNavDropDown?: boolean }) {
 	const { authenticated } = useAuth();
 
 	if (authenticated() == false) {
@@ -23,32 +23,32 @@ export function UserInformation({showNavDropDown = false}: {showNavDropDown?: bo
 		queryFn: getMe,
 	});
 
-	if (isLoading)
-		return (
-			<Spinner animation="border" role="status" />
-		);
+	if (isLoading) return <Spinner animation="border" role="status" />;
 	if (isError) return <b>Error al cargar</b>;
 
 	const title = (
-		<span style={{ whiteSpace: 'pre-line' }}>
-			Hola, <b>{`${data?.name} ${data?.plastName}\n`}</b>{`${data?.document}`}
+		<span style={{ whiteSpace: "pre-line" }}>
+			Hola, <b>{`${data?.name} ${data?.plastName}\n`}</b>
+			{`${data?.document}`}
 		</span>
 	);
+
+	const { logout } = useAuth();
 
 	const navDropDown = (
 		<NavDropdown title={title} id="basic-nav-dropdown">
 			<Link to="/perfil">
 				<NavDropdown.Item href="/perfil">Mi Perfil</NavDropdown.Item>
 			</Link>
-			<Link to="/logout">
-				<NavDropdown.Item href="/logout">Cerrar Sesión</NavDropdown.Item>
+			<Link to="/">
+				<NavDropdown.Item onClick={() => logout()}>Cerrar Sesión</NavDropdown.Item>
 			</Link>
 		</NavDropdown>
 	);
 
 	return (
 		<div className="d-flex">
-			<BootstrapIcons iconName="PersonCircle" size={50} className="mx-2"/>
+			<BootstrapIcons iconName="PersonCircle" size={50} className="mx-2" />
 			{showNavDropDown ? navDropDown : title}
 		</div>
 	);
@@ -64,7 +64,7 @@ export default function MyNavbar({ toggleSidebar, title }: MyNavbarProps) {
 	// ../assets/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png
 	return (
 		<>
-			<Navbar expand="md" sticky="top" className="bg-body-tertiary mynavbar" >
+			<Navbar expand="md" sticky="top" className="bg-body-tertiary mynavbar">
 				<Container fluid>
 					<Navbar.Brand href="/">
 						<img
@@ -77,12 +77,12 @@ export default function MyNavbar({ toggleSidebar, title }: MyNavbarProps) {
 					</Navbar.Brand>
 
 					<Button variant="dark" onClick={toggleSidebar} className="d-md-none mx-3">
-						<BootstrapIcons iconName="MenuButtonWide" size={25}/> Menú
+						<BootstrapIcons iconName="MenuButtonWide" size={25} /> Menú
 					</Button>
 
 					<div className="pe-4  d-none d-md-flex">
 						<div className="vr"></div>
-						<UserInformation showNavDropDown={true}/>
+						<UserInformation showNavDropDown={true} />
 					</div>
 				</Container>
 			</Navbar>

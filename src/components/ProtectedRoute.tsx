@@ -6,6 +6,8 @@ export default function ProtectedRoute({ children }: any) {
 
 	const location = useLocation();
 
+	console.log(location);
+
 	// Check if the user is authenticated
 	if (!authenticated()) {
 		// If not authenticated, redirect to the login page
