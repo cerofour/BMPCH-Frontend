@@ -46,12 +46,7 @@ export function UserInformation({ showNavDropDown = false }: { showNavDropDown?:
 		</NavDropdown>
 	);
 
-	return (
-		<div className="d-flex">
-			<BootstrapIcons iconName="PersonCircle" size={50} className="mx-2" />
-			{showNavDropDown ? navDropDown : title}
-		</div>
-	);
+	return <div className="d-flex">{showNavDropDown ? navDropDown : title}</div>;
 }
 
 interface MyNavbarProps {
@@ -64,14 +59,14 @@ export default function MyNavbar({ toggleSidebar, title }: MyNavbarProps) {
 	// ../assets/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png
 	return (
 		<>
-			<Navbar expand="md" sticky="top" className="bg-body-tertiary mynavbar">
+			<Navbar expand="md" sticky="top" className="mynavbar bg-dark text-light">
 				<Container fluid>
-					<Navbar.Brand href="/">
+					<Navbar.Brand href="/" className="text-light">
 						<img
 							src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png/1200px-Escudo_de_Armas_la_Ciudad_de_Chiclayo.png"
 							alt="Logo de la Municipalidad Provincial de Chiclayo"
-							width={50}
-							height={50}
+							width={40}
+							height={40}
 						/>
 						<span className="d-none d-md-inline mx-2">{title}</span>
 					</Navbar.Brand>
@@ -81,7 +76,6 @@ export default function MyNavbar({ toggleSidebar, title }: MyNavbarProps) {
 					</Button>
 
 					<div className="pe-4  d-none d-md-flex">
-						<div className="vr"></div>
 						<UserInformation showNavDropDown={true} />
 					</div>
 				</Container>

@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllTexts } from "../api/api";
-import {TextAPIObject} from "../api/types";
+import { TextAPIObject } from "../api/types";
 
 import { Link } from "react-router-dom";
 import { Alert, Spinner, Card, Button, Col, Row } from "react-bootstrap";
 
 function BookCard(book: TextAPIObject) {
 	return (
-		<Col key={book.id}>
-			<Card className="text-card" style={{ width: "18rem" }}>
+		<Col xs={12} key={book.id}>
+			<Card className="text-card">
 				<Card.Img variant="top" src={`https://placehold.co/300`} />
 				<Card.Body>
 					<Card.Title>{book.title}</Card.Title>
@@ -38,7 +38,7 @@ export default function BookGroup() {
 
 	if (isLoading)
 		return (
-			<Alert variant="info" style={{alignContent: 'center', display: 'flex'}}>
+			<Alert variant="info" style={{ alignContent: "center", display: "flex" }}>
 				<Spinner animation="border" role="status"></Spinner>
 				<span className="mx-2">Cargando...</span>
 			</Alert>

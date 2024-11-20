@@ -24,7 +24,8 @@ const AuthProvider = ({ children }: any) => {
 	const logout = () => {
 		setToken(null);
 		localStorage.removeItem(tokenKey);
-		delete api.defaults.headers.common["Authorization"]; // Remove token from headers
+		delete api.defaults.headers.common["Authorization"];
+		delete loginApi.defaults.headers.common["Authorization"]; // Remove token from headers
 	};
 
 	const authenticated = (): boolean => {
@@ -48,6 +49,7 @@ const AuthProvider = ({ children }: any) => {
 			localStorage.setItem(tokenKey, token);
 		} else {
 			delete api.defaults.headers.common["Authorization"];
+			delete loginApi.defaults.headers.common["Authorization"];
 			localStorage.removeItem(tokenKey);
 		}
 	}, [token]);

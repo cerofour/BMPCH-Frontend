@@ -2,19 +2,20 @@ import "./App.css";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import { Layout } from "./pages/Layout";
+import Layout from "./components/layout/Layout";
+import HomeLayout from "./components/layout/HomeLayout";
 import Profile from "./pages/Profile";
 import Catalogue from "./pages/Catalogue";
 import Help from "./pages/Help";
 import Login from "./pages/Login";
 import NoPage from "./pages/NoPage";
 import AdminPanel from "./pages/AdminPanel";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 import AuthProvider from "./hooks/useAuth";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "./pages/HomePage";
-import Logout from "./pages/Logout";
 import BookPage from "./pages/BookPage";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,17 @@ function App() {
 				<Router>
 					<Routes>
 						<Route path="login" element={<Login></Login>} />
+						{/* HomePage with a different layout */}
+						<Route
+							path="/"
+							element={
+								<ProtectedRoute>
+									<HomeLayout />
+								</ProtectedRoute>
+							}
+						>
+							<Route index element={<HomePage />} />
+						</Route>
 						{/* Routes that use the layout */}
 						<Route path="/" element={<Layout />}>
 							<Route
