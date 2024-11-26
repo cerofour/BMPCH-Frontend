@@ -1,5 +1,5 @@
 import { useState } from "react";
-import MyNavbar from "../Navbar";
+import MyNavbar from "../UI/Navbar";
 import { Container } from "react-bootstrap";
 import { Outlet } from "react-router-dom";
 

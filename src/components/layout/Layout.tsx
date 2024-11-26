@@ -1,9 +1,9 @@
 import { useState } from "react";
-import MyNavbar from "../Navbar";
+import MyNavbar from "../UI/Navbar";
 import { Container, Row, Col } from "react-bootstrap";
 
 import { Outlet } from "react-router-dom";
-import { Sidebar } from "../Sidebar";
+import { Sidebar } from "../UI/Sidebar";
 
 export default function Layout() {
 	const [showSidebar, setShowSidebar] = useState(false);

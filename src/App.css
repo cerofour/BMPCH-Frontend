@@ -23,6 +23,10 @@
 	border-bottom: 1px solid #e0e0e0;
 }
 
+.menu-button {
+	background-color: none;
+}
+
 .text-card-link {
 	text-decoration: none;
 }

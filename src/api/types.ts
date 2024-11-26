@@ -115,6 +115,11 @@ export type GenderDTO = {
     genderName: string;
 };
 
+export type RoleDTO = {
+	id: number;
+	roleName: string;
+}
+
 export type TextDTO = {
     title: string;
     publicationDate: Date,

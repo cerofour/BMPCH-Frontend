@@ -1,7 +1,7 @@
-import { UserInformation } from "../components/Navbar";
+import { UserInformation } from "./Navbar";
 import { Accordion, Col, Nav, Offcanvas } from "react-bootstrap";
 
-import { ReactIcons } from "../components/Icon";
+import { ReactIcons } from "../Icon";
 
 type x1 = {
 	display: string;
