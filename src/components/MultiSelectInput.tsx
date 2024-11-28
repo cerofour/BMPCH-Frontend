@@ -26,7 +26,7 @@ export function MultiSelectWithAutocomplete<T>({
 
 	const [selectedOptions, setSelectedOptions] = useState<MultiValue<T>>([]);
 
-	const handleSelectChange = (newValue: MultiValue<T>, actionMeta: ActionMeta<T>) => {
+	const handleSelectChange = (newValue: MultiValue<T>, _: ActionMeta<T>) => {
 		setSelectedOptions(newValue);
 		setSelected(newValue.map((e) => getOptionValue(e)));
 	};

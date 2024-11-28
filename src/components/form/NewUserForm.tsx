@@ -66,11 +66,13 @@ export function NewUserForm({ setShow }: any) {
 	const mutation = useMutation({
 		mutationFn: newUser,
 		onSuccess: async () => {
-			context?.userCreationSuccess();
+			context?.toggleToast();
+			context?.setToastData("El usuario se ha creado exitosamente", "success");
 			setShow(false);
 		},
-		onError: async (error) => {
-			context?.userCreationFailure(error);
+		onError: async (_) => {
+			context?.toggleToast();
+			context?.setToastData("No se ha podido crear el usuario", "danger");
 		},
 	});
 
@@ -103,7 +105,8 @@ export function NewUserForm({ setShow }: any) {
 					<ValidatedFormGroup
 						controlId="document"
 						label="DNI"
-						type="number"
+						type="text"
+						dataType="number"
 						value={document}
 						onChange={(e) => setDocument(e.target.value)}
 						minLength={8}
@@ -116,6 +119,7 @@ export function NewUserForm({ setShow }: any) {
 					<ValidatedFormGroup
 						controlId="name"
 						label="Nombres"
+						dataType="text"
 						type="text"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
@@ -130,6 +134,7 @@ export function NewUserForm({ setShow }: any) {
 						controlId="plastname"
 						label="Apellido Paterno"
 						type="text"
+						dataType="text"
 						value={plastname}
 						onChange={(e) => setPlastname(e.target.value)}
 						minLength={2}
@@ -143,6 +148,7 @@ export function NewUserForm({ setShow }: any) {
 						controlId="mlastname"
 						label="Apellido Materno"
 						type="text"
+						dataType="text"
 						value={mlastname}
 						onChange={(e) => setMlastname(e.target.value)}
 						minLength={2}
@@ -156,7 +162,8 @@ export function NewUserForm({ setShow }: any) {
 					<ValidatedFormGroup
 						controlId="phoneNumber"
 						label="Número de Celular"
-						type="number"
+						type="text"
+						dataType="number"
 						value={phoneNumber}
 						onChange={(e) => setPhoneNumber(e.target.value)}
 						minLength={9}
@@ -196,6 +203,7 @@ export function NewUserForm({ setShow }: any) {
 						controlId="password"
 						label="Contraseña"
 						type="password"
+						dataType="text"
 						value={psk}
 						onChange={(e) => setPsk(e.target.value)}
 						minLength={8}

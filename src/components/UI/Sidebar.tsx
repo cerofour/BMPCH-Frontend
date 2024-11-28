@@ -29,7 +29,6 @@ export function Sidebar({ showSidebar, setShowSidebar }: any) {
 	};
 
 	const generateNavLink = (element: y1, key: number) => {
-		console.log(element);
 		return (
 			<Nav.Link key={key} href={element.link}>
 				<ReactIcons library="AntIcons" iconName={element.icon} size={24} />
@@ -65,8 +64,6 @@ export function Sidebar({ showSidebar, setShowSidebar }: any) {
 			)}
 		</Accordion.Item>
 	));
-
-	//console.log(navbarLinks);
 
 	return (
 		<>

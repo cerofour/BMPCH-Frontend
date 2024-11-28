@@ -10,14 +10,18 @@ import {
 	UserLoginResponse,
 	AuthorAPIObject,
 	CustomerAPIObject,
-	AuthorDTO
+	AuthorDTO,
+	GenderDTO,
+	DistrictDTO,
+	EducationAPIObject,
+	//RoleDTO,
 } from "./types";
 
 const DOMAIN = "http://144.22.63.67:8080";
 const API_PREFFIX = '/api/v1';
 
 export const api = axios.create({
-	baseURL: API_PREFFIX,
+	baseURL: DOMAIN + API_PREFFIX,
 	headers: {
 		"Content-Type": "application/json",
 		"Accept": "application/json",
@@ -55,6 +59,11 @@ export async function getAllTexts(): Promise<TextAPIObject[]> {
 	return (await response).data;
 }
 
+export async function getAllGenders(): Promise<GenderDTO[]> {
+	const response = api.get("/genders/");
+	return (await response).data;
+}
+
 export async function getText(textId: number): Promise<TextAPIObject> {
 	const response = await api.get("/texts/get?id=" + textId);
 	return response.data;
@@ -70,11 +79,22 @@ export async function getAllCustomers(): Promise<CustomerAPIObject[]> {
 	return response.data;
 }
 
+export async function getAllDistricts(): Promise<DistrictDTO[]> {
+	const response = await api.get("/districts/");
+	return response.data;
+}
+
+export async function getAllEducationLevels(): Promise<EducationAPIObject[]> {
+	const response = await api.get("/educations/");
+	return response.data;
+}
+
 export async function newText(data: TextDTO) {
 	const response = await api.post("/texts/", data);
 	return response.data;
 }
 
+// TODO: FIX TYPING
 export async function newUser(userDto: any) {
 	const response = loginApi.post("/auth/signup", userDto);
 	return (await response).data;
@@ -87,6 +107,12 @@ export async function newAuthor(authorDto: AuthorDTO) {
 
 export async function newResource(data: TextAPIObject) {
 	const response = api.post("/texts/", data);
+	return (await response).data;
+}
+
+// TODO: FIX TYPING
+export async function newCustomer(data: any) {
+	const response = api.post("/customers/", data);
 	return (await response).data;
 }
 
@@ -111,6 +137,6 @@ export async function deleteAuthor(id: number): Promise<void> {
 }
 
 export async function deleteCustomer(id: number): Promise<void> {
-	const response = await api.delete(`/???/delete?id=${id}`);
+	const response = await api.delete(`/customer/delete?id=${id}`);
 	return response.data;
 }

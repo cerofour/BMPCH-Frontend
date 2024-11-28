@@ -39,8 +39,6 @@ function buildTableContent<T extends Object>(
 			</tr>
 		);
 
-	console.log(data);
-
 	return data?.map(mapFn);
 }
 

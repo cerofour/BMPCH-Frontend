@@ -80,6 +80,18 @@ export type DistrictAPIObject = {
     districtName: string;
 }
 
+export type DistrictDTO = {
+	id: number;
+    districtName: string;
+    provinceId: number;
+    provinceName: string;
+    regionId: number;
+    regionName: string;
+    countryId: number;
+    countryName: string;
+    displayName: string;
+}
+
 export type AddressAPIObject = {
     id: number;
     district: DistrictAPIObject;
@@ -133,8 +145,9 @@ export type TextDTO = {
 
 export type AuthorDTO = {
     name: string,
-    plastName: string;
-    mlastName: string;
+	pseudoname: string;
+    plastname: string;
+    mlastname: string;
 }
 
 export type UserLogin = {

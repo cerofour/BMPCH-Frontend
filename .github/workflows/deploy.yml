@@ -1,0 +1,43 @@
+name: Deploy Vite App to Nginx Server
+
+on:
+    push:
+        branches:
+            - master # Adjust to your deployment branch
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Step 1: Checkout the Repository
+            - name: Checkout code
+              uses: actions/checkout@v3
+
+            # Step 2: Set up Node.js
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18 # Specify your Node.js version
+
+            # Step 3: Install Dependencies
+            - name: Install dependencies
+              run: npm install
+
+            # Step 4: Build the Application
+            - name: Build Vite application
+              run: npm run build
+
+            # Step 5: Deploy to Remote Server
+            - name: Deploy to Nginx server
+              env:
+                  SSH_HOST: ${{ secrets.REMOTE_HOST}}
+                  SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+                  SSH_PORT: "22"
+                  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+              run: |
+                  mkdir -p ~/.ssh
+                  echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+                  chmod 600 ~/.ssh/id_rsa
+                  scp -P "$SSH_PORT" -r dist/* "$SSH_USERNAME@$SSH_HOST:/usr/share/nginx/vite-app"
+                  ssh -p "$SSH_PORT" "$SSH_USERNAME@$SSH_HOST" "sudo systemctl reload nginx"

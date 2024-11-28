@@ -4,13 +4,15 @@ import { Form } from "react-bootstrap";
 interface ValidatedFormGroupProps {
 	controlId: string;
 	label: string;
-	type: "text" | "number" | "email" | "password";
-	value: string;
+	type: "text" | "number" | "email" | "password" | "date";
+	value: string | number;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	required?: boolean;
 	minLength?: number;
 	maxLength?: number;
-	dataType?: "text" | "number" | "email";
+	minValue?: number;
+	maxValue?: number;
+	dataType?: "text" | "number" | "email" | "date";
 	errorMessage?: string;
 	placeholder?: string;
 	placeholderIsExample?: boolean;
@@ -30,29 +32,39 @@ const ValidatedFormGroup: React.FC<ValidatedFormGroupProps> = ({
 	dataType,
 	errorMessage,
 	placeholder,
+	minValue,
+	maxValue,
 	setBadInput,
 }) => {
 	const [error, setError] = useState<string>("");
 
-	const validate = (val: string): string => {
+	const validate = (val: string | number): string => {
 		let error = "";
+		let valStr = val.toString();
 
+		/* this is horrible but it works. */
 		if (required && !val) {
-			error = "Este campo es requerido.";
-		} else if (minLength && val.length < minLength) {
-			error = `La longitud mínima es ${minLength}.`;
-		} else if (maxLength && val.length > maxLength) {
-			error = `La longitud máxima es ${maxLength}.`;
-		} else if (dataType === "number" && isNaN(Number(val))) {
-			error = "Se debe escribir un número.";
-		} else if (dataType === "email" && !/\S+@\S+\.\S+/.test(val)) {
-			error = "Se debe escribir un correo.";
+			error = "Este campo es requerido";
+		}
+
+		if (typeof val === "string") {
+			if (minLength && valStr.length < minLength) error = `La longitud mínima es ${minLength}.`;
+			else if (maxLength && valStr.length > maxLength) error = `La longitud máxima es ${maxLength}.`;
+		}
+
+		if (dataType == "number") {
+			if (typeof val === "string" && !/^\d+$/.test(valStr)) error = "Este campo debe ser un número.";
+			else if (typeof value === "number") {
+				// check if its a number
+				if (minValue && value < minValue) error = `El valor mínimo es es ${minValue}.`;
+				else if (maxValue && value > maxValue) error = `El valor máximo es es ${maxValue}.`;
+			}
 		}
 
 		// Call setBadInput if there's an error
-		if (error && typeof setBadInput === "function") {
+		if (error) {
 			setBadInput(true);
-		} else if (typeof setBadInput === "function") {
+		} else {
 			setBadInput(false);
 		}
 
