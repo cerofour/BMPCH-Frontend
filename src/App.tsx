@@ -19,6 +19,7 @@ import { CRUDContextProvider } from "./hooks/CRUDContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import HomePage from "./pages/HomePage";
 import BookPage from "./pages/BookPage";
+import CustomerPage from "./pages/CustomerPage";
 
 const queryClient = new QueryClient();
 
@@ -82,6 +83,14 @@ function App() {
 									element={
 										<ProtectedRoute>
 											<AdminPanel />
+										</ProtectedRoute>
+									}
+								/>
+								<Route 
+									path="clientes/:id"
+									element={
+										<ProtectedRoute>
+											<CustomerPage />
 										</ProtectedRoute>
 									}
 								/>

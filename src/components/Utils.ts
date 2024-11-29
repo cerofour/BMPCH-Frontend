@@ -11,5 +11,5 @@ export function prettifyAddress(address: AddressAPIObject): string {
 export function commaSeparatedAuthors(authors: AuthorAPIObject[]): string {
 	return authors.map((author: AuthorAPIObject) =>
 		`${author.name} ${author.plastName} ${author.mlastName}`
-	).join(',');
+	).join(', ');
 }

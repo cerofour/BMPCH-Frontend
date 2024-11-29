@@ -14,10 +14,15 @@ import {
 	GenderDTO,
 	DistrictDTO,
 	EducationAPIObject,
+	CodeAPIObject,
+	LoanAPIObject,
+	LoanStatusAPIObject,
+	LoanTypeAPIObject,
 	//RoleDTO,
+	LoanDTO,
 } from "./types";
 
-const DOMAIN = "http://144.22.63.67:8080";
+const DOMAIN = "http://localhost:8080";
 const API_PREFFIX = '/api/v1';
 
 export const api = axios.create({
@@ -79,6 +84,11 @@ export async function getAllCustomers(): Promise<CustomerAPIObject[]> {
 	return response.data;
 }
 
+export async function getCustomerById(id: number): Promise<CustomerAPIObject> {
+	const response = await api.get(`/customers/get?id=${id}`)
+	return response.data;
+}
+
 export async function getAllDistricts(): Promise<DistrictDTO[]> {
 	const response = await api.get("/districts/");
 	return response.data;
@@ -89,8 +99,37 @@ export async function getAllEducationLevels(): Promise<EducationAPIObject[]> {
 	return response.data;
 }
 
+export async function getAllCodes(): Promise<CodeAPIObject[]> {
+	const response = await api.get("/text_codes/");
+	return response.data;
+}
+
+export async function getCodesBybaseCode(baseCode: string): Promise<CodeAPIObject[]> {
+	const response = await api.get(`/text_codes/get?baseCode=${baseCode}`);
+	return response.data;
+}
+
+export async function getAllLoans(): Promise<LoanAPIObject[]> {
+	const response = await api.get("/loans/");
+	return response.data;
+}
+
+export async function getAllLoanTypes(): Promise<LoanTypeAPIObject[]> {
+	const response = await api.get("/loan_types/");
+	return response.data;
+}
+export async function getAllLoanStatuses(): Promise<LoanStatusAPIObject[]> {
+	const response = await api.get("/loan_status/");
+	return response.data;
+}
+
 export async function newText(data: TextDTO) {
 	const response = await api.post("/texts/", data);
+	return response.data;
+}
+
+export async function newLoan(data: LoanDTO) {
+	const response = await api.post("/loans/", data);
 	return response.data;
 }
 

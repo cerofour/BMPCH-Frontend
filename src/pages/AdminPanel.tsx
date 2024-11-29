@@ -5,7 +5,7 @@ import Tabs from "react-bootstrap/Tabs";
 import { useContext } from "react";
 import { Card, CardBody, Container, Toast, ToastContainer } from "react-bootstrap";
 
-import { TextsTable, UsersTable, CustomersTable, AuthorsTable } from "../components/AdminTables";
+import { TextsTable, UsersTable, CustomersTable, AuthorsTable, LoansTable } from "../components/AdminTables";
 import { CustomModal } from "../components/CustomModals";
 import { Button } from "react-bootstrap";
 
@@ -15,6 +15,7 @@ import { NewCustomerForm } from "../components/form/NewCustomersForm";
 import { NewAuthorForm } from "../components/form/NewAuthorForm";
 
 import CRUDContext from "../hooks/CRUDContext";
+import { NewLoanForm } from "../components/form/NewLoanForm";
 
 function PanelCard({ children }: any) {
 	return (
@@ -29,11 +30,13 @@ function CRUDTabs() {
 	const [showNewUserModal, setShowNewUserModal] = useState(false);
 	const [showNewCustomerModal, setShowNewCustomerModal] = useState(false);
 	const [showNewAuthorModal, setShowNewAuthorModal] = useState(false);
+	const [showNewLoanModal, setShowNewLoanModal] = useState(false);
 
 	const [reloadUsers, setReloadUsers] = useState(false);
 	const [reloadTexts, setReloadTexts] = useState(false);
 	const [reloadCustomers, setReloadCustomers] = useState(false);
 	const [reloadAuthors, setReloadAuthors] = useState(false);
+	const [reloadLoans, setReloadLoans] = useState(false);
 
 	const context = useContext(CRUDContext);
 
@@ -131,6 +134,27 @@ function CRUDTabs() {
 							setReload={setReloadAuthors}
 						></CustomModal>
 						<AuthorsTable reload={reloadAuthors} setReload={setReloadAuthors}></AuthorsTable>
+					</PanelCard>
+				</Tab>
+				<Tab eventKey="loans" title="Préstamos">
+					<PanelCard>
+						<div className="my-2 d-flex justify-content-between">
+							<h2>
+								<b>Administrar Préstamos</b>
+							</h2>
+							<Button onClick={() => setShowNewLoanModal(true)}>Agregar préstamo</Button>
+						</div>
+
+						<CustomModal
+							show={showNewLoanModal}
+							setShow={setShowNewLoanModal}
+							title="Añadir nuevo préstamo"
+							form={NewLoanForm}
+							reload={reloadLoans}
+							setReload={setReloadLoans}
+						></CustomModal>
+
+						<LoansTable></LoansTable>
 					</PanelCard>
 				</Tab>
 			</Tabs>
