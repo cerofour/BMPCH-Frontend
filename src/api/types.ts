@@ -38,6 +38,7 @@ export type TextAPIObject = {
     pages: number,
     edition: number,
     volume: number,
+    baseCode: string,
     editorial: EditorialAPIObject,
     type: TextTypeAPIObject,
     authors: AuthorAPIObject[];
@@ -120,7 +121,51 @@ export type CustomerAPIObject = {
     education: EducationAPIObject;
 }
 
+export type CodeAPIObject = {
+    id: number;
+    baseCode: string;
+    exemplaryCode: number;
+    available: boolean;
+}
+
+export type LoanAPIObject = {
+    id: number;
+    user: {
+        document: string;
+        userId: number;
+    };
+    codeTextualResource: {
+        id: number;
+        baseCode: string;
+        exemplaryCode: number;
+        available: boolean;
+    };
+    idTypeLoan: number,
+    idStatusLoan: number,
+    initialDate: Date,
+    scheduledDate: Date
+}
+
+export type LoanTypeAPIObject = {
+    id: number;
+    type: string;
+}
+
+export type LoanStatusAPIObject = {
+    id: number;
+    name: string;
+}
+
 // DTO
+
+export type LoanDTO = {
+    idUser: number; // Utilizamos number para valores de tipo Long en Java
+    idCode: number;
+    idTypeLoan: number; // Short en Java se convierte a number en TypeScript
+    idStatusLoan: number;
+    initialDate: Date; // LocalDate se representa como string (en formato ISO)
+    scheduledDate: Date;
+}
 
 export type GenderDTO = {
     id: number;

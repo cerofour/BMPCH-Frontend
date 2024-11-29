@@ -6,7 +6,7 @@ import { Container, Form, Button, Row, Col, Alert } from "react-bootstrap";
 
 import ValidatedFormGroup from "../UI/FormControlValidator";
 import CustomDropdown from "../UI/CustomDropdown";
-import MultiSelectWithAutocomplete from "../MultiSelectInput";
+import SelectWithAutoComplete from "../SelectWithAutoComplete";
 
 import { AuthorAPIObject, EditorialAPIObject, TextTypeAPIObject, TextDTO } from "../../api/types";
 import { getAllEditorials, getAllAuthors, getAllTypes, newText } from "../../api/api";
@@ -168,13 +168,14 @@ export function NewTextForm({ setShow }: any) {
 
 					<Form.Group className="mb-3" controlId="formBasicPassword">
 						<Form.Label>Seleccionar Autores</Form.Label>
-						<MultiSelectWithAutocomplete
+						<SelectWithAutoComplete
 							qKey={["getAllAuthors"]}
 							qFn={getAllAuthors}
 							getOptionLabel={(e: AuthorAPIObject) => `${e.name} ${e.plastName} ${e.mlastName}`}
 							getOptionValue={(e: AuthorAPIObject) => e.id}
 							setSelected={setAuthors}
-						></MultiSelectWithAutocomplete>
+							isMulti={true}
+						></SelectWithAutoComplete>
 					</Form.Group>
 
 					{badInput && <Alert variant="danger">Algunos datos ingresados son inválidos.</Alert>}

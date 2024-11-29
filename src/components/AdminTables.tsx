@@ -11,8 +11,9 @@ import {
 	getAllAuthors,
 	deleteCustomer,
 	deleteAuthor,
+	getAllLoans,
 } from "../api/api";
-import { UserAPIObject, TextAPIObject, CustomerAPIObject, AuthorAPIObject } from "../api/types";
+import { UserAPIObject, TextAPIObject, CustomerAPIObject, AuthorAPIObject, LoanAPIObject } from "../api/types";
 import { ConfirmationModal } from "./CustomModals";
 import { prettifyAddress } from "./Utils";
 import { Link } from "react-router-dom";
@@ -40,6 +41,59 @@ function buildTableContent<T extends Object>(
 		);
 
 	return data?.map(mapFn);
+}
+
+export function LoansTable() {
+	const {
+		isLoading,
+		isError,
+		data: loans,
+	} = useQuery<LoanAPIObject[], Error>({
+		queryKey: ["getAllLoans"],
+		queryFn: getAllLoans,
+	});
+
+	const tableContent: any = buildTableContent(9, isLoading, isError, loans, (loan: LoanAPIObject) => (
+		<tr key={loan.id}>
+			<td>{loan.id}</td>
+			<td>
+				{<Link to={"/usuarios/" + loan.user.userId}>{loan.user.document}</Link>}
+			</td>
+			<td>
+			{
+				(loan.idTypeLoan === 1) ? "En sala" :
+					((loan.idTypeLoan === 2) ? "A domicilio" : "Desconocido")
+			}</td>
+			<td>
+				{(loan.idStatusLoan === 1) ? "Activo" :
+					(loan.idStatusLoan === 2) ? "Devuelto" : "Desconocido"}
+			</td>
+			<td>{loan.initialDate.toString()}</td>
+			<td>{loan.scheduledDate.toString()}</td>
+			<td>
+				{<Link to={"/codigos/" + loan.codeTextualResource.id}>{loan.codeTextualResource.baseCode}-{loan.codeTextualResource.exemplaryCode}</Link>}
+			</td>
+		</tr>
+	));
+
+	return (
+		<>
+			<Table striped bordered hover>
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Usuario</th>
+						<th>Tipo</th>
+						<th>Estado</th>
+						<th>Fecha Inicio</th>
+						<th>Fecha Programada</th>
+						<th>Código de Libro</th>
+					</tr>
+				</thead>
+				<tbody>{tableContent}</tbody>
+			</Table>
+		</>
+	);
 }
 
 export function TextsTable({ reload, setReload }: any) {
@@ -274,7 +328,7 @@ export function CustomersTable({ reload, setReload }: any) {
 		<tr key={customer.id}>
 			<td>{customer.id}</td>
 			<td>
-				<Link to={`/usuarios/${customer.user.userId}`}>{customer.user.document}</Link>
+				<Link to={`/clientes/${customer.user.userId}`}>{customer.user.document}</Link>
 			</td>
 			<td>{customer.email}</td>
 			<td>{prettifyAddress(customer.address)}</td>
