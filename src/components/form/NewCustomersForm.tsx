@@ -24,6 +24,7 @@ export function NewCustomerForm({ setShow }: any) {
 	const [educationLevelId, setEducationLevelId] = useState<number | undefined>(undefined);
 	const [badInput, setBadInput] = useState<boolean>(false);
 	const [badInputMsg, setBadInputMsg] = useState<string>("");
+	const [imageFile, setImageFile] = useState<File | undefined>(undefined);
 
 	const context = useContext(CRUDContext);
 
@@ -60,7 +61,7 @@ export function NewCustomerForm({ setShow }: any) {
 			return;
 		}
 
-		const requestBody: any = {
+		const customerData: any = {
 			userData: {
 				document,
 				documentTypeId: 1,
@@ -79,8 +80,16 @@ export function NewCustomerForm({ setShow }: any) {
 			educationLevelId,
 			email,
 		};
-		console.log(JSON.stringify(requestBody));
-		mutation.mutate(requestBody);
+
+		const formData = new FormData();
+		formData.append("customer", new Blob([JSON.stringify(customerData)], { type: "application/json" })); // Agregar el objeto JSON
+		if (imageFile === undefined) {
+			setBadInput(true);
+			return;
+		}
+		formData.append("image", imageFile);
+
+		mutation.mutate(formData);
 	};
 	return (
 		<Container fluid>
@@ -233,6 +242,17 @@ export function NewCustomerForm({ setShow }: any) {
 					placeholderIsExample
 					required
 				/>
+				<Form.Group controlId="formFile" className="mb-3">
+					<Form.Label>Subir Imagen</Form.Label>
+					<Form.Control
+						type="file"
+						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+							setImageFile(e.target.files?.[0] || undefined);
+						}}
+						required
+					/>
+					<Form.Control.Feedback>Por favor adjunta una imagen del cliente.</Form.Control.Feedback>
+				</Form.Group>
 
 				{badInput && <Alert variant="danger">Algunos datos ingresados son inválidos: {badInputMsg}.</Alert>}
 				<Button onClick={(e) => handleSubmit(e)} variant="primary" type="submit">

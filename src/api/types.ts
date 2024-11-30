@@ -42,6 +42,7 @@ export type TextAPIObject = {
     editorial: EditorialAPIObject,
     type: TextTypeAPIObject,
     authors: AuthorAPIObject[];
+	imageUrl: string,
 };
 
 export type AuthorAPIObject = {
@@ -130,10 +131,7 @@ export type CodeAPIObject = {
 
 export type LoanAPIObject = {
     id: number;
-    user: {
-        document: string;
-        userId: number;
-    };
+	customer: CustomerAPIObject;
     codeTextualResource: {
         id: number;
         baseCode: string;
@@ -159,7 +157,7 @@ export type LoanStatusAPIObject = {
 // DTO
 
 export type LoanDTO = {
-    idUser: number; // Utilizamos number para valores de tipo Long en Java
+    idCustomer: number; // Utilizamos number para valores de tipo Long en Java
     idCode: number;
     idTypeLoan: number; // Short en Java se convierte a number en TypeScript
     idStatusLoan: number;
@@ -183,6 +181,9 @@ export type TextDTO = {
     numPages: number,
     edition: number,
     volume: number,
+	stock: number,
+	baseCode: string,
+	available: boolean,
     editorialId: number,
     typeId: number,
     authors: number[];

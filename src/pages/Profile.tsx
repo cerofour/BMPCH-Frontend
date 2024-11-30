@@ -1,9 +1,9 @@
-import { Container, Row, Col, Table, Tab, Tabs, Button, Spinner } from "react-bootstrap";
+import { Container, Image, Row, Col, Table, Tab, Tabs, Spinner } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 import { getMe } from "../api/api";
 import { UserAPIObject } from "../api/types";
 import { QRCodeSVG } from "qrcode.react";
-import { ReactIcons } from "../components/Icon";
+import { FetchUserImageTest } from "../components/service/ImageService";
 
 export default function Profile() {
 	const { isLoading, isError, data } = useQuery<UserAPIObject, Error>({
@@ -22,20 +22,16 @@ export default function Profile() {
 	else if (isError) qrData = "Error.";
 	else qrData = data?.document || "example";
 
+	const image = FetchUserImageTest({ document: data?.document });
+
 	return (
 		<Container fluid className="p-4">
 			{/* Profile Header */}
 			<Row className="mb-4">
 				<Col md={12} className="text-center">
-					{/* Profile Picture */}
-					<ReactIcons library="IoIcons" iconName="IoIosPerson" size={200} />
-					{/*<Image
-            src="https://placehold.co/300"
-            roundedCircle
-            width="150"
-            height="150"
-            className="mb-3"
-          />*/}
+					{!image.loading && !image.error && (
+						<Image src={image.blob} roundedCircle className="userProfilePicture my-3" />
+					)}
 					<h3>
 						<b>{data?.name + " " + data?.plastName + " " + data?.mlastName}</b>
 					</h3>
@@ -60,7 +56,7 @@ export default function Profile() {
 							<h5>
 								<b>Rol</b>
 							</h5>
-							<p>Admin</p>
+							<p>{data?.roleId === 1 ? "Admin" : data?.roleId === 2 ? "Cliente" : "Bibliotecario"}</p>
 						</Col>
 						<Col>
 							<h5>
@@ -68,9 +64,6 @@ export default function Profile() {
 							</h5>
 							<p>{data?.phoneNumber}</p>
 						</Col>
-					</Row>
-					<Row>
-						<Button variant="primary">Editar perfil</Button>
 					</Row>
 				</Col>
 			</Row>

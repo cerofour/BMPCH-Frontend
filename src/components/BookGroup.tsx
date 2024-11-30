@@ -5,11 +5,13 @@ import { TextAPIObject } from "../api/types";
 import { Link } from "react-router-dom";
 import { Alert, Spinner, Card, Button, Col, Row } from "react-bootstrap";
 
+import { FetchTextImageCard } from "./service/ImageService";
+
 function BookCard(book: TextAPIObject) {
 	return (
 		<Col xs={12} key={book.id}>
 			<Card className="text-card">
-				<Card.Img variant="top" src={`https://placehold.co/300`} />
+				<FetchTextImageCard variant="top" id={book.id}></FetchTextImageCard>
 				<Card.Body>
 					<Card.Title>{book.title}</Card.Title>
 					<Card.Text>
@@ -45,7 +47,7 @@ export default function BookGroup() {
 		);
 
 	return (
-		<Row xs={1} md={2} lg={3} xxl={4} className="g-4">
+		<Row xs={1} md={3} lg={4} xxl={5} className="g-4">
 			{data?.map(BookCard)}
 		</Row>
 	);

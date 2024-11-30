@@ -22,13 +22,17 @@ export function NewTextForm({ setShow }: any) {
 	const [volume, setVolume] = useState(0);
 	const [authors, setAuthors] = useState<number[]>([]);
 	const [badInput, setBadInput] = useState<boolean>(false);
+	const [stock, setStock] = useState(0);
+	const [baseCode, setBaseCode] = useState<string>("");
+	const [imageFile, setImageFile] = useState<File | undefined>(undefined);
 
 	const context = useContext(CRUDContext);
 
 	const mutation = useMutation({
 		mutationFn: newText,
-		onSuccess: () => {
+		onSuccess: (data) => {
 			context?.toggleToast();
+			console.log(data);
 			context?.setToastData("Texto creado exitosamente.", "success");
 			setShow(false);
 		},
@@ -46,18 +50,28 @@ export function NewTextForm({ setShow }: any) {
 			return;
 		}
 
-		const requestBody: TextDTO = {
+		const textDTO: TextDTO = {
 			title,
 			editorialId,
 			publicationDate,
 			typeId,
 			edition,
+			stock,
+			baseCode,
+			available: true,
 			volume,
 			numPages,
 			authors,
 		};
-		setShow(false);
-		mutation.mutate(requestBody as TextDTO);
+
+		const formData = new FormData();
+		formData.append("text", new Blob([JSON.stringify(textDTO)], { type: "application/json" })); // Agregar el objeto JSON
+		if (imageFile === undefined) {
+			setBadInput(true);
+			return;
+		}
+		formData.append("image", imageFile); // Agregar el archivo de imagen
+		mutation.mutate(formData);
 	};
 
 	return (
@@ -108,8 +122,24 @@ export function NewTextForm({ setShow }: any) {
 
 						<Col>
 							<ValidatedFormGroup
+								controlId="stock"
+								label="Stock"
+								type="number"
+								dataType="number"
+								minValue={1}
+								value={stock}
+								onChange={(e) => setStock(parseInt(e.target.value))}
+								setBadInput={setBadInput}
+								placeholder="12"
+								placeholderIsExample
+								required
+							/>
+						</Col>
+
+						<Col>
+							<ValidatedFormGroup
 								controlId="editorial"
-								label="Editorial"
+								label="Edición"
 								type="number"
 								dataType="number"
 								minValue={1}
@@ -133,6 +163,23 @@ export function NewTextForm({ setShow }: any) {
 								onChange={(e) => setVolume(parseInt(e.target.value))}
 								setBadInput={setBadInput}
 								placeholder="1"
+								placeholderIsExample
+								required
+							/>
+						</Col>
+					</Row>
+					<Row>
+						<Col>
+							<ValidatedFormGroup
+								controlId="baseCode"
+								label="Código"
+								type="text"
+								dataType="text"
+								minLength={4}
+								value={baseCode}
+								onChange={(e) => setBaseCode(e.target.value)}
+								setBadInput={setBadInput}
+								placeholder="CASJMA"
 								placeholderIsExample
 								required
 							/>
@@ -176,6 +223,16 @@ export function NewTextForm({ setShow }: any) {
 							setSelected={setAuthors}
 							isMulti={true}
 						></SelectWithAutoComplete>
+					</Form.Group>
+
+					<Form.Group controlId="formFile" className="mb-3">
+						<Form.Label>Subir Imagen</Form.Label>
+						<Form.Control
+							type="file"
+							onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+								setImageFile(e.target.files?.[0] || undefined);
+							}}
+						/>
 					</Form.Group>
 
 					{badInput && <Alert variant="danger">Algunos datos ingresados son inválidos.</Alert>}

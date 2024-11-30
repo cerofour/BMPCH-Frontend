@@ -3,7 +3,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
 import { useContext } from "react";
-import { Card, CardBody, Container, Toast, ToastContainer } from "react-bootstrap";
+import { Container, Toast, ToastContainer } from "react-bootstrap";
 
 import { TextsTable, UsersTable, CustomersTable, AuthorsTable, LoansTable } from "../components/AdminTables";
 import { CustomModal } from "../components/CustomModals";
@@ -17,13 +17,7 @@ import { NewAuthorForm } from "../components/form/NewAuthorForm";
 import CRUDContext from "../hooks/CRUDContext";
 import { NewLoanForm } from "../components/form/NewLoanForm";
 
-function PanelCard({ children }: any) {
-	return (
-		<Card>
-			<CardBody>{children}</CardBody>
-		</Card>
-	);
-}
+import PanelCard from "../components/UI/PanelCard";
 
 function CRUDTabs() {
 	const [showNewTextModal, setShowNewTextModal] = useState(false);

@@ -2,6 +2,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Table, Button, ButtonGroup } from "react-bootstrap";
 
+import { Link } from "react-router-dom";
+
 import {
 	getAllTexts,
 	getAllUsers,
@@ -16,32 +18,9 @@ import {
 import { UserAPIObject, TextAPIObject, CustomerAPIObject, AuthorAPIObject, LoanAPIObject } from "../api/types";
 import { ConfirmationModal } from "./CustomModals";
 import { prettifyAddress } from "./Utils";
-import { Link } from "react-router-dom";
 import { BootstrapIcons } from "./Icon";
 
-function buildTableContent<T extends Object>(
-	colspan: number,
-	isLoading: boolean,
-	isError: boolean,
-	data: T[] | undefined,
-	mapFn: any
-) {
-	if (isLoading)
-		return (
-			<tr>
-				<td colSpan={colspan}>Cargando recursos...</td>
-			</tr>
-		);
-
-	if (isError)
-		return (
-			<tr>
-				<td colSpan={colspan}>Error al cargar recursos.</td>
-			</tr>
-		);
-
-	return data?.map(mapFn);
-}
+import { buildTableContent } from "./Utils";
 
 export function LoansTable() {
 	const {
@@ -56,22 +35,17 @@ export function LoansTable() {
 	const tableContent: any = buildTableContent(9, isLoading, isError, loans, (loan: LoanAPIObject) => (
 		<tr key={loan.id}>
 			<td>{loan.id}</td>
-			<td>
-				{<Link to={"/usuarios/" + loan.user.userId}>{loan.user.document}</Link>}
-			</td>
-			<td>
-			{
-				(loan.idTypeLoan === 1) ? "En sala" :
-					((loan.idTypeLoan === 2) ? "A domicilio" : "Desconocido")
-			}</td>
-			<td>
-				{(loan.idStatusLoan === 1) ? "Activo" :
-					(loan.idStatusLoan === 2) ? "Devuelto" : "Desconocido"}
-			</td>
+			<td>{<Link to={"/admin/clientes/" + loan.customer.id}>{loan.customer.user.document}</Link>}</td>
+			<td>{loan.idTypeLoan === 1 ? "En sala" : loan.idTypeLoan === 2 ? "A domicilio" : "Desconocido"}</td>
+			<td>{loan.idStatusLoan === 1 ? "Activo" : loan.idStatusLoan === 2 ? "Devuelto" : "Desconocido"}</td>
 			<td>{loan.initialDate.toString()}</td>
 			<td>{loan.scheduledDate.toString()}</td>
 			<td>
-				{<Link to={"/codigos/" + loan.codeTextualResource.id}>{loan.codeTextualResource.baseCode}-{loan.codeTextualResource.exemplaryCode}</Link>}
+				{
+					<Link to={"/admin/codigos/" + loan.codeTextualResource.id}>
+						{loan.codeTextualResource.baseCode}-{loan.codeTextualResource.exemplaryCode}
+					</Link>
+				}
 			</td>
 		</tr>
 	));
@@ -82,7 +56,7 @@ export function LoansTable() {
 				<thead>
 					<tr>
 						<th>ID</th>
-						<th>Usuario</th>
+						<th>Cliente</th>
 						<th>Tipo</th>
 						<th>Estado</th>
 						<th>Fecha Inicio</th>
@@ -142,7 +116,9 @@ export function TextsTable({ reload, setReload }: any) {
 
 	const tableContent: any = buildTableContent(9, isLoading, isError, books, (book: TextAPIObject) => (
 		<tr key={book.id}>
-			<td>{book.id}</td>
+			<td>
+				<Link to={`/catalogo/${book.id}`}>{book.id}</Link>
+			</td>
 			<td>{book.title}</td>
 			<td>{book.editorial.name}</td>
 			<td>{book.type.typename}</td>
@@ -238,7 +214,7 @@ export function UsersTable() {
 			<td>{user.plastName}</td>
 			<td>{user.mlastName}</td>
 			<td>{user.phoneNumber}</td>
-			<td>{user.gender.genderName}</td>
+			<td>{user.gender.genderName[0]}</td>
 			<td>
 				<ButtonGroup aria-label="Basic example">
 					<Button variant="secondary">
@@ -326,9 +302,11 @@ export function CustomersTable({ reload, setReload }: any) {
 
 	const tableContent: any = buildTableContent(9, isLoading, isError, customers, (customer: CustomerAPIObject) => (
 		<tr key={customer.id}>
-			<td>{customer.id}</td>
 			<td>
-				<Link to={`/clientes/${customer.user.userId}`}>{customer.user.document}</Link>
+				<Link to={`/admin/clientes/${customer.id}`}>{customer.id}</Link>
+			</td>
+			<td>
+				<Link to={`/admin/usuarios/${customer.user.userId}`}>{customer.user.document}</Link>
 			</td>
 			<td>{customer.email}</td>
 			<td>{prettifyAddress(customer.address)}</td>

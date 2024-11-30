@@ -23,6 +23,18 @@
 	border-bottom: 1px solid #e0e0e0;
 }
 
+.customerImg {
+	object-fit: cover;
+	width: 22rem;
+	height: 22rem;
+}
+
+.userProfilePicture {
+	object-fit: cover;
+	width: 16rem;
+	height: 16rem;
+}
+
 .menu-button {
 	background-color: none;
 }

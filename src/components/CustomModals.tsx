@@ -2,7 +2,7 @@ import { Modal, Button } from "react-bootstrap";
 
 type CustomModalProps = {
 	title: string;
-	form: ({ show, setShow }: any) => JSX.Element;
+	form: ({ setShow }: any) => JSX.Element;
 	show: any;
 	setShow: any;
 	reload?: boolean;

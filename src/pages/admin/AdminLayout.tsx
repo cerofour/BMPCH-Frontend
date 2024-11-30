@@ -1,11 +1,11 @@
 import { useState } from "react";
-import MyNavbar from "../UI/Navbar";
 import { Container, Row, Col } from "react-bootstrap";
 
 import { Outlet } from "react-router-dom";
-import { Sidebar } from "../UI/Sidebar";
+import { AdminSidebar } from "../../components/UI/Sidebar";
+import MyNavbar from "../../components/UI/Navbar";
 
-export default function Layout() {
+export default function AdminLayout() {
 	const [showSidebar, setShowSidebar] = useState(false);
 
 	const handleSidebarToggle = () => setShowSidebar(!showSidebar);
@@ -22,7 +22,7 @@ export default function Layout() {
 			<Container fluid>
 				<Row>
 					{/* Sidebar */}
-					<Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+					<AdminSidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
 					{/* Main Content */}
 					<Col md={9} lg={10} className="my-5">
 						<Outlet></Outlet>

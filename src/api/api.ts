@@ -5,7 +5,6 @@ import {
 	TextTypeAPIObject, 
 	EditorialAPIObject,
 	TextAPIObject,
-	TextDTO,
 	UserLogin,
 	UserLoginResponse,
 	AuthorAPIObject,
@@ -22,25 +21,30 @@ import {
 	LoanDTO,
 } from "./types";
 
-const DOMAIN = "http://localhost:8080";
+const DOMAIN = "http://144.22.63.67:8080";
 const API_PREFFIX = '/api/v1';
 
 export const api = axios.create({
 	baseURL: DOMAIN + API_PREFFIX,
-	headers: {
-		"Content-Type": "application/json",
-		"Accept": "application/json",
-	}});
+});
 
 export const loginApi = axios.create({
 	baseURL: DOMAIN,
 	headers: {
-		"Content-Type": "application/json",
 		"Accept": "application/json",
 	}});
 
+export function textImageSrc(endpoint: string) {
+	return DOMAIN + endpoint;
+}
+
 export async function getAllUsers(): Promise<UserAPIObject[]> {
 	const response = await api.get('/users/');
+	return response.data;
+}
+
+export async function getUserById(id: number): Promise<UserAPIObject> {
+	const response = await api.get(`/users/get?id=${id}`)
 	return response.data;
 }
 
@@ -73,6 +77,20 @@ export async function getText(textId: number): Promise<TextAPIObject> {
 	const response = await api.get("/texts/get?id=" + textId);
 	return response.data;
 }
+
+export const fetchTextImage = async (id: number) => {
+  const response = await api.get(`/image/text/${id.toString()}`, {
+    responseType: "blob",
+  });
+  return URL.createObjectURL(response.data);
+};
+
+export const fetchUserImage = async (document: string) => {
+  const response = await api.get(`/image/customer/${document}`, {
+    responseType: "blob",
+  });
+  return URL.createObjectURL(response.data);
+};
 
 export async function getAllAuthors(): Promise<AuthorAPIObject[]> {
 	const response = await api.get("/authors/");
@@ -123,7 +141,7 @@ export async function getAllLoanStatuses(): Promise<LoanStatusAPIObject[]> {
 	return response.data;
 }
 
-export async function newText(data: TextDTO) {
+export async function newText(data: FormData) {
 	const response = await api.post("/texts/", data);
 	return response.data;
 }
@@ -150,7 +168,7 @@ export async function newResource(data: TextAPIObject) {
 }
 
 // TODO: FIX TYPING
-export async function newCustomer(data: any) {
+export async function newCustomer(data: FormData) {
 	const response = api.post("/customers/", data);
 	return (await response).data;
 }

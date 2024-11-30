@@ -5,6 +5,8 @@ import { getText } from "../api/api";
 import { TextAPIObject } from "../api/types";
 import { commaSeparatedAuthors } from "../components/Utils";
 
+import { FetchTextImage } from "../components/service/ImageService";
+
 function BookPage() {
 	const { id } = useParams<{ id: string }>(); // Retrieve the book ID from the URL
 
@@ -19,15 +21,13 @@ function BookPage() {
 	if (!data) return <Alert variant="warning">Libro no encontrado</Alert>;
 	if (isError) return <Alert variant="danger">Error al cargar el libro</Alert>; // Solucionar esto
 
+	console.log(data);
+
 	return (
 		<Container className="my-5">
 			<Row className="justify-content-center">
 				<Col xs={12} md={6} lg={6}>
-					<img
-						src="https://placehold.co/300x450"
-						alt="Imagen del libro"
-						style={{ maxHeight: "450px", objectFit: "cover" }}
-					/>
+					<FetchTextImage id={data.id}></FetchTextImage>
 				</Col>
 				<Col xs={12} md={6} lg={6}>
 					<h1>
