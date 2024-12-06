@@ -22,16 +22,14 @@ export default function Profile() {
 	else if (isError) qrData = "Error.";
 	else qrData = data?.document || "example";
 
-	const image = FetchUserImageTest({ document: data?.document });
+	const image = FetchUserImageTest({ document: data ? data.document : "00000000" });
 
 	return (
 		<Container fluid className="p-4">
 			{/* Profile Header */}
 			<Row className="mb-4">
 				<Col md={12} className="text-center">
-					{!image.loading && !image.error && (
-						<Image src={image.blob} roundedCircle className="userProfilePicture my-3" />
-					)}
+					<Image src={image.blob} roundedCircle className="userProfilePicture my-3" />
 					<h3>
 						<b>{data?.name + " " + data?.plastName + " " + data?.mlastName}</b>
 					</h3>
@@ -39,8 +37,8 @@ export default function Profile() {
 			</Row>
 
 			{/* Profile Stats */}
-			<Row className="my-3">
-				<Col md={4} className="text-center">
+			<Row className="mb-4">
+				<Col md={4} className="text-center mb-3">
 					<QRCodeSVG value={qrData} size={128}></QRCodeSVG>
 				</Col>
 				<Col md={8} className="d-flex mb-3 flex-column justify-content-center">

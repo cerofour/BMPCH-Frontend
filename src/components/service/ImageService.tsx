@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { Card } from "react-bootstrap";
+import { Card, Spinner, Image } from "react-bootstrap";
 
 import { fetchTextImage, fetchUserImage } from "../../api/api";
+import { ReactIcons } from "../Icon";
 
 export function FetchTextImage({ id }: any) {
 	const {
@@ -80,10 +81,15 @@ export function FetchUserImageTest({ document }: any) {
 		queryKey: ["fetchUserImage", document], // Query key includes the ID
 	});
 
+	let jsxElement;
+
+	if (isLoading) jsxElement = <Spinner animation="border" role="status"></Spinner>;
+	else if (isError) jsxElement = <ReactIcons library="AntIcons" iconName="AiOutlineClose" size={24} />;
+
 	return {
 		error: isError,
 		loading: isLoading,
-		jsxElement: <img src={imageSrc}></img>,
+		jsxElement: jsxElement,
 		blob: imageSrc,
 		card: <Card.Img width={300} height={300} src={imageSrc ? imageSrc : `https://placehold.co/300`}></Card.Img>,
 	};

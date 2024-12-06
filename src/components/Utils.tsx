@@ -28,7 +28,8 @@ export function buildTableContent<T extends Object>(
 	isLoading: boolean,
 	isError: boolean,
 	data: T[] | undefined,
-	mapFn: any
+	mapFn: (item: T, index: number) => JSX.Element,
+	predicate?: (item: T) => boolean
 ) {
 	if (isLoading)
 		return (
@@ -44,7 +45,9 @@ export function buildTableContent<T extends Object>(
 			</tr>
 		);
 
-	return data?.map(mapFn);
+	const filteredData = predicate ? data?.filter(predicate) : data;
+
+	return filteredData?.map(mapFn);
 }
 
 export type TabsData = {

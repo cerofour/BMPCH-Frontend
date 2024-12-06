@@ -19,6 +19,7 @@ import {
 	LoanTypeAPIObject,
 	//RoleDTO,
 	LoanDTO,
+	EditorialDTO,
 } from "./types";
 
 const DOMAIN = "http://144.22.63.67:8080";
@@ -141,6 +142,11 @@ export async function getAllLoanStatuses(): Promise<LoanStatusAPIObject[]> {
 	return response.data;
 }
 
+export async function newEditorial(data: EditorialDTO) {
+	const response = await api.post("/editorial/new", data);
+	return response.data;
+}
+
 export async function newText(data: FormData) {
 	const response = await api.post("/texts/", data);
 	return response.data;
@@ -148,6 +154,11 @@ export async function newText(data: FormData) {
 
 export async function newLoan(data: LoanDTO) {
 	const response = await api.post("/loans/", data);
+	return response.data;
+}
+
+export async function setLoanStatus(id: number, status: number) {
+	const response = await api.post(`/loans/${id}/status?idStatusLoan=${status}`)
 	return response.data;
 }
 
@@ -166,6 +177,7 @@ export async function newResource(data: TextAPIObject) {
 	const response = api.post("/texts/", data);
 	return (await response).data;
 }
+
 
 // TODO: FIX TYPING
 export async function newCustomer(data: FormData) {

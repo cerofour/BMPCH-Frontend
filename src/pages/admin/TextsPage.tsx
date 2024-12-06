@@ -7,9 +7,11 @@ import { NewTextForm } from "../../components/form/NewTextForm";
 import { NewAuthorForm } from "../../components/form/NewAuthorForm";
 
 import { generateAdminTabs, TabsData } from "../../components/Utils";
+import { SearchBar } from "../../components/UIElements";
 
 import CRUDContext from "../../hooks/CRUDContext";
 import { EditorialsTable } from "../../components/tables/EditorialsTable";
+import NewEditorialForm from "../../components/form/NewEditorialForm";
 
 export default function TextsPage() {
 	const [showNewTextModal, setShowNewTextModal] = useState(false);
@@ -59,7 +61,7 @@ export default function TextsPage() {
 			showModal: showNewEditorialModal,
 			setShowModal: setShowNewEditorialModal,
 			modalTitle: "Añadir nueva editorial",
-			tabForm: NewTextForm, // JSX.Element
+			tabForm: NewEditorialForm, // JSX.Element
 			table: <EditorialsTable reload={reloadEditorials} setReload={setReloadEditorials} />, // JSX.Element
 		},
 	];
@@ -70,6 +72,7 @@ export default function TextsPage() {
 				<h1>Módulo de Administración de Textos</h1>
 			</div>
 			<Container>
+				<SearchBar placeholder="Buscar libros" buttonText="Buscar"></SearchBar>
 				<ToastContainer position="bottom-end" className="p-3">
 					<Toast
 						show={context?.entityCreationToast}

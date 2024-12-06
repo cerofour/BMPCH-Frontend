@@ -141,7 +141,8 @@ export type LoanAPIObject = {
     idTypeLoan: number,
     idStatusLoan: number,
     initialDate: Date,
-    scheduledDate: Date
+    scheduledDate: Date,
+    endDate: Date,
 }
 
 export type LoanTypeAPIObject = {
@@ -155,6 +156,10 @@ export type LoanStatusAPIObject = {
 }
 
 // DTO
+
+export type EditorialDTO = {
+	name: string;
+}
 
 export type LoanDTO = {
     idCustomer: number; // Utilizamos number para valores de tipo Long en Java

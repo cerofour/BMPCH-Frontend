@@ -14,6 +14,7 @@ import {
 	deleteCustomer,
 	deleteAuthor,
 	getAllLoans,
+	setLoanStatus,
 } from "../api/api";
 import { UserAPIObject, TextAPIObject, CustomerAPIObject, AuthorAPIObject, LoanAPIObject } from "../api/types";
 import { ConfirmationModal } from "./CustomModals";
@@ -36,16 +37,24 @@ export function LoansTable() {
 		<tr key={loan.id}>
 			<td>{loan.id}</td>
 			<td>{<Link to={"/admin/clientes/" + loan.customer.id}>{loan.customer.user.document}</Link>}</td>
-			<td>{loan.idTypeLoan === 1 ? "En sala" : loan.idTypeLoan === 2 ? "A domicilio" : "Desconocido"}</td>
-			<td>{loan.idStatusLoan === 1 ? "Activo" : loan.idStatusLoan === 2 ? "Devuelto" : "Desconocido"}</td>
-			<td>{loan.initialDate.toString()}</td>
-			<td>{loan.scheduledDate.toString()}</td>
 			<td>
 				{
 					<Link to={"/admin/codigos/" + loan.codeTextualResource.id}>
 						{loan.codeTextualResource.baseCode}-{loan.codeTextualResource.exemplaryCode}
 					</Link>
 				}
+			</td>
+			<td>{loan.idTypeLoan === 1 ? "En sala" : loan.idTypeLoan === 2 ? "A domicilio" : "Desconocido"}</td>
+			<td>{loan.idStatusLoan === 1 ? "Activo" : loan.idStatusLoan === 2 ? "Devuelto" : "Desconocido"}</td>
+			<td>{loan.initialDate.toString()}</td>
+			<td>{loan.endDate ? loan.endDate.toString() : "-"}</td>
+			<td>{loan.scheduledDate.toString()}</td>
+			<td>
+				<ButtonGroup>
+					<Button variant="outline-success" onClick={() => setLoanStatus(loan.id, 2)}>
+						Devuelto
+					</Button>
+				</ButtonGroup>
 			</td>
 		</tr>
 	));
@@ -57,11 +66,13 @@ export function LoansTable() {
 					<tr>
 						<th>ID</th>
 						<th>Cliente</th>
+						<th>Código de Libro</th>
 						<th>Tipo</th>
 						<th>Estado</th>
 						<th>Fecha Inicio</th>
+						<th>Fecha Devolución</th>
 						<th>Fecha Programada</th>
-						<th>Código de Libro</th>
+						<th>Opciones</th>
 					</tr>
 				</thead>
 				<tbody>{tableContent}</tbody>
