@@ -16,9 +16,7 @@ export default function AdminLayout() {
 
 	return (
 		<>
-			<MyNavbar toggleSidebar={handleSidebarToggle} title={title}>
-				{""}
-			</MyNavbar>
+			<MyNavbar toggleSidebar={handleSidebarToggle} title={title} />
 			<Container fluid>
 				<Row>
 					{/* Sidebar */}

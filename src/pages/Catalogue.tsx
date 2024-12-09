@@ -5,7 +5,6 @@ import { TextAPIObject } from "../api/types";
 
 import BookGroup from "../components/BookGroup";
 import { SearchBar } from "../components/UIElements";
-import { useBreadcrumb } from "../hooks/BreadcrumbContext";
 
 function Catalogue() {
 	const [predicate, setPredicate] = useState<((item: TextAPIObject) => boolean) | undefined>(undefined);

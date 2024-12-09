@@ -1,11 +1,8 @@
 import { useState } from "react";
 import MyNavbar from "../UI/Navbar";
-import { Container, Row, Col, Breadcrumb } from "react-bootstrap";
+import { Container, Nav } from "react-bootstrap";
 
-import { Outlet, Link } from "react-router-dom";
-
-import { AdminSidebar } from "../UI/Sidebar";
-import { useBreadcrumb } from "../../hooks/BreadcrumbContext";
+import { Outlet } from "react-router-dom";
 
 export default function UserLayout() {
 	const [showSidebar, setShowSidebar] = useState(false);
@@ -18,16 +15,15 @@ export default function UserLayout() {
 	return (
 		<>
 			<MyNavbar toggleSidebar={handleSidebarToggle} title={title}>
-				{""}
+				<Nav.Link className="text-light" href="/catalogo">
+					Catálogo
+				</Nav.Link>
+				<Nav.Link className="text-light" href="/perfil">
+					Perfil
+				</Nav.Link>
 			</MyNavbar>
 			<Container fluid className="my-4">
-				<Row>
-					<AdminSidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
-
-					<Col md={9} lg={10} className="my-1">
-						<Outlet></Outlet>
-					</Col>
-				</Row>
+				<Outlet></Outlet>
 			</Container>
 		</>
 	);

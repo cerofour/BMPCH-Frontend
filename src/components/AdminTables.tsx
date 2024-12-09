@@ -14,7 +14,6 @@ import {
 	deleteCustomer,
 	deleteAuthor,
 	getAllLoans,
-	makeClient,
 	setLoanStatus,
 } from "../api/api";
 import { UserAPIObject, TextAPIObject, CustomerAPIObject, AuthorAPIObject, LoanAPIObject } from "../api/types";

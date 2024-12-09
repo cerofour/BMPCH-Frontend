@@ -16,9 +16,7 @@ export default function HomeLayout() {
 
 	return (
 		<>
-			<MyNavbar toggleSidebar={handleSidebarToggle} title={title}>
-				{""}
-			</MyNavbar>
+			<MyNavbar toggleSidebar={handleSidebarToggle} title={title} />
 			<Container fluid className="px-0">
 				<Outlet></Outlet>
 			</Container>

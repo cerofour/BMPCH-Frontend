@@ -57,10 +57,10 @@ export function UserInformation({ showNavDropDown = false }: { showNavDropDown?:
 interface MyNavbarProps {
 	toggleSidebar: () => void;
 	title: string;
-	children: any;
+	children?: JSX.Element[];
 }
 
-export default function MyNavbar({ toggleSidebar, title }: MyNavbarProps) {
+export default function MyNavbar({ toggleSidebar, title, children }: MyNavbarProps) {
 	// ../assets/Escudo_de_Armas_la_Ciudad_de_Chiclayo.png
 	return (
 		<>
@@ -79,6 +79,8 @@ export default function MyNavbar({ toggleSidebar, title }: MyNavbarProps) {
 					<Button variant="dark" onClick={toggleSidebar} className="d-md-none mx-3">
 						<BootstrapIcons iconName="MenuButtonWide" size={25} /> Menú
 					</Button>
+
+					<Nav className="me-auto">{children}</Nav>
 
 					<div className="pe-4  d-none d-md-flex">
 						<UserInformation showNavDropDown={true} />
