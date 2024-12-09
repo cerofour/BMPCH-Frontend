@@ -22,14 +22,19 @@ export default function Profile() {
 	else if (isError) qrData = "Error.";
 	else qrData = data?.document || "example";
 
-	const image = FetchUserImageTest({ document: data ? data.document : "00000000" });
+	const image = (
+		<FetchUserImageTest
+			document={data != undefined ? data.document : "00000000"}
+			mapFn={(x: any) => <Image src={x} roundedCircle className="userProfilePicture" />}
+		/>
+	);
 
 	return (
-		<Container fluid className="p-4">
+		<Container fluid>
 			{/* Profile Header */}
 			<Row className="mb-4">
 				<Col md={12} className="text-center">
-					<Image src={image.blob} roundedCircle className="userProfilePicture my-3" />
+					{image}
 					<h3>
 						<b>{data?.name + " " + data?.plastName + " " + data?.mlastName}</b>
 					</h3>
@@ -45,7 +50,6 @@ export default function Profile() {
 					<Row>
 						<Col>
 							<h5>
-								{" "}
 								<b>{data?.documentTypeId == 1 ? "DNI" : "CE"} </b>
 							</h5>
 							<p>{data?.document}</p>
@@ -54,7 +58,7 @@ export default function Profile() {
 							<h5>
 								<b>Rol</b>
 							</h5>
-							<p>{data?.roleId === 1 ? "Admin" : data?.roleId === 2 ? "Cliente" : "Bibliotecario"}</p>
+							<p>{data?.role.name}</p>
 						</Col>
 						<Col>
 							<h5>

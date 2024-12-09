@@ -70,7 +70,8 @@ export function NewUserForm({ setShow }: any) {
 			context?.setToastData("El usuario se ha creado exitosamente", "success");
 			setShow(false);
 		},
-		onError: async (_) => {
+		onError: async (error) => {
+			console.log(error);
 			context?.toggleToast();
 			context?.setToastData("No se ha podido crear el usuario", "danger");
 		},
@@ -108,7 +109,9 @@ export function NewUserForm({ setShow }: any) {
 						type="text"
 						dataType="number"
 						value={document}
-						onChange={(e) => setDocument(e.target.value)}
+						onChange={(e) => {
+							e.target.value.length <= 8 && setDocument(e.target.value);
+						}}
 						minLength={8}
 						maxLength={8}
 						setBadInput={setBadInput}
@@ -165,7 +168,9 @@ export function NewUserForm({ setShow }: any) {
 						type="text"
 						dataType="number"
 						value={phoneNumber}
-						onChange={(e) => setPhoneNumber(e.target.value)}
+						onChange={(e) => {
+							e.target.value.length <= 9 && setPhoneNumber(e.target.value);
+						}}
 						minLength={9}
 						maxLength={9}
 						placeholder="987654321"

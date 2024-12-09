@@ -1,9 +1,11 @@
+import { FormEvent, useState } from "react";
 import { AddressAPIObject, AuthorAPIObject, UserAPIObject } from "../api/types";
 
-import { Button, Tab } from "react-bootstrap";
+import { Button, Tab, Row, Col } from "react-bootstrap";
 
 import { CustomModal } from "./CustomModals";
 import PanelCard from "./UI/PanelCard";
+import { SearchBar } from "./UIElements";
 
 export function firstN(src: string, n: number): string {
 	return src.slice(0, n) + "...";
@@ -29,7 +31,8 @@ export function buildTableContent<T extends Object>(
 	isError: boolean,
 	data: T[] | undefined,
 	mapFn: (item: T, index: number) => JSX.Element,
-	predicate?: (item: T) => boolean
+	filterFn?: (item: string) => boolean,
+	getFilterKey?: (item: T) => string
 ) {
 	if (isLoading)
 		return (
@@ -45,7 +48,7 @@ export function buildTableContent<T extends Object>(
 			</tr>
 		);
 
-	const filteredData = predicate ? data?.filter(predicate) : data;
+	const filteredData = filterFn && getFilterKey ? data?.filter((e) => filterFn(getFilterKey(e))) : data;
 
 	return filteredData?.map(mapFn);
 }
@@ -61,10 +64,24 @@ export type TabsData = {
 	tabForm: ({ setShow }: any) => JSX.Element;
 	reload: boolean;
 	setReload: React.Dispatch<React.SetStateAction<boolean>>;
-	table: JSX.Element; // a <Table>
+	searchBarPlaceholder: string;
+	tableGenerator: (filterFn: ((item: string) => boolean) | undefined) => JSX.Element;
 };
 
 export function generateAdminTabs(tabsData: TabsData[]) {
+	const [filterFn, setFilterFn] = useState<((item: string) => boolean) | undefined>(undefined);
+	const buildFilterFn = (e: FormEvent) => {
+		let val = "";
+		e.preventDefault();
+		const form = e.currentTarget.closest("form");
+		if (form) {
+			const input = form.querySelector<HTMLInputElement>("input[type='text']");
+			if (input) val = input.value;
+		}
+
+		setFilterFn(val ? () => (item: string) => item.toLowerCase().includes(val.toLowerCase()) : undefined);
+	};
+
 	return tabsData.map(
 		({
 			tabKey,
@@ -77,16 +94,28 @@ export function generateAdminTabs(tabsData: TabsData[]) {
 			tabForm,
 			reload,
 			setReload,
-			table,
+			searchBarPlaceholder,
+			tableGenerator,
 		}) => (
 			<Tab eventKey={tabKey} title={tabName} key={tabKey}>
 				<PanelCard>
-					<div className="my-2 d-flex justify-content-between">
-						<h2>
-							<b>{tabTitle}</b>
-						</h2>
-						<Button onClick={() => setShowModal(true)}>{buttonTitle}</Button>
-					</div>
+					<Row>
+						<Col xs={10}>
+							<h2>
+								<b>{tabTitle}</b>
+							</h2>
+						</Col>
+						<Col xs={2}>
+							<Button onClick={() => setShowModal(true)} className="w-100">
+								{buttonTitle}
+							</Button>
+						</Col>
+					</Row>
+					<SearchBar
+						onClick={buildFilterFn}
+						placeholder={searchBarPlaceholder}
+						buttonText="Buscar"
+					></SearchBar>
 					<CustomModal
 						show={showModal}
 						setShow={setShowModal}
@@ -95,7 +124,7 @@ export function generateAdminTabs(tabsData: TabsData[]) {
 						reload={reload}
 						setReload={setReload}
 					/>
-					{table}
+					{tableGenerator(filterFn)}
 				</PanelCard>
 			</Tab>
 		)

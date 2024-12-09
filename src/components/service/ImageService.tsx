@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { Card, Spinner, Image } from "react-bootstrap";
+import { Card, Spinner } from "react-bootstrap";
 
 import { fetchTextImage, fetchUserImage } from "../../api/api";
 import { ReactIcons } from "../Icon";
@@ -71,28 +71,21 @@ export function FetchUserImage({ document }: any) {
 	);
 }
 
-export function FetchUserImageTest({ document }: any) {
-	const {
-		data: imageSrc,
-		isLoading,
-		isError,
-	} = useQuery<any, Error>({
+interface FetchUserImageProps {
+	mapFn: (x: any) => JSX.Element;
+	document: string;
+}
+
+export function FetchUserImageTest({ document, mapFn }: FetchUserImageProps) {
+	const { data, isLoading, isError } = useQuery<any, Error>({
 		queryFn: () => fetchUserImage(document), // Fetch function
 		queryKey: ["fetchUserImage", document], // Query key includes the ID
 	});
 
-	let jsxElement;
+	if (isLoading) return <Spinner animation="border" role="status"></Spinner>;
+	else if (isError) return <ReactIcons library="AntIcons" iconName="AiOutlineClose" size={24} />;
 
-	if (isLoading) jsxElement = <Spinner animation="border" role="status"></Spinner>;
-	else if (isError) jsxElement = <ReactIcons library="AntIcons" iconName="AiOutlineClose" size={24} />;
-
-	return {
-		error: isError,
-		loading: isLoading,
-		jsxElement: jsxElement,
-		blob: imageSrc,
-		card: <Card.Img width={300} height={300} src={imageSrc ? imageSrc : `https://placehold.co/300`}></Card.Img>,
-	};
+	return mapFn(data);
 }
 
 export function FetchUserImageCard({ variant, document }: any) {

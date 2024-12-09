@@ -22,7 +22,7 @@ import {
 	EditorialDTO,
 } from "./types";
 
-const DOMAIN = "http://144.22.63.67:8080";
+const DOMAIN = "http://localhost:8080";
 const API_PREFFIX = '/api/v1';
 
 export const api = axios.create({
@@ -128,6 +128,11 @@ export async function getCodesBybaseCode(baseCode: string): Promise<CodeAPIObjec
 	return response.data;
 }
 
+export async function getAvailableCodesBybaseCode(baseCode: string): Promise<CodeAPIObject[]> {
+	const response = await api.get(`/text_codes/get_available?baseCode=${baseCode}`);
+	return response.data;
+}
+
 export async function getAllLoans(): Promise<LoanAPIObject[]> {
 	const response = await api.get("/loans/");
 	return response.data;
@@ -139,6 +144,11 @@ export async function getAllLoanTypes(): Promise<LoanTypeAPIObject[]> {
 }
 export async function getAllLoanStatuses(): Promise<LoanStatusAPIObject[]> {
 	const response = await api.get("/loan_status/");
+	return response.data;
+}
+
+export async function makeClient(data: FormData) {
+	const response = await api.post(`/customers/user_to_client`, data);
 	return response.data;
 }
 
@@ -158,7 +168,7 @@ export async function newLoan(data: LoanDTO) {
 }
 
 export async function setLoanStatus(id: number, status: number) {
-	const response = await api.post(`/loans/${id}/status?idStatusLoan=${status}`)
+	const response = await api.put(`/loans/${id}/status?status=${status}`)
 	return response.data;
 }
 

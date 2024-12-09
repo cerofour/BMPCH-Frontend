@@ -1,9 +1,14 @@
 
 // API Objects
 
+export type RoleAPIObject = {
+	id: number;
+	name: String;
+}
+
 export type UserAPIObject = {
     userId: number;
-    roleId: number;
+    role: RoleAPIObject;
     documentTypeId: number;
     document: string;
     psk: string;
@@ -157,8 +162,20 @@ export type LoanStatusAPIObject = {
 
 // DTO
 
+export type AddressDTO = {
+	district: number;
+	address: string;
+}
+
 export type EditorialDTO = {
 	name: string;
+}
+
+export type UserToClientDTO = {
+	id: number;
+	email: string;
+	addressDTO: AddressDTO,
+	educationLevel: number,
 }
 
 export type LoanDTO = {

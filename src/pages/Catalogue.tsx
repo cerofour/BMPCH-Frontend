@@ -1,12 +1,23 @@
+import { useState, ChangeEvent } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+
+import { TextAPIObject } from "../api/types";
+
 import BookGroup from "../components/BookGroup";
 import { SearchBar } from "../components/UIElements";
+import { useBreadcrumb } from "../hooks/BreadcrumbContext";
 
 function Catalogue() {
+	const [predicate, setPredicate] = useState<((item: TextAPIObject) => boolean) | undefined>(undefined);
+
+	const handleSearch = (e: ChangeEvent<HTMLInputElement>) =>
+		setPredicate(
+			() => (item: TextAPIObject) => item.title.toLocaleLowerCase().includes(e.target.value.toLowerCase())
+		);
+
 	return (
 		<>
 			<Container>
-				{/* Search Bar */}
 				<Row className="mb-4">
 					<Col>
 						<h1>
@@ -14,8 +25,9 @@ function Catalogue() {
 						</h1>
 					</Col>
 				</Row>
-				<SearchBar placeholder="Buscar libros" buttonText="Buscar"></SearchBar>
-				<BookGroup></BookGroup>
+				{/* Search Bar */}
+				<SearchBar onChangeInput={handleSearch} placeholder="Buscar libros" buttonText="Buscar"></SearchBar>
+				<BookGroup predicate={predicate}></BookGroup>
 			</Container>
 		</>
 	);

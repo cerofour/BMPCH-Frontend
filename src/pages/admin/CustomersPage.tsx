@@ -27,7 +27,10 @@ export default function CustomersPage() {
 			reload: reloadCustomers,
 			setReload: setReloadCustomers,
 			tabForm: NewCustomerForm, // JSX.Element
-			table: <CustomersTable reload={reloadCustomers} setReload={setReloadCustomers} />, // JSX.Element
+			searchBarPlaceholder: "Buscar cliente por DNI, nombre o apellidos",
+			tableGenerator: (filterFn: ((item: string) => boolean) | undefined) => (
+				<CustomersTable filterFn={filterFn} />
+			), // JSX.Element
 		},
 	];
 

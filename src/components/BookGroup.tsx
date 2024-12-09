@@ -30,7 +30,11 @@ function BookCard(book: TextAPIObject) {
 	);
 }
 
-export default function BookGroup() {
+interface BookGroupProps {
+	predicate?: (item: TextAPIObject) => boolean;
+}
+
+export default function BookGroup({ predicate }: BookGroupProps) {
 	const { isLoading, isError, data, error } = useQuery<TextAPIObject[], Error>({
 		queryKey: ["getAllTexts"],
 		queryFn: getAllTexts,
@@ -46,9 +50,11 @@ export default function BookGroup() {
 			</Alert>
 		);
 
+	const filteredData: TextAPIObject[] | undefined = predicate ? data?.filter(predicate) : data;
+
 	return (
 		<Row xs={1} md={3} lg={4} xxl={5} className="g-4">
-			{data?.map(BookCard)}
+			{filteredData?.map(BookCard)}
 		</Row>
 	);
 }

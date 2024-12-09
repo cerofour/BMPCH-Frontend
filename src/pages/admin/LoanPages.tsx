@@ -20,14 +20,15 @@ export default function LoansPage() {
 			tabKey: "loans",
 			tabName: "Préstamos",
 			tabTitle: "Administrar préstamos",
-			buttonTitle: "Realizar préstamo",
+			buttonTitle: "Nuevo préstamo",
 			showModal: showNewLoanModal,
 			setShowModal: setShowNewLoanModal,
 			modalTitle: "Realizar Préstamo",
 			reload: reloadLoans,
 			setReload: setReloadLoans,
 			tabForm: NewLoanForm, // JSX.Element
-			table: <LoansTable />, // JSX.Element
+			searchBarPlaceholder: "Buscar préstamo por cliente o código de libro",
+			tableGenerator: (filterFn: ((item: string) => boolean) | undefined) => <LoansTable filterFn={filterFn} />, // JSX.Element
 		},
 	];
 

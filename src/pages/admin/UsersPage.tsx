@@ -26,7 +26,8 @@ export default function UsersPage() {
 			reload: reloadUsers,
 			setReload: setReloadUsers,
 			tabForm: NewUserForm, // JSX.Element
-			table: <UsersTable />, // JSX.Element
+			searchBarPlaceholder: "Buscar usuario por DNI, nombre o apellidos",
+			tableGenerator: (filterFn: ((item: string) => boolean) | undefined) => <UsersTable filterFn={filterFn} />, // JSX.Element
 		},
 	];
 

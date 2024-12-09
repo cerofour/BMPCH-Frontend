@@ -7,7 +7,6 @@ import { NewTextForm } from "../../components/form/NewTextForm";
 import { NewAuthorForm } from "../../components/form/NewAuthorForm";
 
 import { generateAdminTabs, TabsData } from "../../components/Utils";
-import { SearchBar } from "../../components/UIElements";
 
 import CRUDContext from "../../hooks/CRUDContext";
 import { EditorialsTable } from "../../components/tables/EditorialsTable";
@@ -36,7 +35,10 @@ export default function TextsPage() {
 			reload: reloadTexts,
 			setReload: setReloadTexts,
 			tabForm: NewTextForm, // JSX.Element
-			table: <TextsTable reload={reloadTexts} setReload={setReloadTexts} />, // JSX.Element
+			searchBarPlaceholder: "Buscar libros",
+			tableGenerator: (filterFn: ((item: string) => boolean) | undefined) => (
+				<TextsTable reload={reloadTexts} setReload={setReloadTexts} filterFn={filterFn} />
+			), // JSX.Element
 		},
 		{
 			tabKey: "authors",
@@ -49,7 +51,10 @@ export default function TextsPage() {
 			setShowModal: setShowNewAuthorModal,
 			modalTitle: "Añadir nuevo autor",
 			tabForm: NewAuthorForm, // JSX.Element
-			table: <AuthorsTable reload={reloadAuthors} setReload={setReloadAuthors} />, // JSX.Element
+			searchBarPlaceholder: "Buscar autores",
+			tableGenerator: (filterFn: ((item: string) => boolean) | undefined) => (
+				<AuthorsTable reload={reloadAuthors} setReload={setReloadAuthors} filterFn={filterFn} />
+			), // JSX.Element
 		},
 		{
 			tabKey: "editorials",
@@ -62,7 +67,10 @@ export default function TextsPage() {
 			setShowModal: setShowNewEditorialModal,
 			modalTitle: "Añadir nueva editorial",
 			tabForm: NewEditorialForm, // JSX.Element
-			table: <EditorialsTable reload={reloadEditorials} setReload={setReloadEditorials} />, // JSX.Element
+			searchBarPlaceholder: "Buscar editorial",
+			tableGenerator: (filterFn: ((item: string) => boolean) | undefined) => (
+				<EditorialsTable reload={reloadEditorials} setReload={setReloadEditorials} filterFn={filterFn} />
+			), // JSX.Element
 		},
 	];
 
@@ -72,7 +80,6 @@ export default function TextsPage() {
 				<h1>Módulo de Administración de Textos</h1>
 			</div>
 			<Container>
-				<SearchBar placeholder="Buscar libros" buttonText="Buscar"></SearchBar>
 				<ToastContainer position="bottom-end" className="p-3">
 					<Toast
 						show={context?.entityCreationToast}

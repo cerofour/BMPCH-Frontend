@@ -40,6 +40,11 @@ export function UserInformation({ showNavDropDown = false }: { showNavDropDown?:
 			<Link to="/perfil">
 				<NavDropdown.Item href="/perfil">Mi Perfil</NavDropdown.Item>
 			</Link>
+			{data?.role.id === 1 && (
+				<Link to="/admin">
+					<NavDropdown.Item href="/admin">Panel de Administrador</NavDropdown.Item>
+				</Link>
+			)}
 			<Link to="/">
 				<NavDropdown.Item onClick={() => logout()}>Cerrar Sesión</NavDropdown.Item>
 			</Link>

@@ -6,6 +6,7 @@ import { TextAPIObject } from "../api/types";
 import { commaSeparatedAuthors } from "../components/Utils";
 
 import { FetchTextImage } from "../components/service/ImageService";
+import { useBreadcrumb } from "../hooks/BreadcrumbContext";
 
 function BookPage() {
 	const { id } = useParams<{ id: string }>(); // Retrieve the book ID from the URL

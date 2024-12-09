@@ -26,6 +26,7 @@ import UsersPage from "./pages/admin/UsersPage";
 import CustomerDetail from "./pages/admin/CustomerDetail";
 import UserDetail from "./pages/admin/UserDetail";
 import LoansPage from "./pages/admin/LoanPages";
+import Admin from "./pages/admin/Admin";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ function App() {
 									</ProtectedRoute>
 								}
 							>
+								<Route index element={<Admin />} />
 								<Route path="usuarios" element={<UsersPage />} />
 								<Route path="prestamos" element={<LoansPage />} />
 								<Route path="usuarios/:id" element={<UserDetail />} />

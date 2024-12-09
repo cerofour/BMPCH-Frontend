@@ -4,6 +4,7 @@ import * as BootstrapIcons_ from "react-bootstrap-icons";
 import * as GoIcons from "react-icons/go";
 import * as IoIcons from "react-icons/io";
 import * as AntIcons from "react-icons/ai";
+import * as MaterialIcons from "react-icons/md";
 
 {
 	/*Bootstrap icons*/
@@ -28,6 +29,7 @@ const IconsLibraries = {
 	GoIcons: GoIcons,
 	IoIcons: IoIcons,
 	AntIcons: AntIcons,
+	MaterialIcons: MaterialIcons,
 };
 
 interface IconProps {

@@ -10,8 +10,9 @@ import { EditorialAPIObject } from "../../api/types";
 import { buildTableContent } from "../Utils";
 
 import { ConfirmationModal } from "../CustomModals";
+import TableProps from "./TableProps";
 
-export function EditorialsTable({ reload, setReload }: any) {
+export function EditorialsTable({ reload, setReload, filterFn }: TableProps) {
 	const {
 		isLoading,
 		isError,
@@ -52,20 +53,28 @@ export function EditorialsTable({ reload, setReload }: any) {
 		handleCloseModal();
 	};
 
-	const tableContent: any = buildTableContent(9, isLoading, isError, editorials, (editorial: EditorialAPIObject) => (
-		<tr key={editorial.id}>
-			<td>{editorial.id}</td>
-			<td>{editorial.name}</td>
-			<td>
-				<ButtonGroup aria-label="Basic example">
-					<Button variant="secondary">Actualizar</Button>
-					<Button onClick={() => handleShowModal(editorial.id)} variant="danger">
-						Eliminar
-					</Button>
-				</ButtonGroup>
-			</td>
-		</tr>
-	));
+	const tableContent: any = buildTableContent(
+		9,
+		isLoading,
+		isError,
+		editorials,
+		(editorial: EditorialAPIObject) => (
+			<tr key={editorial.id}>
+				<td>{editorial.id}</td>
+				<td>{editorial.name}</td>
+				<td>
+					<ButtonGroup aria-label="Basic example">
+						<Button variant="secondary">Actualizar</Button>
+						<Button onClick={() => handleShowModal(editorial.id)} variant="danger">
+							Eliminar
+						</Button>
+					</ButtonGroup>
+				</td>
+			</tr>
+		),
+		filterFn,
+		(item: EditorialAPIObject) => item.name
+	);
 
 	return (
 		<>

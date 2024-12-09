@@ -4,7 +4,7 @@ import { Container, Form, Button, Row, Col, Alert } from "react-bootstrap";
 
 import CustomDropdown from "../UI/CustomDropdown";
 
-import { getAllCustomers, getAllLoanTypes, newLoan, getAllTexts, getCodesBybaseCode } from "../../api/api";
+import { getAllCustomers, getAllLoanTypes, newLoan, getAllTexts, getAvailableCodesBybaseCode } from "../../api/api";
 import { CodeAPIObject, LoanTypeAPIObject, LoanDTO, TextAPIObject, CustomerAPIObject } from "../../api/types";
 import CRUDContext from "../../hooks/CRUDContext";
 import SelectWithAutoComplete from "../SelectWithAutoComplete";
@@ -94,9 +94,9 @@ export function NewLoanForm({ setShow }: any) {
 								<Form.Group className="mb-3" controlId="formBasicPassword">
 									<Form.Label>Código</Form.Label>
 									<CustomDropdown
-										qKey={["getCodesBybaseCode"]}
+										qKey={["getAvailableCodesBybaseCode"]}
 										qFn={() => {
-											return getCodesBybaseCode(baseCode);
+											return getAvailableCodesBybaseCode(baseCode);
 										}}
 										getOptionLabel={(e: CodeAPIObject) => `${e.baseCode}-${e.exemplaryCode}`}
 										setSelectedItem={setIdCode}

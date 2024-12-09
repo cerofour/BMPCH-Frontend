@@ -24,7 +24,7 @@ export default function AdminLayout() {
 					{/* Sidebar */}
 					<AdminSidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
 					{/* Main Content */}
-					<Col md={9} lg={10} className="my-5">
+					<Col md={9} lg={10} className="my-1">
 						<Outlet></Outlet>
 					</Col>
 				</Row>

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { MouseEvent, useContext, useEffect, useState } from "react";
 import { Table, Button, ButtonGroup } from "react-bootstrap";
 
 import { Link } from "react-router-dom";
@@ -14,16 +14,21 @@ import {
 	deleteCustomer,
 	deleteAuthor,
 	getAllLoans,
+	makeClient,
 	setLoanStatus,
 } from "../api/api";
 import { UserAPIObject, TextAPIObject, CustomerAPIObject, AuthorAPIObject, LoanAPIObject } from "../api/types";
-import { ConfirmationModal } from "./CustomModals";
+import { ConfirmationModal, CustomModal } from "./CustomModals";
 import { prettifyAddress } from "./Utils";
 import { BootstrapIcons } from "./Icon";
 
-import { buildTableContent } from "./Utils";
+import TableProps from "./tables/TableProps";
 
-export function LoansTable() {
+import { buildTableContent } from "./Utils";
+import CRUDContext from "../hooks/CRUDContext";
+import UserToClientForm from "./form/UserToClientForm";
+
+export function LoansTable({ filterFn }: TableProps) {
 	const {
 		isLoading,
 		isError,
@@ -33,31 +38,40 @@ export function LoansTable() {
 		queryFn: getAllLoans,
 	});
 
-	const tableContent: any = buildTableContent(9, isLoading, isError, loans, (loan: LoanAPIObject) => (
-		<tr key={loan.id}>
-			<td>{loan.id}</td>
-			<td>{<Link to={"/admin/clientes/" + loan.customer.id}>{loan.customer.user.document}</Link>}</td>
-			<td>
-				{
-					<Link to={"/admin/codigos/" + loan.codeTextualResource.id}>
-						{loan.codeTextualResource.baseCode}-{loan.codeTextualResource.exemplaryCode}
-					</Link>
-				}
-			</td>
-			<td>{loan.idTypeLoan === 1 ? "En sala" : loan.idTypeLoan === 2 ? "A domicilio" : "Desconocido"}</td>
-			<td>{loan.idStatusLoan === 1 ? "Activo" : loan.idStatusLoan === 2 ? "Devuelto" : "Desconocido"}</td>
-			<td>{loan.initialDate.toString()}</td>
-			<td>{loan.endDate ? loan.endDate.toString() : "-"}</td>
-			<td>{loan.scheduledDate.toString()}</td>
-			<td>
-				<ButtonGroup>
-					<Button variant="outline-success" onClick={() => setLoanStatus(loan.id, 2)}>
-						Devuelto
-					</Button>
-				</ButtonGroup>
-			</td>
-		</tr>
-	));
+	const tableContent: any = buildTableContent(
+		9,
+		isLoading,
+		isError,
+		loans,
+		(loan: LoanAPIObject) => (
+			<tr key={loan.id}>
+				<td>{loan.id}</td>
+				<td>{<Link to={"/admin/clientes/" + loan.customer.id}>{loan.customer.user.document}</Link>}</td>
+				<td>
+					{
+						<Link to={"/admin/codigos/" + loan.codeTextualResource.id}>
+							{loan.codeTextualResource.baseCode}-{loan.codeTextualResource.exemplaryCode}
+						</Link>
+					}
+				</td>
+				<td>{loan.idTypeLoan === 1 ? "En sala" : loan.idTypeLoan === 2 ? "A domicilio" : "Desconocido"}</td>
+				<td>{loan.idStatusLoan === 1 ? "Activo" : loan.idStatusLoan === 2 ? "Devuelto" : "Vencido"}</td>
+				<td>{loan.initialDate.toString()}</td>
+				<td>{loan.endDate ? loan.endDate.toString() : "-"}</td>
+				<td>{loan.scheduledDate.toString()}</td>
+				<td>
+					<ButtonGroup>
+						<Button variant="outline-success" onClick={() => setLoanStatus(loan.id, 2)}>
+							Devuelto
+						</Button>
+					</ButtonGroup>
+				</td>
+			</tr>
+		),
+		filterFn,
+		(item: LoanAPIObject) =>
+			`${item.customer.user.document} ${item.customer.user.name} ${item.customer.user.mlastName} ${item.customer.user.plastName} ${item.codeTextualResource.baseCode}`
+	);
 
 	return (
 		<>
@@ -81,7 +95,7 @@ export function LoansTable() {
 	);
 }
 
-export function TextsTable({ reload, setReload }: any) {
+export function TextsTable({ reload, setReload, filterFn }: TableProps) {
 	const {
 		isLoading,
 		isError,
@@ -98,14 +112,14 @@ export function TextsTable({ reload, setReload }: any) {
 	const deleteTextMutation = useMutation({
 		mutationFn: deleteText,
 		onSuccess() {
-			setReload(true);
+			setReload && setReload(true);
 		},
 	});
 
 	useEffect(() => {
 		if (reload) {
 			refetch();
-			setReload(false);
+			setReload && setReload(false);
 		}
 	}, [reload, refetch]);
 
@@ -125,37 +139,45 @@ export function TextsTable({ reload, setReload }: any) {
 		handleCloseModal();
 	};
 
-	const tableContent: any = buildTableContent(9, isLoading, isError, books, (book: TextAPIObject) => (
-		<tr key={book.id}>
-			<td>
-				<Link to={`/catalogo/${book.id}`}>{book.id}</Link>
-			</td>
-			<td>{book.title}</td>
-			<td>{book.editorial.name}</td>
-			<td>{book.type.typename}</td>
-			<td>{book.publicationDate.toString()}</td>
-			<td>
-				<ul>
-					{book.authors.map((e) => (
-						<li>
-							{e.name} {e.plastName} {e.mlastName}
-						</li>
-					))}
-				</ul>
-			</td>
-			<td>{book.pages}</td>
-			<td>{book.edition}</td>
-			<td>{book.volume}</td>
-			<td>
-				<ButtonGroup aria-label="Basic example">
-					<Button variant="secondary">Actualizar</Button>
-					<Button onClick={() => handleShowModal(book.id)} variant="danger">
-						Eliminar
-					</Button>
-				</ButtonGroup>
-			</td>
-		</tr>
-	));
+	const tableContent: any = buildTableContent(
+		9,
+		isLoading,
+		isError,
+		books,
+		(book: TextAPIObject) => (
+			<tr key={book.id}>
+				<td>
+					<Link to={`/catalogo/${book.id}`}>{book.id}</Link>
+				</td>
+				<td>{book.title}</td>
+				<td>{book.editorial.name}</td>
+				<td>{book.type.typename}</td>
+				<td>{book.publicationDate.toString()}</td>
+				<td>
+					<ul>
+						{book.authors.map((e) => (
+							<li>
+								{e.name} {e.plastName} {e.mlastName}
+							</li>
+						))}
+					</ul>
+				</td>
+				<td>{book.pages}</td>
+				<td>{book.edition}</td>
+				<td>{book.volume}</td>
+				<td>
+					<ButtonGroup aria-label="Basic example">
+						<Button variant="secondary">Actualizar</Button>
+						<Button onClick={() => handleShowModal(book.id)} variant="danger">
+							Eliminar
+						</Button>
+					</ButtonGroup>
+				</td>
+			</tr>
+		),
+		filterFn,
+		(item: TextAPIObject) => item.title
+	);
 
 	return (
 		<>
@@ -186,58 +208,86 @@ export function TextsTable({ reload, setReload }: any) {
 	);
 }
 
-export function UsersTable() {
+export function UsersTable({ filterFn }: TableProps) {
 	const { isLoading, isError, data } = useQuery<UserAPIObject[], Error>({
 		queryKey: ["getAllUsers"],
 		queryFn: getAllUsers,
 	});
 
 	const [showModal, setShowModal] = useState(false);
-	const [userIdToDelete, setUserIdToDelete] = useState<number | null>(null);
+	const [showUserToClientModal, setShowUserToClientModal] = useState(false);
+	const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+
+	const context = useContext(CRUDContext);
 
 	const deleteUserMutation = useMutation({
 		mutationFn: deleteUser,
-		onSuccess() {},
+		onSuccess() {
+			context?.setToastData("Se ha eliminado el usuario satisfactoriamente", "success");
+			context?.toggleToast();
+		},
+		onError() {
+			context?.setToastData("No se ha podido eliminar el usuario", "danger");
+			context?.toggleToast();
+		},
 	});
 
 	const handleShowModal = (userId: number) => {
-		setUserIdToDelete(userId);
+		setSelectedUserId(userId);
 		setShowModal(true);
 	};
 
 	const handleCloseModal = () => {
 		setShowModal(false);
-		setUserIdToDelete(null);
+		setSelectedUserId(null);
 	};
 
 	const handleConfirmDelete = () => {
-		if (userIdToDelete === null) return;
-		deleteUserMutation.mutate(userIdToDelete);
+		if (selectedUserId === null) return;
+		deleteUserMutation.mutate(selectedUserId);
 		handleCloseModal();
 	};
 
-	const tableContent: any = buildTableContent(6, isLoading, isError, data, (user: UserAPIObject) => (
-		<tr key={user.userId}>
-			<td>{user.userId}</td>
-			<td>{user.roleId}</td>
-			<td>{user.document}</td>
-			<td>{user.name}</td>
-			<td>{user.plastName}</td>
-			<td>{user.mlastName}</td>
-			<td>{user.phoneNumber}</td>
-			<td>{user.gender.genderName[0]}</td>
-			<td>
-				<ButtonGroup aria-label="Basic example">
-					<Button variant="secondary">
-						<BootstrapIcons iconName="PersonFillUp" size={25} />
-					</Button>
-					<Button onClick={() => handleShowModal(user.userId)} variant="danger">
-						<BootstrapIcons iconName="PersonFillDash" size={25} />
-					</Button>
-				</ButtonGroup>
-			</td>
-		</tr>
-	));
+	const handleUserToClient = (e: MouseEvent<HTMLButtonElement>, id: number) => {
+		e.preventDefault();
+
+		setSelectedUserId(id);
+		setShowUserToClientModal(true);
+	};
+
+	const tableContent: any = buildTableContent(
+		6,
+		isLoading,
+		isError,
+		data,
+		(user: UserAPIObject) => (
+			<tr key={user.userId}>
+				<td>{user.userId}</td>
+				<td>{`${user.role.name.slice(0, 4)}...`}</td>
+				<td>{user.document}</td>
+				<td>{user.name}</td>
+				<td>{user.plastName}</td>
+				<td>{user.mlastName}</td>
+				<td>{user.phoneNumber}</td>
+				<td>{user.gender.genderName[0]}</td>
+				<td>
+					<ButtonGroup aria-label="Basic example">
+						<Button variant="secondary">
+							<BootstrapIcons iconName="PersonFillUp" size={25} />
+						</Button>
+						<Button onClick={() => handleShowModal(user.userId)} variant="danger">
+							<BootstrapIcons iconName="PersonFillDash" size={25} />
+						</Button>
+						<Button onClick={(e) => handleUserToClient(e, user.userId)} variant="outline-success">
+							Hacer Cliente
+						</Button>
+					</ButtonGroup>
+				</td>
+			</tr>
+		),
+		filterFn,
+		(item: UserAPIObject) => `${item.document} ${item.name} ${item.mlastName} ${item.plastName}`
+	);
 
 	return (
 		<>
@@ -263,11 +313,19 @@ export function UsersTable() {
 				onConfirm={handleConfirmDelete}
 				message="¿Desea eliminar este usuario?"
 			></ConfirmationModal>
+			<CustomModal
+				title="Convertir a este usuario en cliente"
+				form={({ setShow }: any) => (
+					<UserToClientForm setShow={setShow} userId={selectedUserId}></UserToClientForm>
+				)}
+				show={showUserToClientModal}
+				setShow={setShowUserToClientModal}
+			></CustomModal>
 		</>
 	);
 }
 
-export function CustomersTable({ reload, setReload }: any) {
+export function CustomersTable({ reload, setReload, filterFn }: TableProps) {
 	const {
 		isLoading,
 		isError,
@@ -284,14 +342,14 @@ export function CustomersTable({ reload, setReload }: any) {
 	const deleteCustomerMutation = useMutation({
 		mutationFn: deleteCustomer,
 		onSuccess() {
-			setReload(true);
+			setReload && setReload(true);
 		},
 	});
 
 	useEffect(() => {
 		if (reload) {
 			refetch();
-			setReload(false);
+			setReload && setReload(false);
 		}
 	}, [reload, refetch]);
 
@@ -311,28 +369,37 @@ export function CustomersTable({ reload, setReload }: any) {
 		handleCloseModal();
 	};
 
-	const tableContent: any = buildTableContent(9, isLoading, isError, customers, (customer: CustomerAPIObject) => (
-		<tr key={customer.id}>
-			<td>
-				<Link to={`/admin/clientes/${customer.id}`}>{customer.id}</Link>
-			</td>
-			<td>
-				<Link to={`/admin/usuarios/${customer.user.userId}`}>{customer.user.document}</Link>
-			</td>
-			<td>{customer.email}</td>
-			<td>{prettifyAddress(customer.address)}</td>
-			<td>{customer.carnet.carnetIssuanceDate.toString()}</td>
-			<td>{customer.carnet.carnetExpirationDate.toString()}</td>
-			<td>
-				<ButtonGroup aria-label="Basic example">
-					<Button variant="secondary">Actualizar</Button>
-					<Button onClick={() => handleShowModal(customer.id)} variant="danger">
-						Eliminar
-					</Button>
-				</ButtonGroup>
-			</td>
-		</tr>
-	));
+	const tableContent: any = buildTableContent(
+		9,
+		isLoading,
+		isError,
+		customers,
+		(customer: CustomerAPIObject) => (
+			<tr key={customer.id}>
+				<td>
+					<Link to={`/admin/clientes/${customer.id}`}>{customer.id}</Link>
+				</td>
+				<td>
+					<Link to={`/admin/usuarios/${customer.user.userId}`}>{customer.user.document}</Link>
+				</td>
+				<td>{customer.email}</td>
+				<td>{prettifyAddress(customer.address)}</td>
+				<td>{customer.carnet.carnetIssuanceDate.toString()}</td>
+				<td>{customer.carnet.carnetExpirationDate.toString()}</td>
+				<td>
+					<ButtonGroup aria-label="Basic example">
+						<Button variant="secondary">Actualizar</Button>
+						<Button onClick={() => handleShowModal(customer.id)} variant="danger">
+							Eliminar
+						</Button>
+					</ButtonGroup>
+				</td>
+			</tr>
+		),
+		filterFn,
+		(item: CustomerAPIObject) =>
+			`${item.user.document} ${item.user.name} ${item.user.mlastName} ${item.user.plastName}`
+	);
 
 	return (
 		<>
@@ -360,7 +427,7 @@ export function CustomersTable({ reload, setReload }: any) {
 	);
 }
 
-export function AuthorsTable({ reload, setReload }: any) {
+export function AuthorsTable({ reload, setReload, filterFn }: TableProps) {
 	const {
 		isLoading,
 		isError,
@@ -377,14 +444,14 @@ export function AuthorsTable({ reload, setReload }: any) {
 	const deleteAuthorMutation = useMutation({
 		mutationFn: deleteAuthor,
 		onSuccess() {
-			setReload(true);
+			setReload && setReload(true);
 		},
 	});
 
 	useEffect(() => {
 		if (reload) {
 			refetch();
-			setReload(false);
+			setReload && setReload(false);
 		}
 	}, [reload, refetch]);
 
@@ -404,22 +471,30 @@ export function AuthorsTable({ reload, setReload }: any) {
 		handleCloseModal();
 	};
 
-	const tableContent: any = buildTableContent(9, isLoading, isError, authors, (author: AuthorAPIObject) => (
-		<tr key={author.id}>
-			<td>{author.id}</td>
-			<td>{author.name}</td>
-			<td>{author.plastName}</td>
-			<td>{author.mlastName}</td>
-			<td>
-				<ButtonGroup aria-label="Basic example">
-					<Button variant="secondary">Actualizar</Button>
-					<Button onClick={() => handleShowModal(author.id)} variant="danger">
-						Eliminar
-					</Button>
-				</ButtonGroup>
-			</td>
-		</tr>
-	));
+	const tableContent: any = buildTableContent(
+		9,
+		isLoading,
+		isError,
+		authors,
+		(author: AuthorAPIObject) => (
+			<tr key={author.id}>
+				<td>{author.id}</td>
+				<td>{author.name}</td>
+				<td>{author.plastName}</td>
+				<td>{author.mlastName}</td>
+				<td>
+					<ButtonGroup aria-label="Basic example">
+						<Button variant="secondary">Actualizar</Button>
+						<Button onClick={() => handleShowModal(author.id)} variant="danger">
+							Eliminar
+						</Button>
+					</ButtonGroup>
+				</td>
+			</tr>
+		),
+		filterFn,
+		(item: AuthorAPIObject) => `${item.name} ${item.mlastName} ${item.plastName}`
+	);
 
 	return (
 		<>

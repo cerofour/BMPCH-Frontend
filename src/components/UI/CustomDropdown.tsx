@@ -26,7 +26,7 @@ export default function CustomDropdown<T>({
 		queryFn: qFn,
 	});
 
-	const [dropdownTitle, setDropdownTitle] = useState("Seleccione una opción");
+	const [dropdownTitle, setDropdownTitle] = useState("Seleccionar");
 
 	if (isLoading) return <Spinner animation="border" role="status" />;
 
