@@ -1,17 +1,23 @@
-import { useState, useContext, FormEvent } from "react";
+import { useState, useContext, FormEvent, useEffect } from "react";
 
 import { useMutation } from "@tanstack/react-query";
 
 import { Container, Form, Button, Alert, Row, Col } from "react-bootstrap";
 
-import { getAllDistricts, getAllEducationLevels, getAllGenders, newCustomer } from "../../api/api";
+import { getAllDistricts, getAllEducationLevels, getAllGenders, getCustomerById, newCustomer, updateCustomer } from "../../api/api";
 
 import ValidatedFormGroup from "../UI/FormControlValidator";
 import CustomDropdown from "../UI/CustomDropdown";
-import { DistrictDTO, EducationAPIObject, GenderDTO } from "../../api/types";
+import { DistrictAPIObject, DistrictDTO, EducationAPIObject, GenderDTO } from "../../api/types";
 import CRUDContext from "../../hooks/CRUDContext";
 
-export function NewCustomerForm({ setShow }: any) {
+type PropsForm = {
+	setShow: any;
+	isEditMode?: boolean;
+	id?: number;
+}
+
+export function NewCustomerForm({ setShow, isEditMode, id }: PropsForm) {
 	const [document, setDocument] = useState("");
 	const [name, setName] = useState("");
 	const [plastname, setPlastname] = useState("");
@@ -26,13 +32,50 @@ export function NewCustomerForm({ setShow }: any) {
 	const [badInputMsg, setBadInputMsg] = useState<string>("");
 	const [imageFile, setImageFile] = useState<File | undefined>(undefined);
 
+	const [isFetchingCustomer, setIsFetchingCustomer] = useState(false);
+	const [fetchError, setFetchError] = useState<boolean>(false);
+
+	const [genderDefaultValue, setGenderDefaultValue] = useState<GenderDTO>();
+	const [districtDefaultValue, setDistrictDefaultValue] = useState<DistrictAPIObject>();
+	const [educationDefaultValue, setEducationDefaultValue] = useState<EducationAPIObject>();
+
 	const context = useContext(CRUDContext);
 
+	useEffect(() => {
+		if(isEditMode && id){
+			setIsFetchingCustomer(true);
+			getCustomerById(id)
+			.then((data) => {
+				setDocument(data.user.document || "");
+				setName(data.user.name || "");
+				setPlastname(data.user.plastName || "");
+				setMlastname(data.user.mlastName || "");
+				setPhoneNumber(data.user.phoneNumber || "");
+				setGenderId(data.user.gender.id || undefined);
+				setDistrict(data.address.district.id || undefined);
+				setAddress(data.address.address || "");
+				setEmail(data.email || "");
+				setEducationLevelId(data.education.id || undefined);
+				setGenderDefaultValue(data.user.gender);
+				setEducationDefaultValue(data.education);
+				setDistrictDefaultValue(data.address.district);
+			})
+			.catch(() => {
+				setFetchError(true);
+			})
+			.finally(() => setIsFetchingCustomer(false));
+		}
+		}
+	, [isEditMode, id]);
+
 	const mutation = useMutation({
-		mutationFn: newCustomer,
+		mutationFn: ({ id, data }: { id?: number; data: FormData }) => {
+			return isEditMode && id ? updateCustomer(id, data) : newCustomer(data);
+		  },
 		onSuccess: async () => {
 			context?.toggleToast();
 			context?.setToastData(
+				isEditMode ? "El cliente fue actualizado exitosamente" : 
 				"El cliente, su carnet y sus credenciales de usuario se han creado exitosamente",
 				"success"
 			);
@@ -40,7 +83,9 @@ export function NewCustomerForm({ setShow }: any) {
 		},
 		onError: async (_) => {
 			context?.toggleToast();
-			context?.setToastData("No se ha podido crear el usuario", "danger");
+			context?.setToastData(
+				isEditMode ? "No se ha podido actualizar el cliente"
+				 : "No se ha podido crear el usuario", "danger");
 		},
 	});
 
@@ -83,16 +128,27 @@ export function NewCustomerForm({ setShow }: any) {
 
 		const formData = new FormData();
 		formData.append("customer", new Blob([JSON.stringify(customerData)], { type: "application/json" })); // Agregar el objeto JSON
-		if (imageFile === undefined) {
+		if (imageFile === undefined && !isEditMode) {
 			setBadInput(true);
 			return;
 		}
-		formData.append("image", imageFile);
 
-		mutation.mutate(formData);
+		if(imageFile !== undefined){
+			formData.append("image", imageFile);
+		}
+
+		if(isEditMode)
+			mutation.mutate({id: id, data: formData})
+		else
+			mutation.mutate({data: formData});
 	};
 	return (
 		<Container fluid>
+			{isFetchingCustomer ? (
+				<p>Cargando...</p>
+			) : fetchError ? (
+				<p>Error al cargar el cliente.</p>
+			) : (
 			<Form>
 				{/* Datos del usuario */}
 				<ValidatedFormGroup
@@ -200,6 +256,7 @@ export function NewCustomerForm({ setShow }: any) {
 								getOptionLabel={(e: GenderDTO) => e.genderName}
 								setSelectedItem={setGenderId}
 								mapSelectedValue={(e: GenderDTO) => e.id}
+								defaultValue={(isEditMode) ? genderDefaultValue : null}
 							></CustomDropdown>
 						</Form.Group>
 					</Col>
@@ -212,6 +269,7 @@ export function NewCustomerForm({ setShow }: any) {
 								getOptionLabel={(e: DistrictDTO) => e.districtName}
 								setSelectedItem={setDistrict}
 								mapSelectedValue={(e) => e.id}
+								defaultValue={districtDefaultValue}
 							/>
 						</Form.Group>
 					</Col>
@@ -224,6 +282,7 @@ export function NewCustomerForm({ setShow }: any) {
 								getOptionLabel={(e: EducationAPIObject) => e.educationName}
 								setSelectedItem={setEducationLevelId}
 								mapSelectedValue={(e) => e.id}
+								defaultValue={educationDefaultValue}
 							/>
 						</Form.Group>
 					</Col>
@@ -249,16 +308,16 @@ export function NewCustomerForm({ setShow }: any) {
 						onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
 							setImageFile(e.target.files?.[0] || undefined);
 						}}
-						required
+						required={!isEditMode} // check
 					/>
 					<Form.Control.Feedback>Por favor adjunta una imagen del cliente.</Form.Control.Feedback>
 				</Form.Group>
 
 				{badInput && <Alert variant="danger">Algunos datos ingresados son inválidos: {badInputMsg}.</Alert>}
 				<Button onClick={(e) => handleSubmit(e)} variant="primary" type="submit">
-					Registrar Cliente
+					{(isEditMode) ? "Actualizar Cliente" : "Registrar Cliente"}
 				</Button>
 			</Form>
-		</Container>
+	)}</Container>
 	);
 }

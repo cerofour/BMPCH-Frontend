@@ -2,11 +2,12 @@ import { Modal, Button } from "react-bootstrap";
 
 type CustomModalProps = {
 	title: string;
-	form: ({ setShow }: any) => JSX.Element;
+	form: ({ setShow}: any) => JSX.Element;
 	show: any;
 	setShow: any;
 	reload?: boolean;
 	setReload?: React.Dispatch<React.SetStateAction<boolean>>;
+	otherProps?: any;
 };
 
 type ConfirmationModalProps = {
@@ -16,7 +17,7 @@ type ConfirmationModalProps = {
 	message: string;
 };
 
-export function CustomModal({ title, form, show, setShow, reload, setReload }: CustomModalProps) {
+export function CustomModal({ title, form, show, setShow, reload, setReload, otherProps }: CustomModalProps) {
 	const handleClose = () => setShow(false);
 
 	return (
@@ -26,8 +27,8 @@ export function CustomModal({ title, form, show, setShow, reload, setReload }: C
 			</Modal.Header>
 			<Modal.Body>
 				{reload && setReload
-					? form({ show: show, setShow: setShow, reload: reload, setReload: setReload })
-					: form({ show: show, setShow: setShow })}
+					? form({ show: show, setShow: setShow, reload: reload, setReload: setReload, ...otherProps})
+					: form({ show: show, setShow: setShow, ...otherProps })}
 			</Modal.Body>
 		</Modal>
 	);
