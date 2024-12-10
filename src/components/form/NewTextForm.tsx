@@ -1,4 +1,4 @@
-import { useState, FormEvent, useContext } from "react";
+import { useState, FormEvent, useContext, useEffect } from "react";
 
 import { useMutation } from "@tanstack/react-query";
 
@@ -9,13 +9,19 @@ import CustomDropdown from "../UI/CustomDropdown";
 import SelectWithAutoComplete from "../SelectWithAutoComplete";
 
 import { AuthorAPIObject, EditorialAPIObject, TextTypeAPIObject, TextDTO } from "../../api/types";
-import { getAllEditorials, getAllAuthors, getAllTypes, newText } from "../../api/api";
+import { getAllEditorials, getAllAuthors, getAllTypes, newText, getText, updateText } from "../../api/api";
 import CRUDContext from "../../hooks/CRUDContext";
 
-export function NewTextForm({ setShow }: any) {
+type PropsForm = {
+	setShow: any;
+	isEditMode?: boolean;
+	id?: number;
+}
+
+export function NewTextForm({ setShow, isEditMode, id }: any) {
 	const [title, setTitle] = useState("");
-	const [editorialId, setEditorialId] = useState(undefined);
-	const [typeId, setTypeId] = useState(undefined);
+	const [editorialId, setEditorialId] = useState<number | undefined>(undefined);
+	const [typeId, setTypeId] = useState<number | undefined>(undefined);
 	const [publicationDate, setPublicationDate] = useState(new Date());
 	const [numPages, setPages] = useState(0);
 	const [edition, setEdition] = useState(0);
@@ -26,19 +32,56 @@ export function NewTextForm({ setShow }: any) {
 	const [baseCode, setBaseCode] = useState<string>("");
 	const [imageFile, setImageFile] = useState<File | undefined>(undefined);
 
+	const [isFetchingText, setIsFetchingText] = useState(false);
+	const [fetchError, setFetchError] = useState<boolean>(false);
+
+	const [editorialDefaultValue, setEditorialDefaultValue] = useState<EditorialAPIObject>();
+	const [typeTextDefaultValue, setTypeTextDefaultValue] = useState<TextTypeAPIObject>();
+
 	const context = useContext(CRUDContext);
 
+	useEffect(() => {
+		if(isEditMode && id){
+			setIsFetchingText(true);
+			getText(id)
+			.then((data) => {
+				setTitle(data.title || "");
+				setEditorialId(data.editorial.id || undefined);
+				setTypeId(data.type.typeId || undefined);
+				setPublicationDate(data.publicationDate ? new Date(data.publicationDate) : new Date());
+				setPages(data.pages || 0);
+				setEdition(data.edition || 0);
+				setVolume(data.volume || 0);
+				setAuthors(data.authors.map((item) => item.id)  || []);
+				setStock(data.stock || 0);
+				setBaseCode(data.baseCode || "");
+				setTypeTextDefaultValue(data.type);
+			})
+			.catch(() => {
+				setFetchError(true);
+			})
+			.finally(() => setIsFetchingText(false));
+		}
+		}
+	, [isEditMode, id]);
+
 	const mutation = useMutation({
-		mutationFn: newText,
+		mutationFn: ({ id, data }: { id?: number; data: any }) => {
+			return isEditMode && id ? updateText(id, data) : newText(data);
+		  },
 		onSuccess: (data) => {
 			context?.toggleToast();
 			console.log(data);
-			context?.setToastData("Texto creado exitosamente.", "success");
+			context?.setToastData(
+				(isEditMode) ? "Texto actualizado exitosamente" 
+				: "Texto creado exitosamente.", "success");
 			setShow(false);
 		},
 		onError: () => {
 			context?.toggleToast();
-			context?.setToastData("No se ha podido crear el texto.", "danger");
+			context?.setToastData(
+				(isEditMode) ? "No se ha podido actualizar el texto" 
+				: "No se ha podido crear el texto.", "danger");
 		},
 	});
 
@@ -66,16 +109,28 @@ export function NewTextForm({ setShow }: any) {
 
 		const formData = new FormData();
 		formData.append("text", new Blob([JSON.stringify(textDTO)], { type: "application/json" })); // Agregar el objeto JSON
-		if (imageFile === undefined) {
+		if (imageFile === undefined && !isEditMode) {
 			setBadInput(true);
 			return;
 		}
-		formData.append("image", imageFile); // Agregar el archivo de imagen
-		mutation.mutate(formData);
+
+		if(imageFile !== undefined){
+			formData.append("image", imageFile);
+		}
+
+		if(isEditMode)
+			mutation.mutate({id: id, data: formData})
+		else
+			mutation.mutate({data: formData});
 	};
 
 	return (
 		<>
+		{isFetchingText ? (
+			<p>Cargando...</p>
+		) : fetchError ? (
+			<p>Error al cargar el recurso textual.</p>
+		) : (
 			<Container fluid>
 				<Form>
 					<ValidatedFormGroup
@@ -208,6 +263,7 @@ export function NewTextForm({ setShow }: any) {
 									getOptionLabel={(e: TextTypeAPIObject) => e.typename}
 									setSelectedItem={setTypeId}
 									mapSelectedValue={(e: TextTypeAPIObject) => e.typeId}
+									defaultValue={typeTextDefaultValue}
 								></CustomDropdown>
 							</Form.Group>
 						</Col>
@@ -222,6 +278,7 @@ export function NewTextForm({ setShow }: any) {
 							getOptionValue={(e: AuthorAPIObject) => e.id}
 							setSelected={setAuthors}
 							isMulti={true}
+							defaultValue={authors}
 						></SelectWithAutoComplete>
 					</Form.Group>
 
@@ -237,10 +294,10 @@ export function NewTextForm({ setShow }: any) {
 
 					{badInput && <Alert variant="danger">Algunos datos ingresados son inválidos.</Alert>}
 					<Button onClick={(e) => handleSubmit(e)} variant="primary" type="submit">
-						Crear texto
+						{(isEditMode) ? "Actualizar texto" : "Crear texto"}
 					</Button>
 				</Form>
 			</Container>
-		</>
+		)}</>
 	);
 }

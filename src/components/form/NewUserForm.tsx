@@ -1,56 +1,24 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { FormEvent } from "react";
 
 import { Container, Form, Button, DropdownButton, Dropdown, Alert } from "react-bootstrap";
 
 import { useMutation } from "@tanstack/react-query";
 
-import { newUser, getAllGenders } from "../../api/api";
-import { GenderDTO } from "../../api/types";
+import { newUser, getAllGenders, getAllRoles, getUserById, updateUser } from "../../api/api";
+import { GenderDTO, RoleAPIObject } from "../../api/types";
 import CRUDContext from "../../hooks/CRUDContext";
 import CustomDropdown from "../UI/CustomDropdown";
 import ValidatedFormGroup from "../UI/FormControlValidator";
 
-/* just for testing purposes */
-function dummyGetRoles() {
-	const data = [
-		{
-			rolu_id: 1,
-			rolu_nombre: "Administrador",
-		},
-		{
-			rolu_id: 2,
-			rolu_nombre: "Cliente",
-		},
-		{
-			rolu_id: 3,
-			rolu_nombre: "Bibliotecario",
-		},
-	];
-
-	return data;
+type PropsForm = {
+	setShow: any;
+	isEditMode?: boolean;
+	id?: number;
 }
 
-function StaticCustomDropdown({ data, getOptionLabel, setSelectedItem, mapSelectedValue }: any) {
-	const [dropdownTitle, setDropdownTitle] = useState("Seleccione una opción");
 
-	return (
-		<DropdownButton variant="outline-secondary" title={dropdownTitle}>
-			{data?.map((e: any) => (
-				<Dropdown.Item
-					key={getOptionLabel(e)}
-					onClick={() => {
-						setSelectedItem(mapSelectedValue(e));
-						setDropdownTitle(getOptionLabel(e));
-					}}
-				>
-					{getOptionLabel(e)}
-				</Dropdown.Item>
-			))}
-		</DropdownButton>
-	);
-}
-export function NewUserForm({ setShow }: any) {
+export function NewUserForm({ setShow, isEditMode, id }: PropsForm) {
 	const [document, setDocument] = useState("");
 	const [psk, setPsk] = useState("");
 	const [name, setName] = useState("");
@@ -61,19 +29,54 @@ export function NewUserForm({ setShow }: any) {
 	const [roleId, setRoleId] = useState<number | undefined>(undefined);
 	const [badInput, setBadInput] = useState<boolean>(false);
 
+	const [isFetchingUser, setIsFetchingUser] = useState(false);
+	const [fetchError, setFetchError] = useState<boolean>(false);
+
+	const [roleDefaultValue, setRoleDefaultValue] = useState<RoleAPIObject>();
+	const [genderDefaultValue, setGenderDefaultValue] = useState<GenderDTO>();
+
+
 	const context = useContext(CRUDContext);
 
+	useEffect(() => {
+		if(isEditMode && id){
+			setIsFetchingUser(true);
+			getUserById(id)
+			.then((data) => {
+				setDocument(data.document || "");
+				setName(data.name || "");
+				setPlastname(data.plastName || "");
+				setMlastname(data.mlastName || "");
+				setPhoneNumber(data.phoneNumber || "");
+				setGenderId(data.gender.id || undefined);
+				setRoleId(data.roleId);
+				setGenderDefaultValue(data.gender);
+			})
+			.catch(() => {
+				setFetchError(true);
+			})
+			.finally(() => setIsFetchingUser(false));
+		}
+		}
+	, [isEditMode, id]);
+
 	const mutation = useMutation({
-		mutationFn: newUser,
+		mutationFn: ({ id, data }: { id?: number; data: any }) => {
+			return isEditMode && id ? updateUser(id, data) : newUser(data);
+		  },
 		onSuccess: async () => {
 			context?.toggleToast();
-			context?.setToastData("El usuario se ha creado exitosamente", "success");
+			context?.setToastData(
+				(isEditMode) ? "El usuario se actualizó correctamente" 
+				: "El usuario se ha creado exitosamente", "success");
 			setShow(false);
 		},
 		onError: async (error) => {
 			console.log(error);
 			context?.toggleToast();
-			context?.setToastData("No se ha podido crear el usuario", "danger");
+			context?.setToastData(
+				(isEditMode) ? "No se ha pido actualizar el usuario"
+				 : "No se ha podido crear el usuario", "danger");
 		},
 	});
 
@@ -96,11 +99,20 @@ export function NewUserForm({ setShow }: any) {
 			phoneNumber,
 			genderId,
 		};
-		mutation.mutate(requestBody);
+
+		if(isEditMode)
+			mutation.mutate({id: id, data: requestBody});
+		else
+			mutation.mutate(requestBody);
 	};
 
 	return (
 		<>
+		{isFetchingUser ? (
+			<p>Cargando...</p>
+		) : fetchError ? (
+			<p>Error al cargar el usuario.</p>
+		) : (
 			<Container fluid>
 				<Form>
 					<ValidatedFormGroup
@@ -188,6 +200,7 @@ export function NewUserForm({ setShow }: any) {
 								getOptionLabel={(e: GenderDTO) => e.genderName}
 								setSelectedItem={setGenderId}
 								mapSelectedValue={(e: GenderDTO) => e.id}
+								defaultValue={genderDefaultValue}
 							></CustomDropdown>
 						</div>
 					</Form.Group>
@@ -195,12 +208,13 @@ export function NewUserForm({ setShow }: any) {
 					<Form.Group className="mb-3" controlId="formGenero">
 						<div className="d-flex justify-content-between">
 							<Form.Label>Rol de Usuario</Form.Label>
-							<StaticCustomDropdown
-								data={dummyGetRoles()}
-								getOptionLabel={(e: any) => e.rolu_nombre}
+							<CustomDropdown
+								qKey={["getAllRoles"]}
+								qFn={getAllRoles}
+								getOptionLabel={(e: RoleAPIObject) => e.role}
 								setSelectedItem={setRoleId}
-								mapSelectedValue={(e: any) => e.rolu_id}
-							></StaticCustomDropdown>
+								mapSelectedValue={(e: RoleAPIObject) => e.id}
+							></CustomDropdown>
 						</div>
 					</Form.Group>
 
@@ -219,10 +233,10 @@ export function NewUserForm({ setShow }: any) {
 					/>
 					{badInput && <Alert variant="danger">Algunos datos ingresados son inválidos.</Alert>}
 					<Button onClick={(e) => handleSubmit(e)} variant="primary" type="submit">
-						Registrar Usuario
+						{(isEditMode) ? "Actualizar Usuario" : "Registrar Usuario"}
 					</Button>
 				</Form>
 			</Container>
-		</>
+	)}</>
 	);
 }

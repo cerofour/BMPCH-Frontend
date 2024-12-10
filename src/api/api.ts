@@ -20,9 +20,11 @@ import {
 	//RoleDTO,
 	LoanDTO,
 	EditorialDTO,
+	RoleAPIObject,
+	TextDTO,
 } from "./types";
 
-const DOMAIN = "http://144.22.63.67:8080";
+const DOMAIN = "http://localhost:8080";
 const API_PREFFIX = '/api/v1';
 
 export const api = axios.create({
@@ -66,6 +68,16 @@ export async function getAllEditorials(): Promise<EditorialAPIObject[]> {
 
 export async function getAllTexts(): Promise<TextAPIObject[]> {
 	const response = api.get("/texts/");
+	return (await response).data;
+}
+
+export async function getAllRoles(): Promise<RoleAPIObject[]> {
+	const response = api.get("/roles/");
+	return (await response).data;
+}
+
+export async function getRoleById(id: number): Promise<RoleAPIObject> {
+	const response = api.get("/roles/get?id="+id);
 	return (await response).data;
 }
 
@@ -157,6 +169,26 @@ export async function newEditorial(data: EditorialDTO) {
 	return response.data;
 }
 
+export async function getAuthorById(id: number, ): Promise<AuthorAPIObject> {
+	const response = await api.get("/authors/get?id="+id);
+	return response.data;
+}
+
+export async function updateAuthor(id: number, authorDto: AuthorDTO): Promise<AuthorAPIObject> {
+	const response = await api.put("/authors/"+id, authorDto);
+	return response.data;
+}
+
+export async function updateUser(id: number, userDto: any){
+	const response = await api.post("/users/update/"+id, userDto);
+	return response.data;
+}
+
+export async function updateText(id: number, textDto: TextDTO){
+	const response = await api.put("/texts/"+id, textDto);
+	return response.data;
+}
+
 export async function newText(data: FormData) {
 	const response = await api.post("/texts/", data);
 	return response.data;
@@ -192,6 +224,11 @@ export async function newResource(data: TextAPIObject) {
 // TODO: FIX TYPING
 export async function newCustomer(data: FormData) {
 	const response = api.post("/customers/", data);
+	return (await response).data;
+}
+
+export async function updateCustomer(id: number, data: FormData) {
+	const response = api.put("/customers/"+id, data);
 	return (await response).data;
 }
 

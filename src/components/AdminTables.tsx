@@ -22,8 +22,12 @@ import { prettifyAddress } from "./Utils";
 import { BootstrapIcons } from "./Icon";
 
 import TableProps from "./tables/TableProps";
-
 import { buildTableContent } from "./Utils";
+import { NewAuthorForm } from "./form/NewAuthorForm";
+import { NewCustomerForm } from "./form/NewCustomersForm";
+import { NewUserForm } from "./form/NewUserForm";
+import { NewTextForm } from "./form/NewTextForm";
+
 import CRUDContext from "../hooks/CRUDContext";
 import UserToClientForm from "./form/UserToClientForm";
 
@@ -108,6 +112,9 @@ export function TextsTable({ reload, setReload, filterFn }: TableProps) {
 	const [showModal, setShowModal] = useState(false);
 	const [bookIdToDelete, setBookIdToDelete] = useState<number | null>(null);
 
+	const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+	const [textIdToUpdate, setTextIdToUpdate] = useState<number>(0);
+
 	const deleteTextMutation = useMutation({
 		mutationFn: deleteText,
 		onSuccess() {
@@ -121,6 +128,13 @@ export function TextsTable({ reload, setReload, filterFn }: TableProps) {
 			setReload && setReload(false);
 		}
 	}, [reload, refetch]);
+
+	const handleShowUpdateModal = (textId: number) => {
+		setTextIdToUpdate(textId);
+		setShowUpdateModal(true);
+	};
+
+	// --------------------------
 
 	const handleShowModal = (bookId: number) => {
 		setBookIdToDelete(bookId);
@@ -138,45 +152,39 @@ export function TextsTable({ reload, setReload, filterFn }: TableProps) {
 		handleCloseModal();
 	};
 
-	const tableContent: any = buildTableContent(
-		9,
-		isLoading,
-		isError,
-		books,
-		(book: TextAPIObject) => (
-			<tr key={book.id}>
-				<td>
-					<Link to={`/catalogo/${book.id}`}>{book.id}</Link>
-				</td>
-				<td>{book.title}</td>
-				<td>{book.editorial.name}</td>
-				<td>{book.type.typename}</td>
-				<td>{book.publicationDate.toString()}</td>
-				<td>
-					<ul>
-						{book.authors.map((e) => (
-							<li>
-								{e.name} {e.plastName} {e.mlastName}
-							</li>
-						))}
-					</ul>
-				</td>
-				<td>{book.pages}</td>
-				<td>{book.edition}</td>
-				<td>{book.volume}</td>
-				<td>
-					<ButtonGroup aria-label="Basic example">
-						<Button variant="secondary">Actualizar</Button>
-						<Button onClick={() => handleShowModal(book.id)} variant="danger">
-							Eliminar
-						</Button>
-					</ButtonGroup>
-				</td>
-			</tr>
-		),
-		filterFn,
-		(item: TextAPIObject) => item.title
-	);
+	const tableContent: any = buildTableContent(9, isLoading, isError, books, (book: TextAPIObject) => (
+		<tr key={book.id}>
+			<td>
+				<Link to={`/catalogo/${book.id}`}>{book.id}</Link>
+			</td>
+			<td>{book.title}</td>
+			<td>{book.editorial.name}</td>
+			<td>{book.type.typename}</td>
+			<td>{book.publicationDate.toString()}</td>
+			<td>
+				<ul>
+					{book.authors.map((e) => (
+						<li>
+							{e.name} {e.plastName} {e.mlastName}
+						</li>
+					))}
+				</ul>
+			</td>
+			<td>{book.pages}</td>
+			<td>{book.edition}</td>
+			<td>{book.volume}</td>
+			<td>
+				<ButtonGroup aria-label="Basic example">
+					<Button onClick={() => handleShowUpdateModal(book.id)} variant="secondary">
+						Actualizar
+					</Button>
+					<Button onClick={() => handleShowModal(book.id)} variant="danger">
+						Eliminar
+					</Button>
+				</ButtonGroup>
+			</td>
+		</tr>
+	));
 
 	return (
 		<>
@@ -197,6 +205,13 @@ export function TextsTable({ reload, setReload, filterFn }: TableProps) {
 				</thead>
 				<tbody>{tableContent}</tbody>
 			</Table>
+			<CustomModal
+				show={showUpdateModal}
+				setShow={setShowUpdateModal}
+				title="Actualizar un recurso textual"
+				form={NewTextForm}
+				otherProps={{ isEditMode: true, id: textIdToUpdate }}
+			></CustomModal>
 			<ConfirmationModal
 				show={showModal}
 				onClose={handleCloseModal}
@@ -219,6 +234,9 @@ export function UsersTable({ filterFn }: TableProps) {
 
 	const context = useContext(CRUDContext);
 
+	const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+	const [userIdToUpdate, setuserIdToUpdate] = useState<number>(0);
+
 	const deleteUserMutation = useMutation({
 		mutationFn: deleteUser,
 		onSuccess() {
@@ -230,6 +248,13 @@ export function UsersTable({ filterFn }: TableProps) {
 			context?.toggleToast();
 		},
 	});
+
+	const handleShowUpdateModal = (authorId: number) => {
+		setuserIdToUpdate(authorId);
+		setShowUpdateModal(true);
+	};
+
+	// --------------------------
 
 	const handleShowModal = (userId: number) => {
 		setSelectedUserId(userId);
@@ -271,7 +296,7 @@ export function UsersTable({ filterFn }: TableProps) {
 				<td>{user.gender.genderName[0]}</td>
 				<td>
 					<ButtonGroup aria-label="Basic example">
-						<Button variant="secondary">
+						<Button onClick={() => handleShowUpdateModal(user.userId)} variant="secondary">
 							<BootstrapIcons iconName="PersonFillUp" size={25} />
 						</Button>
 						<Button onClick={() => handleShowModal(user.userId)} variant="danger">
@@ -306,6 +331,13 @@ export function UsersTable({ filterFn }: TableProps) {
 				</thead>
 				<tbody>{tableContent}</tbody>
 			</Table>
+			<CustomModal
+				show={showUpdateModal}
+				setShow={setShowUpdateModal}
+				title="Actualizar un usuario"
+				form={NewUserForm}
+				otherProps={{ isEditMode: true, id: userIdToUpdate }}
+			></CustomModal>
 			<ConfirmationModal
 				show={showModal}
 				onClose={handleCloseModal}
@@ -338,6 +370,9 @@ export function CustomersTable({ reload, setReload, filterFn }: TableProps) {
 	const [showModal, setShowModal] = useState(false);
 	const [customerIdToDelete, setCustomerIdToDelete] = useState<number | null>(null);
 
+	const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+	const [customerIdToUpdate, setCustomerIdToUpdate] = useState<number>(0);
+
 	const deleteCustomerMutation = useMutation({
 		mutationFn: deleteCustomer,
 		onSuccess() {
@@ -351,6 +386,13 @@ export function CustomersTable({ reload, setReload, filterFn }: TableProps) {
 			setReload && setReload(false);
 		}
 	}, [reload, refetch]);
+
+	const handleShowUpdateModal = (authorId: number) => {
+		setCustomerIdToUpdate(authorId);
+		setShowUpdateModal(true);
+	};
+
+	// --------------------------
 
 	const handleShowModal = (customerId: number) => {
 		setCustomerIdToDelete(customerId);
@@ -387,7 +429,9 @@ export function CustomersTable({ reload, setReload, filterFn }: TableProps) {
 				<td>{customer.carnet.carnetExpirationDate.toString()}</td>
 				<td>
 					<ButtonGroup aria-label="Basic example">
-						<Button variant="secondary">Actualizar</Button>
+						<Button variant="secondary" onClick={() => handleShowUpdateModal(customer.id)}>
+							Actualizar
+						</Button>
 						<Button onClick={() => handleShowModal(customer.id)} variant="danger">
 							Eliminar
 						</Button>
@@ -416,6 +460,13 @@ export function CustomersTable({ reload, setReload, filterFn }: TableProps) {
 				</thead>
 				<tbody>{tableContent}</tbody>
 			</Table>
+			<CustomModal
+				show={showUpdateModal}
+				setShow={setShowUpdateModal}
+				title="Actualizar un cliente"
+				form={NewCustomerForm}
+				otherProps={{ isEditMode: true, id: customerIdToUpdate }}
+			></CustomModal>
 			<ConfirmationModal
 				show={showModal}
 				onClose={handleCloseModal}
@@ -440,6 +491,9 @@ export function AuthorsTable({ reload, setReload, filterFn }: TableProps) {
 	const [showModal, setShowModal] = useState(false);
 	const [authorIdToDelete, setAuthorIdToDelete] = useState<number | null>(null);
 
+	const [showUpdateModal, setShowUpdateModal] = useState<boolean>(false);
+	const [authorIdToUpdate, setAuthorIdToUpdate] = useState<number>(0);
+
 	const deleteAuthorMutation = useMutation({
 		mutationFn: deleteAuthor,
 		onSuccess() {
@@ -453,6 +507,13 @@ export function AuthorsTable({ reload, setReload, filterFn }: TableProps) {
 			setReload && setReload(false);
 		}
 	}, [reload, refetch]);
+
+	const handleShowUpdateModal = (authorId: number) => {
+		setAuthorIdToUpdate(authorId);
+		setShowUpdateModal(true);
+	};
+
+	// ------------------------------------
 
 	const handleShowModal = (authorId: number) => {
 		setAuthorIdToDelete(authorId);
@@ -483,7 +544,9 @@ export function AuthorsTable({ reload, setReload, filterFn }: TableProps) {
 				<td>{author.mlastName}</td>
 				<td>
 					<ButtonGroup aria-label="Basic example">
-						<Button variant="secondary">Actualizar</Button>
+						<Button onClick={() => handleShowUpdateModal(author.id)} variant="secondary">
+							Actualizar
+						</Button>
 						<Button onClick={() => handleShowModal(author.id)} variant="danger">
 							Eliminar
 						</Button>
@@ -509,6 +572,13 @@ export function AuthorsTable({ reload, setReload, filterFn }: TableProps) {
 				</thead>
 				<tbody>{tableContent}</tbody>
 			</Table>
+			<CustomModal
+				show={showUpdateModal}
+				setShow={setShowUpdateModal}
+				title="Actualizar un autor"
+				form={NewAuthorForm}
+				otherProps={{ isEditMode: true, id: authorIdToUpdate }}
+			></CustomModal>
 			<ConfirmationModal
 				show={showModal}
 				onClose={handleCloseModal}
