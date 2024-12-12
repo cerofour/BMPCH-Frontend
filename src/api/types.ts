@@ -1,11 +1,6 @@
 
 // API Objects
 
-export type RoleAPIObject = {
-	id: number;
-	name: String;
-}
-
 export type UserAPIObject = {
     userId: number;
     role: RoleAPIObject;
@@ -25,6 +20,19 @@ export type UserAPIObject = {
     phoneNumber: string;
     gender: GenderDTO;
 };
+
+export type RoleAPIObject = {
+    id: number;
+    name: string;
+}
+
+export type LogAPIObject = {
+	id: number;
+	userId: number;
+	detail: string;
+	fec: string;
+	ip: string;
+}
   
 export type EditorialAPIObject = {
     id: number;
@@ -47,6 +55,7 @@ export type TextAPIObject = {
     editorial: EditorialAPIObject,
     type: TextTypeAPIObject,
     authors: AuthorAPIObject[];
+    stock: number;
 	imageUrl: string,
 };
 
@@ -210,6 +219,25 @@ export type TextDTO = {
     typeId: number,
     authors: number[];
 };
+
+export type CustomerDTO = {
+    userData: UserDTO,
+    addressData: AddressDTO,
+    educationLevelId: number;
+    email: string;
+}
+
+export type UserDTO = {
+    document: string,
+    documentTypeId: number,
+    roleId: number;
+    psk: string;
+    name: string;
+    plastname: string;
+    mlastname: string;
+    phoneNumber: string;
+    genderId: string;
+}
 
 export type AuthorDTO = {
     name: string,

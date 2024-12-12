@@ -41,12 +41,12 @@ export default function Admin() {
 							<Link to="/admin/logs">Logs del Sistema</Link>
 						</div>
 					</Col>
-					<Col xs={12} sm={2} md={4}>
+					{/*<Col xs={12} sm={2} md={4}>
 						<div className="d-flex flex-column justify-content-center align-items-center">
 							<ReactIcons library="MaterialIcons" iconName="MdBarChart" size={96} />
 							<Link to="/admin/estadisticas">Estadísticas</Link>
 						</div>
-					</Col>
+					</Col>*/}
 				</Row>
 			</Container>
 		</>

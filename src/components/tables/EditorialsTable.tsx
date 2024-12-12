@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 
 import { Button, ButtonGroup, Table } from "react-bootstrap";
 
-import { getAllEditorials } from "../../api/api";
+import { getAllEditorials, deleteEditorial } from "../../api/api";
 import { EditorialAPIObject } from "../../api/types";
 
 import { buildTableContent } from "../Utils";
 
 import { ConfirmationModal } from "../CustomModals";
 import TableProps from "./TableProps";
+import CRUDContext from "../../hooks/CRUDContext";
 
-export function EditorialsTable({ reload, setReload, filterFn }: TableProps) {
+export function EditorialsTable({ filterFn }: TableProps) {
 	const {
 		isLoading,
 		isError,
@@ -22,35 +23,35 @@ export function EditorialsTable({ reload, setReload, filterFn }: TableProps) {
 		queryFn: getAllEditorials,
 	});
 
-	reload; // yea
-	setReload;
-
 	const [showModal, setShowModal] = useState(false);
-	const [editorialIdToDelete, setEditorialIdToDelete] = useState<number | null>(null);
+	const [editorialNameToDelete, setEditorialNameToDelete] = useState<string | null>(null);
+	const context = useContext(CRUDContext);
 
-	/* TODO: DELETE EDITORIAL 
-	const deleteAuthorMutation = useMutation({
+	const deleteEditorialMutation = useMutation({
 		mutationFn: deleteEditorial,
 		onSuccess() {
-			setReload(true);
+			context?.setToastData("Se ha eliminado la editorial.", "success");
+			context?.toggleToast();
+			setShowModal(false);
+			setEditorialNameToDelete(null);
+		},
+		onError(error) {
+			console.log(error);
+			context?.setToastData("No se pudo eliminar.", "danger");
+			context?.toggleToast();
 		},
 	});
-	*/
 
-	const handleShowModal = (authorId: number) => {
-		setEditorialIdToDelete(authorId);
+	const handleShowModal = (name: string) => {
+		setEditorialNameToDelete(name);
 		setShowModal(true);
 	};
 
-	const handleCloseModal = () => {
-		setShowModal(false);
-		setEditorialIdToDelete(null);
-	};
+	const handleCloseModal = () => {};
 
 	const handleConfirmDelete = () => {
-		if (editorialIdToDelete === null) return;
-		//deleteAuthorMutation.mutate(authorIdToDelete);
-		handleCloseModal();
+		if (editorialNameToDelete === null) return;
+		deleteEditorialMutation.mutate(editorialNameToDelete);
 	};
 
 	const tableContent: any = buildTableContent(
@@ -65,7 +66,7 @@ export function EditorialsTable({ reload, setReload, filterFn }: TableProps) {
 				<td>
 					<ButtonGroup aria-label="Basic example">
 						<Button variant="secondary">Actualizar</Button>
-						<Button onClick={() => handleShowModal(editorial.id)} variant="danger">
+						<Button onClick={() => handleShowModal(editorial.name)} variant="danger">
 							Eliminar
 						</Button>
 					</ButtonGroup>

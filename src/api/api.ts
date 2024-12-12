@@ -18,8 +18,11 @@ import {
 	LoanStatusAPIObject,
 	LoanTypeAPIObject,
 	//RoleDTO,
+	LogAPIObject,
 	LoanDTO,
 	EditorialDTO,
+	RoleAPIObject,
+	TextDTO,
 } from "./types";
 
 const DOMAIN = "http://144.22.63.67:8080";
@@ -66,6 +69,16 @@ export async function getAllEditorials(): Promise<EditorialAPIObject[]> {
 
 export async function getAllTexts(): Promise<TextAPIObject[]> {
 	const response = api.get("/texts/");
+	return (await response).data;
+}
+
+export async function getAllRoles(): Promise<RoleAPIObject[]> {
+	const response = api.get("/roles/");
+	return (await response).data;
+}
+
+export async function getRoleById(id: number): Promise<RoleAPIObject> {
+	const response = api.get("/roles/get?id="+id);
 	return (await response).data;
 }
 
@@ -147,6 +160,12 @@ export async function getAllLoanStatuses(): Promise<LoanStatusAPIObject[]> {
 	return response.data;
 }
 
+export async function getAllLogs(): Promise<LogAPIObject[]>  {
+	const response = await api.get("/logs/");
+	//console.log(response.data[0].fec instanceof String);
+	return response.data;
+}
+
 export async function makeClient(data: FormData) {
 	const response = await api.post(`/customers/user_to_client`, data);
 	return response.data;
@@ -154,6 +173,26 @@ export async function makeClient(data: FormData) {
 
 export async function newEditorial(data: EditorialDTO) {
 	const response = await api.post("/editorial/new", data);
+	return response.data;
+}
+
+export async function getAuthorById(id: number, ): Promise<AuthorAPIObject> {
+	const response = await api.get("/authors/get?id="+id);
+	return response.data;
+}
+
+export async function updateAuthor(id: number, authorDto: AuthorDTO): Promise<AuthorAPIObject> {
+	const response = await api.put("/authors/"+id, authorDto);
+	return response.data;
+}
+
+export async function updateUser(id: number, userDto: any){
+	const response = await api.post("/users/update/"+id, userDto);
+	return response.data;
+}
+
+export async function updateText(id: number, textDto: TextDTO){
+	const response = await api.put("/texts/"+id, textDto);
 	return response.data;
 }
 
@@ -195,6 +234,11 @@ export async function newCustomer(data: FormData) {
 	return (await response).data;
 }
 
+export async function updateCustomer(id: number, data: FormData) {
+	const response = api.put("/customers/"+id, data);
+	return (await response).data;
+}
+
 export async function sendLoginCredentials(data: UserLogin): Promise<UserLoginResponse> {
 	const response = await loginApi.post("/auth/login", data);
 	return response.data;
@@ -217,5 +261,10 @@ export async function deleteAuthor(id: number): Promise<void> {
 
 export async function deleteCustomer(id: number): Promise<void> {
 	const response = await api.delete(`/customer/delete?id=${id}`);
+	return response.data;
+}
+
+export async function deleteEditorial(name: string): Promise<void> {
+	const response = await api.delete(`/editorial/delete/${name}`);
 	return response.data;
 }

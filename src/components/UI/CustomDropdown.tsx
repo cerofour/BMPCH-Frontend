@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Spinner, DropdownButton, Dropdown, Alert } from "react-bootstrap";
 import { useQuery } from "@tanstack/react-query";
 
@@ -8,6 +8,7 @@ type CustomDropdownProps<T> = {
 	getOptionLabel: any;
 	setSelectedItem: any;
 	mapSelectedValue: (e: any) => string | number;
+	defaultValue?: any;
 };
 
 export default function CustomDropdown<T>({
@@ -16,6 +17,7 @@ export default function CustomDropdown<T>({
 	getOptionLabel,
 	setSelectedItem,
 	mapSelectedValue,
+	defaultValue,
 }: CustomDropdownProps<T>) {
 	const {
 		isLoading,
@@ -27,6 +29,13 @@ export default function CustomDropdown<T>({
 	});
 
 	const [dropdownTitle, setDropdownTitle] = useState("Seleccionar");
+
+	useEffect(() => {
+		if (defaultValue) {
+			setSelectedItem(mapSelectedValue(defaultValue));
+			setDropdownTitle(getOptionLabel(defaultValue));
+		}
+	}, [defaultValue]);
 
 	if (isLoading) return <Spinner animation="border" role="status" />;
 

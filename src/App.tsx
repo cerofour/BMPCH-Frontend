@@ -26,6 +26,7 @@ import UsersPage from "./pages/admin/UsersPage";
 import CustomerDetail from "./pages/admin/CustomerDetail";
 import UserDetail from "./pages/admin/UserDetail";
 import LoansPage from "./pages/admin/LoanPages";
+import LogsPage from "./pages/admin/LogsPage";
 import Admin from "./pages/admin/Admin";
 
 const queryClient = new QueryClient();
@@ -81,6 +82,7 @@ function App() {
 								<Route path="clientes" element={<CustomersPage />} />
 								<Route path="clientes/:id" element={<CustomerDetail />} />
 								<Route path="textos" element={<TextsPage />} />
+								<Route path="logs" element={<LogsPage />} />
 							</Route>
 
 							{/* Catch-all route */}

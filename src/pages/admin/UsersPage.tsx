@@ -19,6 +19,7 @@ export default function UsersPage() {
 			tabKey: "users",
 			tabName: "Usuarios",
 			tabTitle: "Administrar usuarios",
+			useButton: true,
 			buttonTitle: "Agregar usuario",
 			showModal: showNewUserModal,
 			setShowModal: setShowNewUserModal,

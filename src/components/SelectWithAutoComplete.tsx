@@ -2,7 +2,7 @@ import Select, { ActionMeta, MultiValue } from "react-select";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "react-bootstrap/esm/Spinner";
 import Alert from "react-bootstrap/esm/Alert";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type SelectWithAutoCompleteProps<T> = {
 	qKey: string[];
@@ -11,6 +11,7 @@ type SelectWithAutoCompleteProps<T> = {
 	getOptionValue: any;
 	isMulti: boolean;
 	setSelected: any;
+	defaultValue?: any;
 };
 
 export function SelectWithAutoComplete<T>({
@@ -20,6 +21,7 @@ export function SelectWithAutoComplete<T>({
 	getOptionLabel,
 	getOptionValue,
 	isMulti,
+	defaultValue,
 }: SelectWithAutoCompleteProps<T>) {
 	const { isLoading, isError, data } = useQuery<T[], Error>({
 		queryKey: qKey,
@@ -36,6 +38,23 @@ export function SelectWithAutoComplete<T>({
 			setSelected(getOptionValue(newValue as T));
 		}
 	};
+
+	useEffect(() => {
+		const values = defaultValue ? [...defaultValue] : [];
+		if (data) {
+			const initialOptions: MultiValue<T> = data?.filter((item) => values.includes(getOptionValue(item))) || [];
+
+			if (defaultValue || initialOptions.length > 0) {
+				setSelectedOptions(initialOptions);
+
+				if (isMulti) {
+					setSelected(initialOptions.map((option) => getOptionValue(option)));
+				} else {
+					setSelected(getOptionValue(initialOptions[0]));
+				}
+			}
+		}
+	}, [data]);
 
 	if (isLoading) return <Spinner animation="border" role="status" />;
 
@@ -54,7 +73,8 @@ export function SelectWithAutoComplete<T>({
 					classNamePrefix="select"
 					getOptionLabel={getOptionLabel}
 					getOptionValue={getOptionValue}
-				/>) : (
+				/>
+			) : (
 				<Select
 					options={data || []} // Opciones predefinidas
 					value={selectedOptions as T | null} // Valores seleccionados
@@ -64,8 +84,8 @@ export function SelectWithAutoComplete<T>({
 					classNamePrefix="select"
 					getOptionLabel={getOptionLabel}
 					getOptionValue={getOptionValue}
-				/>)
-			}
+				/>
+			)}
 		</div>
 	);
 }
