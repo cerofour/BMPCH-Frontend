@@ -6,7 +6,7 @@ import { Table } from "react-bootstrap";
 import { getAllLogs } from "../../api/api";
 import { LogAPIObject } from "../../api/types";
 
-import { buildTableContent, firstN } from "../Utils";
+import { buildTableContent } from "../Utils";
 
 import TableProps from "./TableProps";
 
@@ -31,7 +31,7 @@ export default function LogsTable({ filterFn }: TableProps) {
 				<td>
 					<Link to={`/admin/usuarios/${log.userId}`}>{log.userId}</Link>
 				</td>
-				<td>{firstN(log.detail, 36)}</td>
+				<td>{log.detail}</td>
 				<td>{log.ip}</td>
 				<td>{log.fec.toString()}</td>
 			</tr>

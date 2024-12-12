@@ -39,15 +39,14 @@ export function SelectWithAutoComplete<T>({
 		}
 	};
 
-    useEffect(() => {
-		const values = [...defaultValue];
-		if(data){
-			const initialOptions: MultiValue<T> = data?.filter(
-				(item) => values.includes(getOptionValue(item))) || [];
+	useEffect(() => {
+		const values = defaultValue ? [...defaultValue] : [];
+		if (data) {
+			const initialOptions: MultiValue<T> = data?.filter((item) => values.includes(getOptionValue(item))) || [];
 
-			if(defaultValue || initialOptions.length > 0){
+			if (defaultValue || initialOptions.length > 0) {
 				setSelectedOptions(initialOptions);
-	
+
 				if (isMulti) {
 					setSelected(initialOptions.map((option) => getOptionValue(option)));
 				} else {
@@ -55,8 +54,7 @@ export function SelectWithAutoComplete<T>({
 				}
 			}
 		}
-
-    }, [data]);
+	}, [data]);
 
 	if (isLoading) return <Spinner animation="border" role="status" />;
 
@@ -75,7 +73,8 @@ export function SelectWithAutoComplete<T>({
 					classNamePrefix="select"
 					getOptionLabel={getOptionLabel}
 					getOptionValue={getOptionValue}
-				/>) : (
+				/>
+			) : (
 				<Select
 					options={data || []} // Opciones predefinidas
 					value={selectedOptions as T | null} // Valores seleccionados
@@ -85,8 +84,8 @@ export function SelectWithAutoComplete<T>({
 					classNamePrefix="select"
 					getOptionLabel={getOptionLabel}
 					getOptionValue={getOptionValue}
-				/>)
-			}
+				/>
+			)}
 		</div>
 	);
 }

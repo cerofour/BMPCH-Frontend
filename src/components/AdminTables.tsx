@@ -152,39 +152,47 @@ export function TextsTable({ reload, setReload, filterFn }: TableProps) {
 		handleCloseModal();
 	};
 
-	const tableContent: any = buildTableContent(9, isLoading, isError, books, (book: TextAPIObject) => (
-		<tr key={book.id}>
-			<td>
-				<Link to={`/catalogo/${book.id}`}>{book.id}</Link>
-			</td>
-			<td>{book.title}</td>
-			<td>{book.editorial.name}</td>
-			<td>{book.type.typename}</td>
-			<td>{book.publicationDate.toString()}</td>
-			<td>
-				<ul>
-					{book.authors.map((e) => (
-						<li>
-							{e.name} {e.plastName} {e.mlastName}
-						</li>
-					))}
-				</ul>
-			</td>
-			<td>{book.pages}</td>
-			<td>{book.edition}</td>
-			<td>{book.volume}</td>
-			<td>
-				<ButtonGroup aria-label="Basic example">
-					<Button onClick={() => handleShowUpdateModal(book.id)} variant="secondary">
-						Actualizar
-					</Button>
-					<Button onClick={() => handleShowModal(book.id)} variant="danger">
-						Eliminar
-					</Button>
-				</ButtonGroup>
-			</td>
-		</tr>
-	));
+	const tableContent: any = buildTableContent(
+		9,
+		isLoading,
+		isError,
+		books,
+		(book: TextAPIObject) => (
+			<tr key={book.id}>
+				<td>
+					<Link to={`/catalogo/${book.id}`}>{book.id}</Link>
+				</td>
+				<td>{book.title}</td>
+				<td>{book.editorial.name}</td>
+				<td>{book.type.typename}</td>
+				<td>{book.publicationDate.toString()}</td>
+				<td>
+					<ul>
+						{book.authors.map((e) => (
+							<li>
+								{e.name} {e.plastName} {e.mlastName}
+							</li>
+						))}
+					</ul>
+				</td>
+				<td>{book.pages}</td>
+				<td>{book.edition}</td>
+				<td>{book.volume}</td>
+				<td>
+					<ButtonGroup aria-label="Basic example">
+						<Button onClick={() => handleShowUpdateModal(book.id)} variant="secondary">
+							Actualizar
+						</Button>
+						<Button onClick={() => handleShowModal(book.id)} variant="danger">
+							Eliminar
+						</Button>
+					</ButtonGroup>
+				</td>
+			</tr>
+		),
+		filterFn,
+		(item) => item.title
+	);
 
 	return (
 		<>

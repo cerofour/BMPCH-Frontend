@@ -30,18 +30,16 @@ export default function CustomDropdown<T>({
 
 	const [dropdownTitle, setDropdownTitle] = useState("Seleccionar");
 
-    useEffect(() => {
-        if (defaultValue) {
-            setSelectedItem(mapSelectedValue(defaultValue));
-            setDropdownTitle(getOptionLabel(defaultValue));
-        }
-    }, [defaultValue]);
+	useEffect(() => {
+		if (defaultValue) {
+			setSelectedItem(mapSelectedValue(defaultValue));
+			setDropdownTitle(getOptionLabel(defaultValue));
+		}
+	}, [defaultValue]);
 
 	if (isLoading) return <Spinner animation="border" role="status" />;
 
 	if (isError) return <Alert variant="danger">No se pudo cargar.</Alert>;
-
-
 
 	return (
 		<DropdownButton variant="outline-secondary" title={dropdownTitle}>

@@ -28,6 +28,9 @@ export default function Profile() {
 			mapFn={(x: any) => <Image src={x} roundedCircle className="userProfilePicture" />}
 		/>
 	);
+	{
+		console.log(data);
+	}
 
 	return (
 		<Container fluid>
