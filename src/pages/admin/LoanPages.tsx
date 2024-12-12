@@ -20,6 +20,7 @@ export default function LoansPage() {
 			tabKey: "loans",
 			tabName: "Préstamos",
 			tabTitle: "Administrar préstamos",
+			useButton: true,
 			buttonTitle: "Nuevo préstamo",
 			showModal: showNewLoanModal,
 			setShowModal: setShowNewLoanModal,

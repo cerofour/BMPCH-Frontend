@@ -32,7 +32,8 @@ export function buildTableContent<T extends Object>(
 	data: T[] | undefined,
 	mapFn: (item: T, index: number) => JSX.Element,
 	filterFn?: (item: string) => boolean,
-	getFilterKey?: (item: T) => string
+	getFilterKey?: (item: T) => string,
+	comparator?: (a: T, b: T) => number
 ) {
 	if (isLoading)
 		return (
@@ -48,20 +49,25 @@ export function buildTableContent<T extends Object>(
 			</tr>
 		);
 
-	const filteredData = filterFn && getFilterKey ? data?.filter((e) => filterFn(getFilterKey(e))) : data;
+	let processedData = data;
 
-	return filteredData?.map(mapFn);
+	if (filterFn && getFilterKey) processedData = processedData?.filter((e) => filterFn(getFilterKey(e)));
+
+	if (comparator) processedData = processedData?.sort(comparator);
+
+	return processedData?.map(mapFn);
 }
 
 export type TabsData = {
 	tabKey: string;
 	tabName: string;
 	tabTitle: string;
-	buttonTitle: string;
-	showModal: boolean;
-	setShowModal: (x: boolean) => void;
-	modalTitle: string;
-	tabForm: ({ setShow }: any) => JSX.Element;
+	useButton: boolean;
+	buttonTitle?: string;
+	showModal?: boolean;
+	setShowModal?: (x: boolean) => void;
+	modalTitle?: string;
+	tabForm?: ({ setShow }: any) => JSX.Element;
 	reload: boolean;
 	setReload: React.Dispatch<React.SetStateAction<boolean>>;
 	searchBarPlaceholder: string;
@@ -96,34 +102,39 @@ export function generateAdminTabs(tabsData: TabsData[]) {
 			setReload,
 			searchBarPlaceholder,
 			tableGenerator,
+			useButton,
 		}) => (
 			<Tab eventKey={tabKey} title={tabName} key={tabKey}>
 				<PanelCard>
 					<Row>
-						<Col xs={10}>
+						<Col xs={useButton ? 10 : 12}>
 							<h2>
 								<b>{tabTitle}</b>
 							</h2>
 						</Col>
-						<Col xs={2}>
-							<Button onClick={() => setShowModal(true)} className="w-100">
-								{buttonTitle}
-							</Button>
-						</Col>
+						{useButton && (
+							<Col xs={2}>
+								<Button onClick={() => setShowModal && setShowModal(true)} className="w-100">
+									{buttonTitle}
+								</Button>
+							</Col>
+						)}
 					</Row>
 					<SearchBar
 						onClick={buildFilterFn}
 						placeholder={searchBarPlaceholder}
 						buttonText="Buscar"
 					></SearchBar>
-					<CustomModal
-						show={showModal}
-						setShow={setShowModal}
-						title={modalTitle}
-						form={tabForm}
-						reload={reload}
-						setReload={setReload}
-					/>
+					{useButton && modalTitle && tabForm && setShowModal && showModal && (
+						<CustomModal
+							show={showModal}
+							setShow={setShowModal}
+							title={modalTitle}
+							form={tabForm}
+							reload={reload}
+							setReload={setReload}
+						/>
+					)}
 					{tableGenerator(filterFn)}
 				</PanelCard>
 			</Tab>

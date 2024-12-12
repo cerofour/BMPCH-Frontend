@@ -18,13 +18,14 @@ import {
 	LoanStatusAPIObject,
 	LoanTypeAPIObject,
 	//RoleDTO,
+	LogAPIObject,
 	LoanDTO,
 	EditorialDTO,
 	RoleAPIObject,
 	TextDTO,
 } from "./types";
 
-const DOMAIN = "http://localhost:8080";
+const DOMAIN = "http://144.22.63.67:8080";
 const API_PREFFIX = '/api/v1';
 
 export const api = axios.create({
@@ -159,6 +160,12 @@ export async function getAllLoanStatuses(): Promise<LoanStatusAPIObject[]> {
 	return response.data;
 }
 
+export async function getAllLogs(): Promise<LogAPIObject[]>  {
+	const response = await api.get("/logs/");
+	//console.log(response.data[0].fec instanceof String);
+	return response.data;
+}
+
 export async function makeClient(data: FormData) {
 	const response = await api.post(`/customers/user_to_client`, data);
 	return response.data;
@@ -254,5 +261,10 @@ export async function deleteAuthor(id: number): Promise<void> {
 
 export async function deleteCustomer(id: number): Promise<void> {
 	const response = await api.delete(`/customer/delete?id=${id}`);
+	return response.data;
+}
+
+export async function deleteEditorial(name: string): Promise<void> {
+	const response = await api.delete(`/editorial/delete/${name}`);
 	return response.data;
 }

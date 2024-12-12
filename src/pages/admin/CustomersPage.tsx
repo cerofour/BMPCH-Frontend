@@ -20,6 +20,7 @@ export default function CustomersPage() {
 			tabKey: "customers",
 			tabName: "Clientes",
 			tabTitle: "Administrar clientes",
+			useButton: true,
 			buttonTitle: "Agregar cliente",
 			showModal: showNewCustomerModal,
 			setShowModal: setShowNewCustomerModal,
